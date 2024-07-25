@@ -50,7 +50,7 @@
   "keyToString": {
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "feature/1-create-a-user-class",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/vaughny/git-root/Locals-Password-Manager",
     "project.structure.last.edited": "Artifacts",
@@ -68,6 +68,31 @@
       <option name="presentableId" value="Default" />
       <updated>1721498186222</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added files to allow building .jar executable of project through IntelliJ build command">
+      <option name="closed" value="true" />
+      <created>1721870014422</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1721870014422</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added MANIFEST.MF and supporting files to allow building java .jar executable file of project through IntelliJ build commands" />
+    <MESSAGE value="Added files to allow building .jar executable of project through IntelliJ build command" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added files to allow building .jar executable of project through IntelliJ build command" />
   </component>
 </project>
