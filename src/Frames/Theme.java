@@ -4,7 +4,7 @@
  * DATE: 8/3/2024
  *
  * DESCRIPTION: Abstract class that will keep track of the theme of the program during runtime (light or dark). Methods
- * will return the correct color for the object (frame, button, etc.) based on the theme that is set.
+ * will return the correct color for the object (frame, loginButton, etc.) based on the theme that is set.
  */
 
 package Frames;
@@ -37,7 +37,7 @@ public abstract class Theme {
     }
 
     // Public getters for colors for the objects based on theme
-    public static Color getMainFrameColor() {
+    public static Color getFrameColor() {
         if(theme == LIGHT_MODE) {
             return Color.WHITE;
 //            return new Color(0xFFFFFF); // For a custom color using hex code or RGB (R,G,B)
@@ -46,11 +46,21 @@ public abstract class Theme {
         }
     }
 
-    public static Color getMainFrameButtonColor() {
+    public static Color getButtonColor() {
         if(theme == LIGHT_MODE) {
             return Color.WHITE;
         } else {
             return Color.DARK_GRAY;
         }
     }
+
+    public static Color getTextColor() {
+        if(theme == LIGHT_MODE) {
+            return Color.BLACK;
+        } else {
+            return Color.WHITE;
+        }
+    }
+
+    // TODO: way to update the frame when the theme changes. Method that is triggered after theme is pressed?
 }

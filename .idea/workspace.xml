@@ -12,6 +12,10 @@
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Frames/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Frames/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Frames/OptionsFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Frames/OptionsFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Frames/TEST_Frames.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Frames/TEST_Frames.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Frames/Theme.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Frames/Theme.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,20 +50,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.TEST_Frames.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/5-create-frame-classes&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/vaughny/git-root/Locals-Password-Manager&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;build.tools&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.TEST_Frames.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feature/5-create-frame-classes",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/vaughny/git-root/Locals-Password-Manager",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.toDoOptions"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="TEST_Frames" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Frames.TEST_Frames" />

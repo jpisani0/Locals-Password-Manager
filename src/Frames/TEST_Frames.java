@@ -8,8 +8,10 @@
 
 package Frames;
 
+import Main.Main;
+
 public abstract class TEST_Frames {
     public static void main(String[] args) {
-        MainFrame mainFrame = new MainFrame();
+        new LaunchFrame();
     }
 }
