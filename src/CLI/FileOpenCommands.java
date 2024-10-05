@@ -26,6 +26,14 @@ abstract class FileOpenCommands {
         }
     }
 
+    static void showEntry() {
+        if(Shell.fileIsOpen) {
+
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
     static void addNewEntry() {
         if(Shell.fileIsOpen) {
 

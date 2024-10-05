@@ -89,6 +89,11 @@ public class Shell {
                 FileOpenCommands.listEntries();
                 break;
 
+            case "s":
+            case "show":
+                FileOpenCommands.showEntry();
+                break;
+
             case "a":
             case "add":
                 FileOpenCommands.addNewEntry();
@@ -124,6 +129,8 @@ public class Shell {
                         "   close the password file that is currently open\n" +
                 "l, list\n" +
                         "   list all entries of the open password file\n" +
+                "s, show\n" +
+                        "   show the username and password saved in a certain entry\n" +
                 "a, add\n" +
                         "   add a new entry to an open password file\n" +
                 "r, remove\n" +
