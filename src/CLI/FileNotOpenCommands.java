@@ -9,6 +9,7 @@
 package CLI;
 
 abstract class FileNotOpenCommands {
+    // TODO: create functionality for these commands once the file manipulation and encryption/decryption classes are done
     static void createNewPasswordFile() {
         if(!Shell.fileIsOpen) {
 
