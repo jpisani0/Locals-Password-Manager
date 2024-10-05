@@ -47,6 +47,11 @@ public class Shell {
     private void runCommand() {
         switch(input) {
             case "exit":
+                // Close the open password file if one is open before exiting
+                if(fileIsOpen) {
+                    FileOpenCommands.closePasswordFile();
+                }
+
                 exit = true;
                 break;
 
@@ -104,6 +109,25 @@ public class Shell {
 
     // Manual type print out when requested or an invalid command is entered
     private void printHelp() {
-        // TODO: manual type print out for all commands depending on whether the file is open or not
+        System.out.println(
+                "exit\n" +
+                        "   close and exit Locals. If a password file is open when exit is called, it will be closed automatically.\n" +
+                "h, help\n" +
+                        "   print these commands and their function to CLI.\n" +
+                "n, new\n" +
+                        "   create a new encrypted password file.\n" +
+                "d, delete\n" +
+                        "   delete an encrypted password file\n" +
+                "o, open\n" +
+                        "   open an existing encrypted password file\n" +
+                "c, close\n" +
+                        "   close the password file that is currently open\n" +
+                "l, list\n" +
+                        "   list all entries of the open password file\n" +
+                "a, add\n" +
+                        "   add a new entry to an open password file\n" +
+                "r, remove\n" +
+                        "   remove an entry from an open password file\n"
+        );
     }
 }
