@@ -9,5 +9,7 @@
 package CLI;
 
 abstract class TEST_CLI {
-
+    public static void main(String[] args) {
+        Shell shell = new Shell();
+    }
 }

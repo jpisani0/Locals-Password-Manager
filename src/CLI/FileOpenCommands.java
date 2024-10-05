@@ -9,19 +9,39 @@
 package CLI;
 
 abstract class FileOpenCommands {
-    static String closePasswordFile() {
+    static void closePasswordFile() {
+        if(Shell.fileIsOpen) {
 
+        } else {
+            printFileNotOpenErrorMsg();
+        }
     }
 
     static void listEntries() {
+        if(Shell.fileIsOpen) {
 
+        } else {
+            printFileNotOpenErrorMsg();
+        }
     }
 
     static void addNewEntry() {
+        if(Shell.fileIsOpen) {
 
+        } else {
+            printFileNotOpenErrorMsg();
+        }
     }
 
     static void removeEntry() {
+        if(Shell.fileIsOpen) {
 
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
+    private static void printFileNotOpenErrorMsg() {
+        System.out.println("ERROR: no password file is open. Please open one before using the \"" + Shell.input + "\" command.");
     }
 }

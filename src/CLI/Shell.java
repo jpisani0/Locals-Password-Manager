@@ -8,133 +8,102 @@
 
 package CLI;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Shell {
     private boolean exit = false; // Flag for when the user wants to exit the program
     static String fileName = ""; // Name of file that is currently open
-    private boolean fileIsOpen = false; // Flag to check if a password file is open
-    private static String input = "";
+    static boolean fileIsOpen = false; // Flag to check if a password file is open
+    static String input = ""; // User input on command line
+    private final Scanner scanner = new Scanner(System.in); // Scanner for user input on command line
 
-    Shell() {
+    public Shell() {
         // TODO: add some other information to print when starting such as the version number of the program
 
         System.out.println("WARNING: viewing decrypted passwords in CLI will cause them to be logged in plain text on" +
                 " your machine. Consider deleting them from your logs for maximum security.");
 
-        Scanner scanner = new Scanner(System.in);
-
-        while(!exit) {
-            if(fileIsOpen) {
-                System.out.print("\n>> (" + fileName + ") ");
-            } else {
-                System.out.print("\n>> ");
-            }
-
-            input = scanner.nextLine().toLowerCase(); // Wait for the user's input
-
-            // Determine the command the user entered for what to do next
-            switch(input) {
-                case "exit":
-                    exit = true;
-                    break;
-
-                case "":
-                    // Do nothing if the user entered nothing
-                    break;
-
-                case "n":
-                case "new":
-                    if(!fileIsOpen) {
-                        FileNotOpenCommands.createNewPasswordFile();
-                    } else {
-                        printFileOpenErrorMsg();
-                    }
-                    break;
-
-                case "d":
-                case "delete":
-                    if(!fileIsOpen) {
-                        FileNotOpenCommands.deletePasswordFile();
-                    } else {
-                        printFileOpenErrorMsg();
-                    }
-                    break;
-
-                case "o":
-                case "open":
-                    fileName = FileNotOpenCommands.openPasswordFile();
-
-                    // If the file name was not updated, then the file was not opened successfully
-                    if(!Objects.equals(fileName, "")) {
-                        fileIsOpen = true;
-                    }
-                    break;
-
-                case "c":
-                case "close":
-                    if(fileIsOpen) {
-                        fileName = FileOpenCommands.closePasswordFile();
-
-                        // If the file name was not cleared
-                        if(Objects.equals(fileName, "")) {
-                            fileIsOpen = false;
-                        }
-                    } else {
-                        printFileNotOpenErrorMsg();
-                    }
-                    break;
-
-                case "l":
-                case "list":
-                    if(fileIsOpen) {
-                        FileOpenCommands.listEntries();
-                    } else {
-                        printFileNotOpenErrorMsg();
-                    }
-                    break;
-
-                case "a":
-                case "add":
-                    if(fileIsOpen) {
-                        FileOpenCommands.addNewEntry();
-                    } else {
-                        printFileNotOpenErrorMsg();
-                    }
-                    break;
-
-                case "r":
-                case "remove":
-                    if(fileIsOpen) {
-                        FileOpenCommands.removeEntry();
-                    } else {
-                        printFileNotOpenErrorMsg();
-                    }
-                    break;
-
-                default:
-                    // Unknown command
-                    System.out.println("ERROR: Unknown command: " + input + ".");
-                    printHelp();
-                    break;
-            }
-        }
+        runShell(); // Runs until the user requests to exit
 
         System.out.println("Exiting Locals...");
     }
 
+    // Runs the shell
+    private void runShell() {
+        while(!exit) {
+            if(fileIsOpen) {
+                System.out.print(">> (" + fileName + ") ");
+            } else {
+                System.out.print(">> ");
+            }
 
-    // Print out methods for repeating print statements
+            input = scanner.nextLine().toLowerCase(); // Wait for the user's input
+
+            runCommand();
+        }
+    }
+
+    // Determine the command the user entered for what to do next
+    private void runCommand() {
+        switch(input) {
+            case "exit":
+                exit = true;
+                break;
+
+            case "":
+                // Do nothing if the user entered nothing
+                break;
+
+            case "h":
+            case "help":
+                printHelp();
+                break;
+
+            case "n":
+            case "new":
+                FileNotOpenCommands.createNewPasswordFile();
+                break;
+
+            case "d":
+            case "delete":
+                FileNotOpenCommands.deletePasswordFile();
+                break;
+
+            case "o":
+            case "open":
+                FileNotOpenCommands.openPasswordFile();
+                break;
+
+            case "c":
+            case "close":
+                FileOpenCommands.closePasswordFile();
+                break;
+
+            case "l":
+            case "list":
+                FileOpenCommands.listEntries();
+                break;
+
+            case "a":
+            case "add":
+                FileOpenCommands.addNewEntry();
+                break;
+
+            case "r":
+            case "remove":
+                FileOpenCommands.removeEntry();
+                break;
+
+            default:
+                // Unknown command
+                System.out.println("ERROR: Unknown command: " + input + ".");
+                printHelp();
+                break;
+        }
+    }
+
+    // Manual type print out when requested or an invalid command is entered
     private void printHelp() {
         // TODO: manual type print out for all commands depending on whether the file is open or not
-    }
-
-    private void printFileNotOpenErrorMsg() {
-        System.out.println("ERROR: no password file is open. Please open one before using the \"" + input + "\" command.");
-    }
-
-    private void printFileOpenErrorMsg() {
-        System.out.println("ERROR: a password file is currently open. Please close it before using the \"" + input + "\" command.");
     }
 }
