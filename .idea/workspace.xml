@@ -11,6 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Locals-Password-Manager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Locals-Password-Manager.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entry/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entry/Entry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +51,10 @@
   "keyToString": {
     "Application.Main.executor": "Run",
     "Application.TEST_CLI.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "feature/9-entry-class",
     "kotlin-language-version-configured": "true",
@@ -55,7 +62,7 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "editor.preferences.smartKeys"
+    "settings.editor.selected.configurable": "preferences.toDoOptions"
   }
 }]]></component>
   <component name="RunManager" selected="Application.TEST_CLI">

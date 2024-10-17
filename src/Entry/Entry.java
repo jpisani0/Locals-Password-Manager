@@ -9,74 +9,59 @@
 package Entry;
 
 public class Entry {
-    // Entry Data from password file
-    private String entryName = "";
-    private String username = "";
-    private String password = "";
-
-    // Previous and next entries in list
-    private Entry previousEntry = null;
-    private Entry nextEntry = null;
-
-    // Entry specific data
-    private int entryNum = 0;
-    private static int totalNumEntries = 0;
+    private String entryName;  // Name or title of the entry
+    private String username;  // Username for the account login
+    private String password;  // Password for the account login
+    private String url;  // URL or website for this entry
+    private String notes;  // Notes written by the user for the entry
 
     // Constructor for setting up the list of entries, starting with the first in the password file
     public Entry() {
         // TODO: set up data from file methods when implemented
-
-        this.entryNum = 1;
-        totalNumEntries++;
-
-        // TODO: add way to check if this is the last entry before adding another, prob method from file class checking EOF or some other indicator
-        this.nextEntry = new Entry(this);
+        this.entryName = "";
+        this.username = "";
+        this.password = "";
+        this.url = "";
+        this.notes = "";
     }
 
-    // Constructor for the next entry in the list until the last entry in the list
-    private Entry(Entry previousEntry) {
-        // TODO: setup data from file methods when implemented
-
-        this.entryNum = ++totalNumEntries;
-        this.previousEntry = previousEntry;
-
-        // TODO: add way to check if this is the last entry before adding another, prob method from file class checking EOF or some other indicator
-        this.nextEntry = new Entry(this);
-    }
-
-    public String EntryName() {
+    public String getEntryName() {
         return this.entryName;
     }
 
-    public String Username() {
+    public void setEntryName(String entryName) {
+        this.entryName = entryName;
+    }
+
+    public String getUsername() {
         return this.username;
     }
 
-    public String Password() {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
         return this.password;
     }
 
-    public Entry PreviousEntry() {
-        return this.previousEntry;
+    public void setPassword() {
+        this.password = password;
     }
 
-    public Entry NextEntry() {
-        return this.nextEntry;
+    public String getUrl() {
+        return this.url;
     }
 
-    public int EntryNum() {
-        return this.entryNum;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public static int TotalNumEntries() {
-        return totalNumEntries;
+    public String getNotes() {
+        return this.notes;
     }
 
-    public boolean isFirstEntry() {
-        return this.entryNum == 1;
-    }
-
-    public boolean isLastEntry() {
-        return this.entryNum == totalNumEntries;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
