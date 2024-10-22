@@ -52,11 +52,11 @@ public class EntryGroup {
     }
 
     // REVIEW: needed?
-    public void insertEntry(@NotNull Entry entry) {
+    public void addEntry(@NotNull Entry entry) {
         entryArray.add(entry);
     }
 
-    public boolean insertEntry(int entryIndex, @NotNull Entry entry) {
+    public boolean addEntry(int entryIndex, @NotNull Entry entry) {
         // Check that the requested index is not outside bounds of array
         if(entryIndex < 0 || entryIndex > entryArray.size()) {
             return false;
@@ -90,11 +90,15 @@ public class EntryGroup {
     }
 
     public void listEntries() {
-        // REVIEW: need this if? or will work same if removed?
+        // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entryArray.isEmpty()) {
             for (Entry entry : entryArray) {
                 System.out.println(entry);
             }
         }
+    }
+
+    public boolean isEmpty() {
+        return entryArray.isEmpty();
     }
 }
