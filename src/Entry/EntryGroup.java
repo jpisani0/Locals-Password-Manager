@@ -93,7 +93,7 @@ public class EntryGroup {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entryArray.isEmpty()) {
             for (Entry entry : entryArray) {
-                System.out.println(entry);
+                System.out.println(entry.getEntryName());
             }
         }
     }
