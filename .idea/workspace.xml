@@ -11,8 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CLI/FileOpenCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CLI/FileOpenCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CLI/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CLI/Shell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PasswordStorage/ManagePassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PasswordStorage/ManagePassword.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +51,7 @@
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;Application.TEST_CLI.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/7-create-cli-interface-classes&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;10-writereadupdate-credentials&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/vaughny/git-root/Locals-Password-Manager&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
