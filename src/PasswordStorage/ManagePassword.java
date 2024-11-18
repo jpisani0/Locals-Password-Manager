@@ -1,7 +1,9 @@
 package PasswordStorage;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -45,14 +47,14 @@ public class ManagePassword {
             // will print in project folder
             // Change the directory to make sense for you
             BufferedWriter credWriter = new BufferedWriter(new FileWriter(
-                    "password,txt"));
-                    //"/home/dannymac/Desktop/test.txt"));
+                    //"password,txt"));
+                    "/home/dannymac/Desktop/test.txt"));
 
 
-            // NOTE!!! Password will be plaintext for now, will work on ecnryption soon.
+            // NOTE!!! Password will be plaintext for now, will work on encryption soon.
             // DO NOT STORE ANY MEANINGFUL PASSWORD AT THE MOMENT
-            String testData = ("Title: " + title + "\nUsername: " + username + "\nPassword: " + password);
-            credWriter.write(testData);
+            String credData = ("Title: " + title + "\nUsername: " + username + "\nPassword: " + password);
+            credWriter.write(credData);
             // clear memory and close writer
             credWriter.flush();
             credWriter.close();
@@ -62,5 +64,55 @@ public class ManagePassword {
 
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void ReadPassword() {
+
+        try {
+            // Changed the directory to desktop for easy testing, if not specified it
+            // will print in project folder
+
+            // Change the directory to make sense for you
+            BufferedReader credReader = new BufferedReader(new FileReader(
+                    //"password,txt"));
+                    "/home/dannymac/Desktop/test.txt"));
+
+
+            // NOTE!!! Password will be plaintext for now, will work on encryption soon.
+            // DO NOT STORE ANY MEANINGFUL PASSWORD AT THE MOMENT
+            String data;
+            while ((data = credReader.readLine()) !=null) {
+                System.out.println(data);
+            }
+        }
+        // Catch the exception
+        catch (IOException e) {
+
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public static void AppendPassword() {
+
+        String credFile = "/home/dannymac/Desktop/test.txt";
+        String appendData = "\n\nWILL BE NEW CREDS";
+
+        try {
+            FileWriter credAppend = new FileWriter(credFile, true);
+            BufferedWriter credWriter = new BufferedWriter(credAppend);
+
+            credWriter.write(appendData);
+
+            System.out.println("Data has been successfully appended!");
+            credWriter.close();
+
+        }
+
+        catch (IOException e) {
+
+            System.out.println(e.getMessage());
+        }
+
     }
 }
