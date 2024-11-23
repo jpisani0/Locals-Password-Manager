@@ -18,12 +18,11 @@ public class EntryGroup {
     private Image groupImage;  // Image for the group
 
     // REVIEW: after researching, this seems to be better than using/creating a custom linked list system, should look into further
-    private ArrayList<Entry> entryArray;  // Array list to hold entries in this group
+    private ArrayList<Entry> entryArray = new ArrayList<>();  // Array list to hold entries in this group
 
     public EntryGroup(String groupName, Image groupImage) {
         this.groupName = groupName;
         this.groupImage = groupImage;
-        entryArray = new ArrayList<Entry>();
     }
 
     public String getGroupName() {

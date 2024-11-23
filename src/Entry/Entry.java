@@ -16,15 +16,16 @@ public class Entry {
     private String notes;  // Notes written by the user for the entry
 
     // Constructor for setting up the list of entries, starting with the first in the password file
-    public Entry() {
+    public Entry(String entryName, String username, String password, String url, String notes) {
         // TODO: set up data from file methods when implemented
-        this.entryName = "";
-        this.username = "";
-        this.password = "";
-        this.url = "";
-        this.notes = "";
+        this.entryName = entryName;
+        this.username = username;
+        this.password = password;
+        this.url = url;
+        this.notes = notes;
     }
 
+    // REVIEW: setters might not be needed
     public String getEntryName() {
         return this.entryName;
     }
