@@ -14,6 +14,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.util.Base64;
+import java.util.Scanner;
 
 public class CredentialEncryption {
     private final SecretKey secretKey;
@@ -27,16 +28,36 @@ public class CredentialEncryption {
     // Method to generate a new AES key and save it
     private SecretKey generateKey(String keyFilePath) throws Exception {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        // AES key size (128, 192, or 256 bits)
-        //TODO: Possibly take input from user to allow for different sizes?
-        keyGen.init(256);
+        // Get valid key size from user
+        int keySize = getValidKeySize();
+
+        keyGen.init(keySize); // Initialize key generator
         SecretKey key = keyGen.generateKey();
 
-        // Save the key to the file
+        // Save the key to a file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(keyFilePath))) {
             writer.write(Base64.getEncoder().encodeToString(key.getEncoded()));
         }
+        System.out.println("Generated AES Key with size: " + keySize);
         return key;
+    }
+
+    // Prompt user until a valid AES key size is entered
+    private int getValidKeySize() {
+        Scanner scanner = new Scanner(System.in);
+        int keySize;
+        while (true) {
+            System.out.print("Enter AES key size (128, 192, or 256): ");
+            if (scanner.hasNextInt()) {
+                keySize = scanner.nextInt();
+                if (keySize == 128 || keySize == 192 || keySize == 256) {
+                    return keySize;
+                }
+            }
+            System.out.println("Invalid key size. Please enter 128, 192, or 256.");
+            scanner.nextLine(); // Clear invalid input
+        }
+
     }
 
     // Method to load an existing key or generate a new one if not found
