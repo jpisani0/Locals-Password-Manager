@@ -9,7 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="" />
+    <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PasswordStorage/CredentialEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PasswordStorage/CredentialEncryption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PasswordStorage/ManageCredFileTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PasswordStorage/ManageCredFileTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PasswordStorage/ManageCredentialFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PasswordStorage/ManageCredentialFile.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,7 +54,7 @@
     &quot;Application.TEST_CLI.executor&quot;: &quot;Run&quot;,
     &quot;Application.Test.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;10-writereadupdate-credentials&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/10-writereadupdate-credentials&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/vaughny/git-root/Locals-Password-Manager&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
@@ -110,6 +115,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.TEST_CLI" />
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.ManageCredFileTest" />
+      <item itemvalue="Application.Test" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.ManageCredFileTest" />

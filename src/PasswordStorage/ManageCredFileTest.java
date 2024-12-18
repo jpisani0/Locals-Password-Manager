@@ -1,5 +1,14 @@
+/*
+ * NAME: CredentialEncryption
+ * AUTHOR:  D. MacCarthy
+ * DATE: 11/28/24
+ *
+ * DESCRIPTION: Class to test Writing to and Reading from file, and ensuring all encryption and decryption works
+ */
+
 package PasswordStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,10 +17,10 @@ public class ManageCredFileTest {
 
         //will store files in project folder
         String credFile = "credFile.txt";
-        String keyFileName = "keyFile.txt";
+        //String keyFileName = "keyFile.txt";
         try {
             // Create an EncryptionManager and display the key for reference
-            CredentialEncryption credentialEncryption = new CredentialEncryption(keyFileName);
+            CredentialEncryption credentialEncryption = new CredentialEncryption();
             ManageCredentialFile manageCredentials = new ManageCredentialFile(credFile, credentialEncryption);
 
             Scanner scanner = new Scanner(System.in);
@@ -27,18 +36,13 @@ public class ManageCredFileTest {
 
                 if (choice == 1) {
                     // Write encrypted credentials to the file
-                    manageCredentials.writeCredentials();
-
+                     List<String> credentialsToWrite = getCredentialsFromUser(scanner);
+                     manageCredentials.writeCredentials(credentialsToWrite);
                 } else if (choice == 2) {
                     // Read and display decrypted credentials
                     List<String> readCredentials = manageCredentials.readCredentials();
-                    if (readCredentials.isEmpty()) {
-                        System.out.println("No credentials found.");
-                    } else {
-                        System.out.println("Decrypted Credentials from file:");
-                        for (String credential : readCredentials) {
-                            System.out.println(credential);
-                        }
+                    for (String credential : readCredentials) {
+                        System.out.println(credential);
                     }
 
                 } else if (choice == 3) {
@@ -52,5 +56,18 @@ public class ManageCredFileTest {
         } catch (Exception e) {
             System.err.println("An error occurred: " + e.getMessage());
         }
+    }
+    // Prompts user to enter credentials and stores them in a list
+    private static List<String> getCredentialsFromUser(Scanner scanner) {
+        List<String> credentialsToWrite = new ArrayList<>();
+        System.out.println("Enter credentials (format: title:username:password:URL:Notes:). Type 'done' to stop:");
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+            credentialsToWrite.add(input);
+        }
+        return credentialsToWrite;
     }
 }

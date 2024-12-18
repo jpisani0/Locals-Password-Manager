@@ -1,3 +1,11 @@
+/*
+ * NAME: ManageCredentialFile
+ * AUTHOR:  D. MacCarthy
+ * DATE: 11/7/24
+ *
+ * DESCRIPTION: Class to Write to and Read from different Credential Files
+ */
+
 package PasswordStorage;
 
 import java.io.*;
@@ -10,43 +18,50 @@ public class ManageCredentialFile {
     private final CredentialEncryption credentialEncryption;
 
     // Constructor to initialize file path and encryption manager
-    public ManageCredentialFile(String credFile, CredentialEncryption credentialEncryption) {
+    public ManageCredentialFile(String credFile, CredentialEncryption credentialEncryption) throws IOException {
         this.credFile = credFile;
         this.credentialEncryption = credentialEncryption;
+        ensureFileExists(credFile);
+    }
+
+    // Ensures the credentials file exists; creates it if not
+    private void ensureFileExists(String credFile) throws IOException {
+        File file = new File(credFile);
+        if (!file.exists()) {
+            System.out.println("Credentials file not found. Creating a new one...");
+            if (file.createNewFile()) {
+                System.out.println("File created successfully: " + credFile);
+            } else {
+                throw new IOException("Failed to create the credentials file: " + credFile);
+            }
+        }
     }
 
     // Method to write encrypted credentials to the file
-    public void writeCredentials() throws IOException, Exception {
-        Scanner scanner = new Scanner(System.in);
-        List<String> credentialsToWrite = new ArrayList<>();
-
-        System.out.println("Enter credentials (format: username:password). Type 'done' to stop:");
-        while (true) {
-            String credData = scanner.nextLine();
-            if (credData.equalsIgnoreCase("done")) {
-                break;
-            }
-            credentialsToWrite.add(credData);
-        }
-
+    public void writeCredentials(List<String> credentialsToWrite) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(credFile, true))) { // Append mode
             for (String credential : credentialsToWrite) {
                 String encryptedCredential = credentialEncryption.encrypt(credential);
                 writer.write(encryptedCredential);
                 writer.newLine(); // Add a newline after each encrypted credential
             }
+            writer.newLine();
             System.out.println("Credentials encrypted and written to file successfully.");
         }
     }
 
     // Method to read and decrypt credentials from the file
-    public List<String> readCredentials() throws IOException, Exception {
+    public List<String> readCredentials() throws Exception {
         List<String> credentials = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(credFile))) {
             String line;
-            while ((line = reader.readLine()) != null) {
-                String decryptedCredential = credentialEncryption.decrypt(line); // Decrypt each line
-                credentials.add(decryptedCredential);
+            if (credFile.isEmpty()){
+                System.out.println("No credentials found");
+            } else {
+                while ((line = reader.readLine()) != null) {
+                    String decryptedCredential = credentialEncryption.decrypt(line); // Decrypt each line
+                    credentials.add(decryptedCredential);
+                }
             }
         }
         System.out.println("Encrypted credentials read and decrypted successfully.");
