@@ -10,14 +10,14 @@ package CLI;
 
 import java.util.Scanner;
 
-public class Shell {
-    private boolean exit = false; // Flag for when the user wants to exit the program
-    static String fileName = ""; // Name of file that is currently open
-    static boolean fileIsOpen = false; // Flag to check if a password file is open
-    static String input = ""; // User input on command line
-    private final Scanner scanner = new Scanner(System.in); // Scanner for user input on command line
+abstract public class Shell {
+    private static boolean exit = false; // Flag for when the user wants to exit the program
+    private static String fileName = ""; // Name of file that is currently open
+    private static boolean fileIsOpen = false; // Flag to check if a password file is open
+    private static String input = ""; // User input on command line
+    private static final Scanner scanner = new Scanner(System.in); // Scanner for user input on command line
 
-    public Shell() {
+    public static void start() {
         // TODO: add some other information to print when starting such as the version number of the program
 
         System.out.println("WARNING: viewing decrypted passwords in CLI will most likely be logged in plain text on" +
@@ -29,7 +29,7 @@ public class Shell {
     }
 
     // Runs the shell
-    private void runShell() {
+    private static void runShell() {
         while(!exit) {
             if(fileIsOpen) {
                 System.out.print(">> (" + fileName + ") ");
@@ -44,12 +44,12 @@ public class Shell {
     }
 
     // Determine the command the user entered for what to do next
-    private void runCommand() {
+    private static void runCommand() {
         switch(input) {
             case "exit":
                 // Close the open password file if one is open before exiting
                 if(fileIsOpen) {
-                    FileOpenCommands.closePasswordFile();
+                    closePasswordFile();
                 }
 
                 exit = true;
@@ -66,54 +66,54 @@ public class Shell {
 
             case "n":
             case "new":
-                FileNotOpenCommands.createNewPasswordFile();
+                createNewPasswordFile();
                 break;
 
             case "d":
             case "delete":
-                FileNotOpenCommands.deletePasswordFile();
+                deletePasswordFile();
                 break;
 
             case "o":
             case "open":
-                FileNotOpenCommands.openPasswordFile();
+                openPasswordFile();
                 break;
 
             case "c":
             case "close":
-                FileOpenCommands.closePasswordFile();
+                closePasswordFile();
                 break;
 
             case "l":
             case "list":
-                FileOpenCommands.listEntries();
+                listEntries();
                 break;
 
             case "s":
             case "show":
-                FileOpenCommands.showEntry();
+                showEntry();
                 break;
 
             case "a":
             case "add":
-                FileOpenCommands.addNewEntry();
+                addNewEntry();
                 break;
 
             case "r":
             case "remove":
-                FileOpenCommands.removeEntry();
+                removeEntry();
                 break;
 
             default:
                 // Unknown command
-                System.out.println("ERROR: Unknown command: " + input + ".");
+                System.out.println("ERROR: Unknown command: " + input + ".\n");
                 printHelp();
                 break;
         }
     }
 
     // Manual type print out when requested or an invalid command is entered
-    private void printHelp() {
+    private static  void printHelp() {
         System.out.println(
                 "exit\n" +
                         "   close and exit Locals. If a password file is open when exit is called, it will be closed automatically.\n" +
@@ -136,5 +136,85 @@ public class Shell {
                 "r, remove\n" +
                         "   remove an entry from an open password file\n"
         );
+    }
+
+
+    /* -------------------------------------------------------------------------------- */
+    /* ------------------------------ FILE OPEN COMMANDS ------------------------------ */
+    /* -------------------------------------------------------------------------------- */
+    private  static void closePasswordFile() {
+        if(Shell.fileIsOpen) {
+
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
+    private static void listEntries() {
+        if(Shell.fileIsOpen) {
+
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
+    private static void showEntry() {
+        if(Shell.fileIsOpen) {
+
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
+    private static void addNewEntry() {
+        if(Shell.fileIsOpen) {
+
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
+    private static void removeEntry() {
+        if(Shell.fileIsOpen) {
+
+        } else {
+            printFileNotOpenErrorMsg();
+        }
+    }
+
+    private static void printFileNotOpenErrorMsg() {
+        System.out.println("ERROR: no password file is open. Please open one before using the \"" + Shell.input + "\" command.");
+    }
+
+
+    /* -------------------------------------------------------------------------------- */
+    /* ---------------------------- FILE NOT OPEN COMMANDS ---------------------------- */
+    /* -------------------------------------------------------------------------------- */
+    private static void createNewPasswordFile() {
+        if(!Shell.fileIsOpen) {
+
+        } else {
+            printFileOpenErrorMsg();
+        }
+    }
+
+    private static void deletePasswordFile() {
+        if(!Shell.fileIsOpen) {
+
+        } else {
+            printFileOpenErrorMsg();
+        }
+    }
+
+    private static void openPasswordFile() {
+        if(!Shell.fileIsOpen) {
+
+        } else {
+            printFileOpenErrorMsg();
+        }
+    }
+
+    private static void printFileOpenErrorMsg() {
+        System.out.println("ERROR: a password file is currently open. Please close it before using the \"" + Shell.input + "\" command.");
     }
 }
