@@ -9,9 +9,7 @@
 package Encryption;
 
 public enum EncryptionAlgorithm {
-    AES_256(1),   // Assigning a number to AES_256
-    CHACHA20(2),  // Assigning a number to CHACHA20
-    DES(3);       // Assigning a number to DES
+    AES(1);
 
     private final int value;
 
@@ -34,5 +32,14 @@ public enum EncryptionAlgorithm {
         }
 
         throw new IllegalArgumentException("Unknown value: " + value);
+    }
+
+    // TODO: add more encryption algorithms
+    // Return the string to be used in the Cipher class from the enum
+    public String toCipherString() {
+        return switch(this) {
+            case AES -> "AES";
+            default -> "";
+        };
     }
 }

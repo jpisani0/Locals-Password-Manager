@@ -35,4 +35,14 @@ public enum HashingAlgorithm {
 
         throw new IllegalArgumentException("Unknown value: " + value);
     }
+
+    // TODO: add more hashing algorithms
+    // Return the string to be used in the hasher classes from the enum
+    public String toHasherString() {
+        return switch (this) {
+            case PBKDF2 -> "PBKDF2WithHmacSHA256";
+            case Argon2 -> ""; // TODO
+            default -> "";
+        };
+    }
 }
