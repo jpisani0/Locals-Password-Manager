@@ -20,21 +20,11 @@ public class Vault {
     private String masterHash = ""; // Hash of the master password for this vault
     private ArrayList<Group> groups = new ArrayList<>(); // Groups in the vault
 
-    // TODO: change this. setting up either a new file or loading an existing one should happen outside the constructor, this should be simple
     // Constructor for creating a new vault
-    public Vault(String filename) throws IOException {
+    public Vault(String filename, String salt, String masterHash) {
         this.path = Paths.get(filename);
-
-        // Try to create the file
-        try {
-            Files.createFile(path);
-        } catch (FileAlreadyExistsException e) {
-            throw new IOException("File " + filename + " already exists!", e);
-        } catch (IOException e) {
-            throw new IOException("Could not create file " + filename, e);
-        }
-
-
+        this.salt = salt;
+        this.masterHash = masterHash;
     }
 
     // Get the salt for this vault
@@ -93,5 +83,29 @@ public class Vault {
     // Checks if this vault is empty
     public boolean isEmpty() {
         return groups.isEmpty();
+    }
+
+    // Load data from the vault file
+    public boolean load() throws IOException {
+        boolean success = true;
+
+        return success;
+    }
+
+    // Write data to the vault file
+    public boolean write() throws IOException {
+        boolean success = true;
+
+        // TODO: need to handle trying to create a new password file vs updating an existing one
+        // Try to create the file
+        try {
+            Files.createFile(path);
+        } catch (FileAlreadyExistsException e) {
+            throw new IOException("File " + path.toString() + " already exists!", e);
+        } catch (IOException e) {
+            throw new IOException("Could not create file " + path.toString(), e);
+        }
+
+        return success;
     }
 }

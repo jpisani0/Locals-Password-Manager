@@ -13,15 +13,19 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 
+// REVIEW: what to do with group image? issue being that it will be tough to store an image in the vault file, using color for now might add hardcoded icons
+
 public class Group {
     private String groupName;  // Name of the group
-    private Image groupImage;  // Image for the group
+    private Color color; // Color for the group
+//    private Image groupImage;  // Image for the group
     private ArrayList<Entry> entries = new ArrayList<>();  // Array list to hold entries in this group
 
     // Constructor for a group
-    public Group(String groupName, Image groupImage) {
+    public Group(String groupName, Color color /*Image groupImage*/) {
         this.groupName = groupName;
-        this.groupImage = groupImage;
+        this.color = color;
+//        this.groupImage = groupImage;
     }
 
     // Get the name of this group
@@ -34,15 +38,25 @@ public class Group {
         this.groupName = groupName;
     }
 
-    // Get the image of this group
-    public Image getGroupImage() {
-        return this.groupImage;
+    // Get the color of the group
+    public Color getColor() {
+        return this.color;
     }
 
-    // Set the image of this group
-    public void setGroupImage(Image groupImage) {
-        this.groupImage = groupImage;
+    // Set the color of this group
+    public void setColor(Color color) {
+        this.color = color;
     }
+
+//    // Get the image of this group
+//    public Image getGroupImage() {
+//        return this.groupImage;
+//    }
+//
+//    // Set the image of this group
+//    public void setGroupImage(Image groupImage) {
+//        this.groupImage = groupImage;
+//    }
 
     // Get an entry from this group
     public Entry getEntry(int entryIndex) {
