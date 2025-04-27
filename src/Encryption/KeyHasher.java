@@ -1,0 +1,61 @@
+/*
+ * NAME: KeyHasher
+ * AUTHOR: J. Pisani
+ * DATE: 4/26/25
+ *
+ * DESCRIPTION: Handles generating a cryptographic key from the user's master password
+ */
+
+package Encryption;
+
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.*;
+import java.util.Base64;
+
+public class KeyHasher {
+    private static final int SALT_LENGTH = 16; // Length of salts generated (bytes)
+    private static final int KEY_LENGTH = 256; // Length of derived keys (bytes)
+    public static final int DEFAULT_ITERATIONS = 100000; // Default number of hash iterations
+
+    public String password; // The user's master password as a String
+    public byte[] salt; // The salt used with the master password before hashing
+    public HashingAlgorithm algorithm; // The hashing algorithm chosen
+    public int iterations; // Number of times to hash the master password
+
+    // Constructor for the KeyHasher class
+    public KeyHasher(String password, byte[] salt, HashingAlgorithm algorithm, int iterations) {
+        this.password = password;
+        this.salt = salt;
+        this.algorithm = algorithm;
+        this.iterations = iterations;
+    }
+
+    // Hash the master password into a cryptographic key
+    public byte[] hashMasterPassword(final String password, final byte[] salt, int iterations) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        String algorithmName = "PBKDF2WithHmacSHA256";
+        SecretKeyFactory skf;
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, KEY_LENGTH);
+
+        skf = SecretKeyFactory.getInstance(algorithmName);
+        return skf.generateSecret(spec).getEncoded();
+    }
+
+    // Hash the derived key to safely store in the vault file
+    public byte[] hashKey(final byte[] key) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        return md.digest(key);
+    }
+
+    // Generate a random salt to be used in the KDF
+    public byte[] generateSalt() {
+        SecureRandom rand = new SecureRandom();
+        byte[] salt = new byte[SALT_LENGTH];
+        rand.nextBytes(salt);
+        return salt;
+    }
+}
