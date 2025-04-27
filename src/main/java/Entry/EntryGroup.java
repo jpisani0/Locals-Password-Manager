@@ -8,8 +8,6 @@
 
 package Entry;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -51,11 +49,11 @@ public class EntryGroup {
     }
 
     // REVIEW: needed?
-    public void addEntry(@NotNull Entry entry) {
+    public void addEntry(Entry entry) {
         entryArray.add(entry);
     }
 
-    public boolean addEntry(int entryIndex, @NotNull Entry entry) {
+    public boolean addEntry(int entryIndex, Entry entry) {
         // Check that the requested index is not outside bounds of array
         if(entryIndex < 0 || entryIndex > entryArray.size()) {
             return false;

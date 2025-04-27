@@ -4,9 +4,9 @@ abstract class TEST_Entry {
     public static void main(String[] args) {
         EntryGroup group1 = new EntryGroup("group1", null);
 
-        Entry entry1 = new Entry();
-        Entry entry2 = new Entry();
-        Entry entry3 = new Entry();
+        Entry entry1 = new Entry("entry1", "user1", "passwd1", "url1", "notes1");
+        Entry entry2 = new Entry("entry2", "user2", "passwd2", "url2", "notes2");
+        Entry entry3 = new Entry("entry3", "user3", "passwd3", "url3", "notes3");
 
         entry1.setEntryName("entry1");
         entry2.setEntryName("entry2");
