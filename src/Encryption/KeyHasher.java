@@ -36,19 +36,23 @@ public class KeyHasher {
     }
 
     // Hash the master password into a cryptographic key
-    public byte[] hashMasterPassword(final String password, final byte[] salt, int iterations) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public String hashMasterPassword(final String password, final byte[] salt, int iterations) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        // TODO: add support for other hashing algorithms, likely using a private method that converts the HashingAlgorithm enum to the string for SecretKeyFactory
         String algorithmName = "PBKDF2WithHmacSHA256";
+        byte[] hash;
         SecretKeyFactory skf;
         PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, KEY_LENGTH);
 
         skf = SecretKeyFactory.getInstance(algorithmName);
-        return skf.generateSecret(spec).getEncoded();
+        hash = skf.generateSecret(spec).getEncoded();
+        return Base64.getEncoder().encodeToString(hash);
     }
 
     // Hash the derived key to safely store in the vault file
-    public byte[] hashKey(final byte[] key) throws NoSuchAlgorithmException {
+    public String hashKey(final byte[] key) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        return md.digest(key);
+        byte[] hash = md.digest(key);
+        return Base64.getEncoder().encodeToString(hash);
     }
 
     // Generate a random salt to be used in the KDF
