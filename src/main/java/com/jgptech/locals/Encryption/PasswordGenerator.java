@@ -6,7 +6,7 @@
  * DESCRIPTION: Generate a secure password for the user if they don't want to make one themselves
  */
 
-package Encryption;
+package com.jgptech.locals.Encryption;
 
 import java.security.SecureRandom;
 

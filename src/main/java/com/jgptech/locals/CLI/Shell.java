@@ -6,7 +6,7 @@
  * DESCRIPTION: Shell that is run when Locals is called to run without GUI
  */
 
-package CLI;
+package com.jgptech.locals.CLI;
 
 import java.util.Scanner;
 
@@ -20,7 +20,7 @@ abstract public class Shell {
     public static void start() {
         // TODO: add some other information to print when starting such as the version number of the program
 
-        System.out.println("WARNING: viewing decrypted passwords in CLI will most likely be logged in plain text on" +
+        System.out.println("WARNING: viewing decrypted passwords in com.jgptech.locals.CLI will most likely be logged in plain text on" +
                 " your machine. Consider deleting them from your logs for maximum security.");
 
         runShell(); // Runs until the user requests to exit
@@ -118,7 +118,7 @@ abstract public class Shell {
                 "exit\n" +
                         "   close and exit Locals. If a password file is open when exit is called, it will be closed automatically.\n" +
                 "h, help\n" +
-                        "   print these commands and their function to CLI.\n" +
+                        "   print these commands and their function to com.jgptech.locals.CLI.\n" +
                 "n, new\n" +
                         "   create a new encrypted password file.\n" +
                 "d, delete\n" +
