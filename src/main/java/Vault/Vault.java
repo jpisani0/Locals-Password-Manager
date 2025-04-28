@@ -8,8 +8,6 @@
 
 package Vault;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
@@ -57,12 +55,12 @@ public class Vault {
     }
 
     // Add a group to the end of this vault
-    public void addGroup(@NotNull Group group) {
+    public void addGroup(Group group) {
         groups.add(group);
     }
 
     // Add a group at a specific index of this vault
-    public boolean addGroup(@NotNull Group group, int groupIndex) {
+    public boolean addGroup(Group group, int groupIndex) {
         if(groupIndex < 0 || groupIndex > groups.size()) {
             return false;
         }

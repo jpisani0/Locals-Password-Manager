@@ -8,8 +8,6 @@
 
 package Vault;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -70,12 +68,12 @@ public class Group {
 
     // REVIEW: needed?
     // Add an entry to the end of this group
-    public void addEntry(@NotNull Entry entry) {
+    public void addEntry(Entry entry) {
         entries.add(entry);
     }
 
     // Add an entry at a specific index of this group
-    public boolean addEntry(@NotNull Entry entry, int entryIndex) {
+    public boolean addEntry(Entry entry, int entryIndex) {
         // Check that the requested index is not outside bounds of array
         if(entryIndex < 0 || entryIndex > entries.size()) {
             return false;
