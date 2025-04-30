@@ -12,17 +12,76 @@ import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Vault {
     private Path path = null; // Path object of the vault
+
+    @JsonProperty("hashAlg")
+    private String hashingAlgorithm = ""; // Hashing algorithm used for this vault // TODO: change to HashingAlgorithm enum
+
+    @JsonProperty("encrAlg")
+    private String encryptionAlgorithm = ""; // Encryption algorithm used for this vault // TODO: change to EncryptionAlgorithm enum
+
+    @JsonProperty("iter")
+    private int iterations; // Iterations for the hashing algorithm
+
     private String salt = ""; // The salt for this vault
+
     private String masterHash = ""; // Hash of the master password for this vault
+
     private ArrayList<Group> groups = new ArrayList<>(); // Groups in the vault
 
+
+    // Constructor for loading an existing vault (Jackson requires an empty constructor)
+    public Vault() {}
+
     // Constructor for creating a new vault
-    public Vault(String filename, String salt, String masterHash) {
+    public Vault(String filename, String hashingAlgorithm, String encryptionAlgorithm, int iterations, String salt, String masterHash) {
         this.path = Paths.get(filename);
+        this.hashingAlgorithm = hashingAlgorithm;
+        this.encryptionAlgorithm = encryptionAlgorithm;
+        this.iterations = iterations;
         this.salt = salt;
         this.masterHash = masterHash;
+    }
+
+    // TODO: enum
+    // Get the hashing algorithm for this vault
+    public String getHashingAlgorithm() {
+        return this.hashingAlgorithm;
+    }
+
+    // TODO: enum
+    // Set the hashing algorithm for this vault
+    public void setHashingAlgorithm(String hashingAlgorithm) {
+        this.hashingAlgorithm = hashingAlgorithm;
+    }
+
+    // TODO: enum
+    // Get the encryption algorithm for this vault
+    public String getEncryptionAlgorithm() {
+        return this.encryptionAlgorithm;
+    }
+
+    // TODO: enum
+    // Set the encryption algorithm for this vault
+    public void setEncryptionAlgorithm(String encryptionAlgorithm) {
+        this.encryptionAlgorithm = encryptionAlgorithm;
+    }
+
+    // Get the number of iterations for this vault
+    public int getIterations() {
+        return this.iterations;
+    }
+
+    // Set the number of iterations for this vault
+    public void setIterations(int iterations) {
+        this.iterations = iterations;
     }
 
     // Get the salt for this vault
