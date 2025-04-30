@@ -11,29 +11,35 @@ package Vault;
 import java.awt.*;
 import java.util.ArrayList;
 
-// REVIEW: what to do with group image? issue being that it will be tough to store an image in the vault file, using color for now might add hardcoded icons
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Group {
-    private String groupName;  // Name of the group
+    private String name;  // Name of the group
     private Color color; // Color for the group
-//    private Image groupImage;  // Image for the group
     private ArrayList<Entry> entries = new ArrayList<>();  // Array list to hold entries in this group
 
-    // Constructor for a group
-    public Group(String groupName, Color color /*Image groupImage*/) {
-        this.groupName = groupName;
+    // Constructor for loading a group from an existing vault file (Jackson requires an empty constructor)
+    public Group() {}
+
+    // Constructor for a new group
+    public Group(String name, Color color /*Image groupImage*/) {
+        this.name = name;
         this.color = color;
 //        this.groupImage = groupImage;
     }
 
     // Get the name of this group
-    public String getGroupName() {
-        return this.groupName;
+    public String getName() {
+        return this.name;
     }
 
     // Set the name of this group
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Get the color of the group
@@ -45,16 +51,6 @@ public class Group {
     public void setColor(Color color) {
         this.color = color;
     }
-
-//    // Get the image of this group
-//    public Image getGroupImage() {
-//        return this.groupImage;
-//    }
-//
-//    // Set the image of this group
-//    public void setGroupImage(Image groupImage) {
-//        this.groupImage = groupImage;
-//    }
 
     // Get an entry from this group
     public Entry getEntry(int entryIndex) {
@@ -113,7 +109,7 @@ public class Group {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entries.isEmpty()) {
             for (Entry entry : entries) {
-                System.out.println(entry.getEntryName());
+                System.out.println(entry.getName());
             }
         }
     }

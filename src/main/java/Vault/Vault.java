@@ -132,7 +132,7 @@ public class Vault {
     public void listGroups() {
         if(!groups.isEmpty()) {
             for(Group group : groups) {
-                System.out.println(group.getGroupName());
+                System.out.println(group.getName());
             }
         }
     }
