@@ -9,6 +9,7 @@
 package com.jgptech.locals.Encryption;
 
 public enum EncryptionAlgorithm {
+    NoEncryptionAlgorithm(0),
     AES(1);
 
     private final int value;

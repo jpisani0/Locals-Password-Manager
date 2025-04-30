@@ -3,24 +3,31 @@
  * AUTHOR: J. Pisani
  * DATE: 10/3/24
  *
- * DESCRIPTION: Shell that is run when Locals is called to run without GUI
+ * DESCRIPTION: Shell for viewing and modifying a vault file
  */
 
 package com.jgptech.locals.CLI;
 
 import java.util.Scanner;
 
-abstract public class Shell {
+public class Shell {
+    private static String VERSION = "0.1";
+
     private static boolean exit = false; // Flag for when the user wants to exit the program
     private static String fileName = ""; // Name of file that is currently open
     private static boolean fileIsOpen = false; // Flag to check if a password file is open
     private static String input = ""; // User input on command line
     private static final Scanner scanner = new Scanner(System.in); // Scanner for user input on command line
 
+    // Constructor for the shell class
+    public Shell() {
+
+    }
+
     public static void start() {
         // TODO: add some other information to print when starting such as the version number of the program
 
-        System.out.println("WARNING: viewing decrypted passwords in com.jgptech.locals.CLI will most likely be logged in plain text on" +
+        System.out.println("WARNING: viewing decrypted passwords in CLI will most likely be logged in plain text on" +
                 " your machine. Consider deleting them from your logs for maximum security.");
 
         runShell(); // Runs until the user requests to exit
@@ -64,26 +71,6 @@ abstract public class Shell {
                 printHelp();
                 break;
 
-            case "n":
-            case "new":
-                createNewPasswordFile();
-                break;
-
-            case "d":
-            case "delete":
-                deletePasswordFile();
-                break;
-
-            case "o":
-            case "open":
-                openPasswordFile();
-                break;
-
-            case "c":
-            case "close":
-                closePasswordFile();
-                break;
-
             case "l":
             case "list":
                 listEntries();
@@ -123,8 +110,6 @@ abstract public class Shell {
                         "   create a new encrypted password file.\n" +
                 "d, delete\n" +
                         "   delete an encrypted password file\n" +
-                "o, open\n" +
-                        "   open an existing encrypted password file\n" +
                 "c, close\n" +
                         "   close the password file that is currently open\n" +
                 "l, list\n" +
@@ -190,31 +175,9 @@ abstract public class Shell {
     /* -------------------------------------------------------------------------------- */
     /* ---------------------------- FILE NOT OPEN COMMANDS ---------------------------- */
     /* -------------------------------------------------------------------------------- */
-    private static void createNewPasswordFile() {
-        if(!Shell.fileIsOpen) {
 
-        } else {
-            printFileOpenErrorMsg();
-        }
-    }
+    // Delete an existing vault
+    public static void deleteVault() {
 
-    private static void deletePasswordFile() {
-        if(!Shell.fileIsOpen) {
-
-        } else {
-            printFileOpenErrorMsg();
-        }
-    }
-
-    private static void openPasswordFile() {
-        if(!Shell.fileIsOpen) {
-
-        } else {
-            printFileOpenErrorMsg();
-        }
-    }
-
-    private static void printFileOpenErrorMsg() {
-        System.out.println("ERROR: a password file is currently open. Please close it before using the \"" + Shell.input + "\" command.");
     }
 }

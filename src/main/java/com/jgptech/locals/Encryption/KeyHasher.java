@@ -19,7 +19,7 @@ import java.util.Base64;
 public class KeyHasher {
     private static final int SALT_LENGTH = 16; // Length of salts generated (bytes)
     private static final int KEY_LENGTH = 256; // Length of derived keys (bytes)
-    public static final int DEFAULT_ITERATIONS = 100000; // Default number of hash iterations
+    public static final int DEFAULT_ITERATIONS = 600000; // Default number of hash iterations
 
     public String password; // The user's master password as a String
     public byte[] salt; // The salt used with the master password before hashing
@@ -35,7 +35,7 @@ public class KeyHasher {
     }
 
     // Hash the master password into a cryptographic key
-    public String hashMasterPassword(final String password, final byte[] salt, int iterations) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public String hashMasterPassword() throws NoSuchAlgorithmException, InvalidKeySpecException {
         // TODO: add support for other hashing algorithms, likely using a private method that converts the HashingAlgorithm enum to the string for SecretKeyFactory
         String algorithmName = "PBKDF2WithHmacSHA256";
         byte[] hash;
@@ -55,7 +55,7 @@ public class KeyHasher {
     }
 
     // Generate a random salt to be used in the KDF
-    public byte[] generateSalt() {
+    public static byte[] generateSalt() {
         SecureRandom rand = new SecureRandom();
         byte[] salt = new byte[SALT_LENGTH];
         rand.nextBytes(salt);
