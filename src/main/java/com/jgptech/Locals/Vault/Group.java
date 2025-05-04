@@ -6,16 +6,10 @@
  * DESCRIPTION: Class to encapsulate and organize entries into separate groups.
  */
 
-package Vault;
+package com.jgptech.Locals.Vault;
 
 import java.awt.*;
 import java.util.ArrayList;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Group {
     // Name of the group

@@ -1,26 +1,22 @@
 /*
- * NAME: Vault
+ * NAME: com.jgptech.Locals.Vault
  * AUTHOR: J. Pisani
  * DATE: 4/24/25
  *
  * DESCRIPTION: Class to organize and manipulate the vault file data in memory
  */
 
-package Vault;
+package com.jgptech.Locals.Vault;
 
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
 
-import Encryption.EncryptionAlgorithm;
-import Encryption.HashingAlgorithm;
+import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
+import com.jgptech.Locals.Encryption.HashingAlgorithm;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Vault {
     // Path object of the vault
@@ -29,7 +25,7 @@ public class Vault {
     // Hashing algorithm used for this vault
     private HashingAlgorithm hashingAlgorithm;
 
-    // Encryption algorithm used for this vault
+    // com.jgptech.Locals.Encryption algorithm used for this vault
     private EncryptionAlgorithm encryptionAlgorithm;
 
     // Iterations for the hashing algorithm

@@ -10,10 +10,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Vault/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Vault/Entry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Vault/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Vault/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Vault/Vault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Vault/Vault.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CLI/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CLI/TEST_CLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/TEST_CLI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Encryption/EncryptionAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/EncryptionAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Encryption/HashingAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/HashingAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Encryption/KeyHasher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/KeyHasher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Encryption/PasswordGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/PasswordGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Encryption/VaultEncryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/VaultEncryptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Vault/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Entry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Vault/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Group.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Vault/Vault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Vault.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +71,7 @@
 }</component>
   <component name="RunManager">
     <configuration name="TEST_CLI" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="CLI.TEST_CLI" />
+      <option name="MAIN_CLASS_NAME" value="com.jgptech.Locals.CLI.TEST_CLI" />
       <module name="Locals-Password-Manager" />
       <method v="2">
         <option name="Make" enabled="true" />

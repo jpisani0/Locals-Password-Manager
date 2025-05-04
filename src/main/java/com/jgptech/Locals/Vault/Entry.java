@@ -6,13 +6,7 @@
  * DESCRIPTION: Class to hold data for reading/writing entry information from/to password files
  */
 
-package Vault;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.jgptech.Locals.Vault;
 
 public class Entry {
     // Name or title of the entry
