@@ -179,7 +179,6 @@ public class Vault {
             }
         }
 
-        // TODO: need to handle trying to create a new password file vs updating an existing one
         // Try to create the file
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), this);

@@ -18,6 +18,8 @@ public class Group {
     // Color for the group
     private Color color;
 
+    // TODO: add predefined list of icons to identify the group as well
+
     // Array list to hold entries in this group
     private ArrayList<Entry> entries = new ArrayList<>();
 
@@ -29,7 +31,6 @@ public class Group {
     public Group(String name, Color color /*Image groupImage*/) {
         this.name = name;
         this.color = color;
-//        this.groupImage = groupImage;
     }
 
     // Get the name of this group
