@@ -161,17 +161,30 @@ public class Vault {
     }
 
     // Write data to the vault file
-    public boolean write() throws IOException {
+    public boolean write() {
+        ObjectMapper mapper = new ObjectMapper();
         boolean success = true;
+
+        // TODO
+        // Check that this vault has enough data to write
+
+
+        // REVIEW: not checking if file already exists because if it does, we assume that we are updating an existing file. Correct?
+        // Check if the file path exists
+        if(Files.exists(path)) {
+            // Check if the file path is a directory
+            if(Files.isDirectory(path)) {
+                System.out.println("Error: path the vault is a directory: " + path.toString());
+                success = false;
+            }
+        }
 
         // TODO: need to handle trying to create a new password file vs updating an existing one
         // Try to create the file
         try {
-            Files.createFile(path);
-        } catch (FileAlreadyExistsException e) {
-            throw new IOException("File " + path.toString() + " already exists!", e);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), this);
         } catch (IOException e) {
-            throw new IOException("Could not create file " + path.toString(), e);
+            System.out.println("Error: could not write data to file: " + e.getMessage());
         }
 
         return success;
