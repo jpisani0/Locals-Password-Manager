@@ -8,40 +8,48 @@
 
 package Vault;
 
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import Encryption.EncryptionAlgorithm;
+import Encryption.HashingAlgorithm;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Vault {
-    private Path path = null; // Path object of the vault
+    // Path object of the vault
+    private Path path = null;
 
-    @JsonProperty("hashAlg")
-    private String hashingAlgorithm = ""; // Hashing algorithm used for this vault // TODO: change to HashingAlgorithm enum
+    // Hashing algorithm used for this vault
+    private HashingAlgorithm hashingAlgorithm;
 
-    @JsonProperty("encrAlg")
-    private String encryptionAlgorithm = ""; // Encryption algorithm used for this vault // TODO: change to EncryptionAlgorithm enum
+    // Encryption algorithm used for this vault
+    private EncryptionAlgorithm encryptionAlgorithm;
 
-    @JsonProperty("iter")
-    private int iterations; // Iterations for the hashing algorithm
+    // Iterations for the hashing algorithm
+    private int iterations;
 
-    private String salt = ""; // The salt for this vault
+    // The salt for this vault
+    private String salt;
 
-    private String masterHash = ""; // Hash of the master password for this vault
+    // Hash of the master password for this vault
+    private String masterHash;
 
-    private ArrayList<Group> groups = new ArrayList<>(); // Groups in the vault
+    // Groups in the vault
+    private ArrayList<Group> groups = new ArrayList<>();
 
 
     // Constructor for loading an existing vault (Jackson requires an empty constructor)
     public Vault() {}
 
     // Constructor for creating a new vault
-    public Vault(String filename, String hashingAlgorithm, String encryptionAlgorithm, int iterations, String salt, String masterHash) {
+    public Vault(String filename, HashingAlgorithm hashingAlgorithm, EncryptionAlgorithm encryptionAlgorithm, int iterations, String salt, String masterHash) {
         this.path = Paths.get(filename);
         this.hashingAlgorithm = hashingAlgorithm;
         this.encryptionAlgorithm = encryptionAlgorithm;
@@ -50,27 +58,23 @@ public class Vault {
         this.masterHash = masterHash;
     }
 
-    // TODO: enum
     // Get the hashing algorithm for this vault
-    public String getHashingAlgorithm() {
+    public HashingAlgorithm getHashingAlgorithm() {
         return this.hashingAlgorithm;
     }
 
-    // TODO: enum
     // Set the hashing algorithm for this vault
-    public void setHashingAlgorithm(String hashingAlgorithm) {
+    public void setHashingAlgorithm(HashingAlgorithm hashingAlgorithm) {
         this.hashingAlgorithm = hashingAlgorithm;
     }
 
-    // TODO: enum
     // Get the encryption algorithm for this vault
-    public String getEncryptionAlgorithm() {
+    public EncryptionAlgorithm getEncryptionAlgorithm() {
         return this.encryptionAlgorithm;
     }
 
-    // TODO: enum
     // Set the encryption algorithm for this vault
-    public void setEncryptionAlgorithm(String encryptionAlgorithm) {
+    public void setEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm) {
         this.encryptionAlgorithm = encryptionAlgorithm;
     }
 
@@ -143,10 +147,21 @@ public class Vault {
     }
 
     // Load data from the vault file
-    public boolean load() throws IOException {
-        boolean success = true;
+    public static Vault load(String vaultName) {
+        ObjectMapper mapper = new ObjectMapper();
+        Path vaultPath = Paths.get(vaultName);
 
-        return success;
+        try {
+            return mapper.readValue(vaultPath.toFile(), Vault.class);
+        } catch (StreamReadException e) {
+            System.out.println("Error: malformed JSON: " + e.getMessage());
+        } catch (DatabindException e) {
+            System.out.println("Error: JSON formatting incorrect for vault file: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error: could not read vault file" + e.getMessage());
+        }
+
+        return null;
     }
 
     // Write data to the vault file

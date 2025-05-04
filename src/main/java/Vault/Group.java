@@ -18,9 +18,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Group {
-    private String name;  // Name of the group
-    private Color color; // Color for the group
-    private ArrayList<Entry> entries = new ArrayList<>();  // Array list to hold entries in this group
+    // Name of the group
+    private String name;
+
+    // Color for the group
+    private Color color;
+
+    // Array list to hold entries in this group
+    private ArrayList<Entry> entries = new ArrayList<>();
+
 
     // Constructor for loading a group from an existing vault file (Jackson requires an empty constructor)
     public Group() {}

@@ -15,18 +15,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Entry {
-    private String name;  // Name or title of the entry
-    private String username;  // Username for the account login
-    private String password;  // Password for the account login
-    private String url;  // URL or website for this entry
-    private String notes;  // Notes written by the user for the entry
+    // Name or title of the entry
+    private String name;
+
+    // Username for the account login
+    private String username;
+
+    // Password for the account login
+    private String password;
+
+    // URL or website for this entry
+    private String url;
+
+    // Notes written by the user for the entry
+    private String notes;
+
 
     // Constructor for loading an existing entry from a vault file (Jackson requires an empty constructor)
     public Entry() {}
 
     // Constructor for a new entry
     public Entry(String name, String username, String password, String url, String notes) {
-        // TODO: set up data from file methods when implemented
         this.name = name;
         this.username = username;
         this.password = password;
