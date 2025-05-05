@@ -14,10 +14,10 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import Encryption.EncryptionAlgorithm;
-import Encryption.HashingAlgorithm;
-import Encryption.KeyHasher;
-import Encryption.PasswordGenerator;
+import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
+import com.jgptech.Locals.Encryption.HashingAlgorithm;
+import com.jgptech.Locals.Encryption.KeyHasher;
+import com.jgptech.Locals.Encryption.PasswordGenerator;
 
 public abstract class UserInput {
     private final static Console console = System.console();

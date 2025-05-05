@@ -6,9 +6,9 @@
  * DESCRIPTION: Entry point for the program
  */
 
-import picocli.CommandLine.Option;
-
 package com.jgptech.Locals;
+
+import picocli.CommandLine.Option;
 
 public class Main {
     @Option(names = {"-n", "--new"}, description = "Create a new vault")
