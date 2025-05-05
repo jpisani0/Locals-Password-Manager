@@ -6,7 +6,7 @@
  * DESCRIPTION: Enum for encryption algorithms used in the password manager
  */
 
-package com.jgptech.locals.Encryption;
+package Encryption;
 
 public enum EncryptionAlgorithm {
     NoEncryptionAlgorithm(0),

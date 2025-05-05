@@ -6,19 +6,18 @@
  * DESCRIPTION: Handles getting user input for commands on the command line and passing them to the appropriate methods
  */
 
-package com.jgptech.locals.CLI;
+package CLI;
 
 import java.io.Console;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import com.jgptech.locals.Encryption.EncryptionAlgorithm;
-import com.jgptech.locals.Encryption.HashingAlgorithm;
-import com.jgptech.locals.Encryption.KeyHasher;
-import com.jgptech.locals.Encryption.PasswordGenerator;
+import Encryption.EncryptionAlgorithm;
+import Encryption.HashingAlgorithm;
+import Encryption.KeyHasher;
+import Encryption.PasswordGenerator;
 
 public abstract class UserInput {
     private final static Console console = System.console();

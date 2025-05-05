@@ -6,7 +6,7 @@
  * DESCRIPTION: Handles generating a cryptographic key from the user's master password
  */
 
-package com.jgptech.locals.Encryption;
+package Encryption;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -6,7 +6,7 @@
  * DESCRIPTION: Support for encrypting/decrypting vault data
  */
 
-package com.jgptech.locals.Encryption;
+package Encryption;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -15,7 +15,7 @@ import java.util.Base64;
 
 public class VaultEncryptor {
     public SecretKey key; // Key for encrypting/decrypting the data
-    public EncryptionAlgorithm algorithm; // com.jgptech.locals.Encryption algorithm for this encryptor
+    public EncryptionAlgorithm algorithm; // Encryption algorithm for this encryptor
 
     // Construct for the VaultEncryption class
     public VaultEncryptor(SecretKey key, EncryptionAlgorithm algorithm) {

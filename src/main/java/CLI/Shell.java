@@ -6,7 +6,7 @@
  * DESCRIPTION: Shell for viewing and modifying a vault file
  */
 
-package com.jgptech.locals.CLI;
+package CLI;
 
 import java.util.Scanner;
 
@@ -105,7 +105,7 @@ public class Shell {
                 "exit\n" +
                         "   close and exit Locals. If a password file is open when exit is called, it will be closed automatically.\n" +
                 "h, help\n" +
-                        "   print these commands and their function to com.jgptech.locals.CLI.\n" +
+                        "   print these commands and their function to CLI.\n" +
                 "n, new\n" +
                         "   create a new encrypted password file.\n" +
                 "d, delete\n" +

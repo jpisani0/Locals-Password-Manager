@@ -1,12 +1,12 @@
 /*
- * NAME: com.jgptech.locals.Entry
+ * NAME: Entry
  * AUTHOR:  J. Pisani
  * DATE: 10/11/24
  *
  * DESCRIPTION: Class to hold data for reading/writing entry information from/to password files
  */
 
-package com.jgptech.locals.Entry;
+package Entry;
 
 public class Entry {
     private String entryName;  // Name or title of the entry

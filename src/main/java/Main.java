@@ -6,9 +6,6 @@
  * DESCRIPTION: Entry point for the program
  */
 
-package com.jgptech.locals;
-
-import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
 public class Main {

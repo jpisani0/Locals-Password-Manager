@@ -6,7 +6,7 @@
  * DESCRIPTION: Enum for hashing algorithms used in the password manager
  */
 
-package com.jgptech.locals.Encryption;
+package Encryption;
 
 public enum HashingAlgorithm {
     NoHashingAlgorithm(0),

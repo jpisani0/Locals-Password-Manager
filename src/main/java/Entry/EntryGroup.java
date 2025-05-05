@@ -6,7 +6,7 @@
  * DESCRIPTION: Class to encapsulate and organize entries into separate groups.
  */
 
-package com.jgptech.locals.Entry;
+package Entry;
 
 import java.awt.*;
 import java.util.ArrayList;
