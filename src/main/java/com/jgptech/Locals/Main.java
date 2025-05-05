@@ -8,6 +8,8 @@
 
 import picocli.CommandLine.Option;
 
+package com.jgptech.Locals;
+
 public class Main {
     @Option(names = {"-n", "--new"}, description = "Create a new vault")
     private boolean newVault;
