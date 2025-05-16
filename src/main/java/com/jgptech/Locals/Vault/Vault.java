@@ -18,6 +18,7 @@ import com.jgptech.Locals.Encryption.HashingAlgorithm;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Vault {
     // Path object of the vault
@@ -26,7 +27,7 @@ public class Vault {
     // Hashing algorithm used for this vault
     private HashingAlgorithm hashingAlgorithm;
 
-    // com.jgptech.Locals.Encryption algorithm used for this vault
+    // Encryption algorithm used for this vault
     private EncryptionAlgorithm encryptionAlgorithm;
 
     // Iterations for the hashing algorithm
@@ -138,6 +139,7 @@ public class Vault {
         }
     }
 
+    @JsonIgnore
     // Checks if this vault is empty
     public boolean isEmpty() {
         return groups.isEmpty();
@@ -166,25 +168,28 @@ public class Vault {
         ObjectMapper mapper = new ObjectMapper();
         boolean success = true;
 
-        // TODO
         // Check that this vault has enough data to write
-
-
-        // REVIEW: not checking if file already exists because if it does, we assume that we are updating an existing file. Correct?
-        // Check if the file path exists
-        if(Files.exists(path)) {
-            // Check if the file path is a directory
-            if(Files.isDirectory(path)) {
-                System.out.println("Error: path the vault is a directory: " + path.toString());
-                success = false;
+        if(path == null || hashingAlgorithm == HashingAlgorithm.NoHashingAlgorithm ||
+           encryptionAlgorithm == EncryptionAlgorithm.NoEncryptionAlgorithm || iterations < 1 || salt.isEmpty()) {
+            System.out.println("ERROR: not enough data to write to vault");
+            success = false;
+        } else {
+            // REVIEW: not checking if file already exists because if it does, we assume that we are updating an existing file. Correct?
+            // Check if the file path exists
+            if(Files.exists(path)) {
+                // Check if the file path is a directory
+                if(Files.isDirectory(path)) {
+                    System.out.println("Error: path the vault is a directory: " + path.toString());
+                    success = false;
+                }
             }
-        }
 
-        // Try to create the file
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), this);
-        } catch (IOException e) {
-            System.out.println("Error: could not write data to file: " + e.getMessage());
+            // Try to create the file
+            try {
+                mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), this);
+            } catch (IOException e) {
+                System.out.println("Error: could not write data to file: " + e.getMessage());
+            }
         }
 
         return success;

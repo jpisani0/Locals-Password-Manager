@@ -6,20 +6,22 @@
  * DESCRIPTION: Handles getting user input for commands on the command line and passing them to the appropriate methods
  */
 
-package CLI;
+package com.jgptech.Locals.CLI;
 
 import java.io.Console;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.HashingAlgorithm;
 import com.jgptech.Locals.Encryption.KeyHasher;
 import com.jgptech.Locals.Encryption.PasswordGenerator;
+import com.jgptech.Locals.Vault.Vault;
 
-public abstract class UserInput {
+public abstract class  UserInput {
     private final static Console console = System.console();
     private final static Scanner scanner = new Scanner(System.in);
     private static String input;
@@ -45,13 +47,20 @@ public abstract class UserInput {
             System.out.println("1. PBKDF2");
             System.out.println("More to come soon....");
             System.out.println();
-            System.out.print("Choose a hashing algorithm: ");
+            System.out.print("Choose a hashing algorithm (default=PBKDF2): ");
 
-            try {
-                hashingAlgorithm = HashingAlgorithm.fromValue(Integer.parseInt(scanner.nextLine()));
-            } catch(IllegalArgumentException e) {
-                // Value entered was either not a number (NumberFormatException) or not a value from the list (IllegalArgumentException)
-                System.out.println("Error: enter a number from the list");
+            String response = scanner.nextLine();
+
+            if(response.isEmpty()) {
+                hashingAlgorithm = HashingAlgorithm.PBKDF2;
+            } else {
+                try {
+                    hashingAlgorithm = HashingAlgorithm.fromValue(Integer.parseInt(response));
+                } catch (IllegalArgumentException e) {
+                    // Value entered was either not a number (NumberFormatException) or not a value from the list (IllegalArgumentException)
+                    System.out.println("Error: enter a number from the list");
+                    System.out.println();
+                }
             }
         }
 
@@ -59,24 +68,29 @@ public abstract class UserInput {
         while(iterations == 0) {
             System.out.print("PIM (blank for default): ");
 
-            try {
-                iterations = Integer.parseInt(scanner.nextLine());
+            String response = scanner.nextLine();
 
-                // Check if the given number of iterations is small and warn the user
-                if(iterations < KeyHasher.DEFAULT_ITERATIONS) {
-                    System.out.println("The number of iterations you chose, " + iterations + ", is unusually low for proper security.");
-                    System.out.println("Most systems call for at least 600,000 iterations to be secure.");
-                    System.out.print(" Do you want to continue anyway? (y/N): ");
+            // Set the default iterations if the user enters blank
+            if(response.isEmpty()) {
+                iterations = KeyHasher.DEFAULT_ITERATIONS;
+            } else {
+                try {
+                    iterations = Integer.parseInt(response);
 
-                    String input = scanner.nextLine();
+                    // Check if the given number of iterations is small and warn the user
+                    if(iterations < KeyHasher.DEFAULT_ITERATIONS) {
+                        System.out.println("The number of iterations you chose, " + iterations + ", is unusually low for proper security.");
+                        System.out.println("Most systems call for at least 600,000 iterations to be secure.");
+                        System.out.print(" Do you want to continue with " + iterations +  " iterations anyway? (y/N): ");
 
-                    // Set iterations back to zero for another loop if the user requests to change their PIM
-                    if(input.equals("n") || input.equals("N") || input.isEmpty()) {
-                        iterations = 0;
+                        // Set iterations back to zero for another loop if the user requests to change their PIM
+                        if(input.equals("n") || input.equals("N")) {
+                            iterations = 0;
+                        }
                     }
+                } catch(NumberFormatException e) {
+                    System.out.println("Error: enter a valid PIM");
                 }
-            } catch(NumberFormatException e) {
-                System.out.println("Error: enter a valid PIM");
             }
         }
 
@@ -87,13 +101,19 @@ public abstract class UserInput {
             System.out.println("1. AES");
             System.out.println("More to come soon...");
             System.out.println();
-            System.out.print("Choose an encryption algorithm: ");
+            System.out.print("Choose an encryption algorithm (default=AES): ");
 
-            try {
-                encryptionAlgorithm = EncryptionAlgorithm.fromValue(Integer.parseInt(scanner.nextLine()));
-            } catch(IllegalArgumentException e) {
-                // Value entered was either not a number (NumberFormatException) or not a value from the list (IllegalArgumentException)
-                System.out.println("Error: enter a number from the list");
+            String response = scanner.nextLine();
+
+            if(response.isEmpty()) {
+                encryptionAlgorithm = EncryptionAlgorithm.AES;
+            } else {
+                try {
+                    encryptionAlgorithm = EncryptionAlgorithm.fromValue(Integer.parseInt(scanner.nextLine()));
+                } catch(IllegalArgumentException e) {
+                    // Value entered was either not a number (NumberFormatException) or not a value from the list (IllegalArgumentException)
+                    System.out.println("Error: enter a number from the list");
+                }
             }
         }
 
@@ -108,11 +128,17 @@ public abstract class UserInput {
             while(length < 0) {
                 System.out.print("Length of password (default=20): ");
 
-                try {
-                    length = Integer.parseInt(scanner.nextLine());
-                } catch(NumberFormatException e) {
-                    System.out.println("Enter a positive integer for the length");
-                    System.out.println();
+                String response = scanner.nextLine();
+
+                if(response.isEmpty()) {
+                    length = 20;
+                } else {
+                    try {
+                        length = Integer.parseInt(scanner.nextLine());
+                    } catch(NumberFormatException e) {
+                        System.out.println("Enter a positive integer for the length");
+                        System.out.println();
+                    }
                 }
             }
 
@@ -123,13 +149,14 @@ public abstract class UserInput {
                 System.out.print("Do you want to regenerate the password? [Y/n]: ");
                 input = scanner.nextLine();
 
-                if(input == "y" || input == "Y" || input.isEmpty()) {
+                if(input.equals("y") || input.equals("Y") || input.isEmpty()) {
                     masterPassword = "";
                 }
             }
         } else {
             // Loop until a valid password is entered and then re-entered correctly
             while(masterPassword.isEmpty()) {
+                // TODO: add try catch block for this line in the case that we cant get a handle on the console (java.lang.NullPointerException)
                 // Get the password for this vault from the user while hiding it in the terminal by disabling echo
                 masterPassword = Arrays.toString(console.readPassword("Enter the password for this vault: "));
 
@@ -142,7 +169,8 @@ public abstract class UserInput {
         }
 
         // Create the key hasher object
-        KeyHasher hasher = new KeyHasher(masterPassword, KeyHasher.generateSalt(), hashingAlgorithm, iterations);
+        byte[] salt = KeyHasher.generateSalt();
+        KeyHasher hasher = new KeyHasher(masterPassword, salt, hashingAlgorithm, iterations);
 
         // Hash the master password using the chosen KDF to get a secure cryptographic key
         try {
@@ -153,6 +181,11 @@ public abstract class UserInput {
             System.out.println("Error: " + e.getMessage());
         }
 
-        // TODO: need to finish vault file changes and merge them into master then this branch
+        // TODO: Base64 encode the salt before saving to the vault. Maybe change the setter and getter to be able to
+        //  pass in a byte[] but converts to the base64 string before saving, and the getter converts to byte[] again before returning
+        Vault vault = new Vault(vaultName, hashingAlgorithm, encryptionAlgorithm, iterations, Arrays.toString(salt), masterHash);
+        vault.write();
+
+        System.out.println("New vault " + vaultName + "created successfully! Use locals -o " + vaultName + " to open it and start adding passwords.");
     }
 }

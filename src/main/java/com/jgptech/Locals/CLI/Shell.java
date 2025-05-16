@@ -25,11 +25,6 @@ public class Shell {
     }
 
     public static void start() {
-        // TODO: add some other information to print when starting such as the version number of the program
-
-        System.out.println("WARNING: viewing decrypted passwords in com.jgptech.Locals.CLI will most likely be logged in plain text on" +
-                " your machine. Consider deleting them from your logs for maximum security.");
-
         runShell(); // Runs until the user requests to exit
 
         System.out.println("Exiting Locals...");
