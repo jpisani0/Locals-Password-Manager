@@ -8,6 +8,10 @@
 
 package com.jgptech.Locals.Vault;
 
+import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
+import com.jgptech.Locals.Encryption.VaultEncryptor;
+
+import javax.crypto.SecretKey;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -28,19 +32,19 @@ public class Group {
     public Group() {}
 
     // Constructor for a new group
-    public Group(String name, Color color /*Image groupImage*/) {
-        this.name = name;
+    public Group(String name, Color color, SecretKey key, EncryptionAlgorithm encryptionAlgorithm /*Image groupImage*/) {
+        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
         this.color = color;
     }
 
     // Get the name of this group
-    public String getName() {
-        return this.name;
+    public String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        return VaultEncryptor.decrypt(name, key, encryptionAlgorithm);
     }
 
     // Set the name of this group
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
     }
 
     // Get the color of the group
@@ -106,11 +110,11 @@ public class Group {
     }
 
     // List all the entries in this group
-    public void listEntries() {
+    public void listEntries(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entries.isEmpty()) {
             for (Entry entry : entries) {
-                System.out.println(entry.getName());
+                System.out.println(entry.getName(key, encryptionAlgorithm));
             }
         }
     }

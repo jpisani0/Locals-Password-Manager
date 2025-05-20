@@ -11,6 +11,8 @@ package com.jgptech.Locals.Vault;
 import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
+import java.util.Base64;
+import javax.crypto.*;
 
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.HashingAlgorithm;
@@ -47,18 +49,23 @@ public class Vault {
     public Vault() {}
 
     // Constructor for creating a new vault
-    public Vault(String filename, HashingAlgorithm hashingAlgorithm, EncryptionAlgorithm encryptionAlgorithm, int iterations, String salt, String masterHash) {
+    public Vault(String filename, HashingAlgorithm hashingAlgorithm, EncryptionAlgorithm encryptionAlgorithm, int iterations, byte[] salt, byte[] masterHash) {
         this.path = Paths.get(filename);
         this.hashingAlgorithm = hashingAlgorithm;
         this.encryptionAlgorithm = encryptionAlgorithm;
         this.iterations = iterations;
-        this.salt = salt;
-        this.masterHash = masterHash;
+        this.salt = Base64.getEncoder().encodeToString(salt);
+        this.masterHash = Base64.getEncoder().encodeToString(masterHash);
+    }
+
+    // Get the name of the vault
+    public String getName() {
+        return path.toString();
     }
 
     // Get the hashing algorithm for this vault
     public HashingAlgorithm getHashingAlgorithm() {
-        return this.hashingAlgorithm;
+        return hashingAlgorithm;
     }
 
     // Set the hashing algorithm for this vault
@@ -68,7 +75,7 @@ public class Vault {
 
     // Get the encryption algorithm for this vault
     public EncryptionAlgorithm getEncryptionAlgorithm() {
-        return this.encryptionAlgorithm;
+        return encryptionAlgorithm;
     }
 
     // Set the encryption algorithm for this vault
@@ -78,7 +85,7 @@ public class Vault {
 
     // Get the number of iterations for this vault
     public int getIterations() {
-        return this.iterations;
+        return iterations;
     }
 
     // Set the number of iterations for this vault
@@ -87,23 +94,23 @@ public class Vault {
     }
 
     // Get the salt for this vault
-    public String getSalt() {
-        return this.salt;
+    public byte[] getSalt() {
+        return Base64.getDecoder().decode(salt);
     }
 
     // Set the salt for this vault
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setSalt(byte[] salt) {
+        this.salt = Base64.getEncoder().encodeToString(salt);
     }
 
     // Get the hash of the master password for this vault
-    public String getMasterHash() {
-        return this.masterHash;
+    public byte[] getMasterHash() {
+        return Base64.getDecoder().decode(masterHash);
     }
 
     // Set the hash of the master password for this vault
-    public void setMasterHash(String masterHash) {
-        this.masterHash = masterHash;
+    public void setMasterHash(byte[] masterHash) {
+        this.masterHash = Base64.getEncoder().encodeToString(masterHash);
     }
 
     // Get a group in this vault
@@ -131,10 +138,10 @@ public class Vault {
     }
 
     // List all the groups in this vault
-    public void listGroups() {
+    public void listGroups(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         if(!groups.isEmpty()) {
             for(Group group : groups) {
-                System.out.println(group.getName());
+                System.out.println(group.getName(key, encryptionAlgorithm));
             }
         }
     }
@@ -179,7 +186,7 @@ public class Vault {
             if(Files.exists(path)) {
                 // Check if the file path is a directory
                 if(Files.isDirectory(path)) {
-                    System.out.println("Error: path the vault is a directory: " + path.toString());
+                    System.out.println("Error: vault path is a directory: " + path.toString());
                     success = false;
                 }
             }
@@ -189,6 +196,7 @@ public class Vault {
                 mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), this);
             } catch (IOException e) {
                 System.out.println("Error: could not write data to file: " + e.getMessage());
+                success = false;
             }
         }
 
