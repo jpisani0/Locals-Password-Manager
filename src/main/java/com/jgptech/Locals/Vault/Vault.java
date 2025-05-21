@@ -8,6 +8,7 @@
 
 package com.jgptech.Locals.Vault;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
@@ -49,13 +50,14 @@ public class Vault {
     public Vault() {}
 
     // Constructor for creating a new vault
-    public Vault(String filename, HashingAlgorithm hashingAlgorithm, EncryptionAlgorithm encryptionAlgorithm, int iterations, byte[] salt, byte[] masterHash) {
+    public Vault(String filename, HashingAlgorithm hashingAlgorithm, EncryptionAlgorithm encryptionAlgorithm, int iterations, byte[] salt, byte[] masterHash, SecretKey key) {
         this.path = Paths.get(filename);
         this.hashingAlgorithm = hashingAlgorithm;
         this.encryptionAlgorithm = encryptionAlgorithm;
         this.iterations = iterations;
         this.salt = Base64.getEncoder().encodeToString(salt);
         this.masterHash = Base64.getEncoder().encodeToString(masterHash);
+        groups.add(new Group("General", Color.blue, key, encryptionAlgorithm));
     }
 
     // Get the name of the vault
@@ -113,39 +115,6 @@ public class Vault {
         this.masterHash = Base64.getEncoder().encodeToString(masterHash);
     }
 
-    // Get a group in this vault
-    public Group getGroup(int groupIndex) {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
-            return null;
-        }
-
-        return groups.get(groupIndex);
-    }
-
-    // Add a group to the end of this vault
-    public void addGroup(Group group) {
-        groups.add(group);
-    }
-
-    // Add a group at a specific index of this vault
-    public boolean addGroup(Group group, int groupIndex) {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
-            return false;
-        }
-
-        groups.add(groupIndex, group);
-        return true;
-    }
-
-    // List all the groups in this vault
-    public void listGroups(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        if(!groups.isEmpty()) {
-            for(Group group : groups) {
-                System.out.println(group.getName(key, encryptionAlgorithm));
-            }
-        }
-    }
-
     @JsonIgnore
     // Checks if this vault is empty
     public boolean isEmpty() {
@@ -177,7 +146,7 @@ public class Vault {
 
         // Check that this vault has enough data to write
         if(path == null || hashingAlgorithm == HashingAlgorithm.NoHashingAlgorithm ||
-           encryptionAlgorithm == EncryptionAlgorithm.NoEncryptionAlgorithm || iterations < 1 || salt.isEmpty()) {
+                encryptionAlgorithm == EncryptionAlgorithm.NoEncryptionAlgorithm || iterations < 1 || salt.isEmpty()) {
             System.out.println("ERROR: not enough data to write to vault");
             success = false;
         } else {
@@ -201,5 +170,180 @@ public class Vault {
         }
 
         return success;
+    }
+
+    @JsonIgnore
+    // Get the name of a group in this vault
+    public String getGroupName(int groupIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getName(key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Set the name of a group in this vault
+    public void setGroupName(int groupIndex, SecretKey key, String name) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setName(name, key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Get the color of a group in this vault
+    public Color getGroupColor(int groupIndex) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getColor();
+    }
+
+    @JsonIgnore
+    // Set the color of a group in this vault
+    public void setGroupColor(int groupIndex, Color color) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setColor(color);
+    }
+
+    @JsonIgnore
+    // Add a group to the end of this vault
+    public void addGroup(String name, Color color, SecretKey key) {
+        groups.add(new Group(name, color, key, encryptionAlgorithm));
+    }
+
+    @JsonIgnore
+    // Add a group at a specific index of this vault
+    public void addGroup(int groupIndex, String name, Color color, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.add(groupIndex, new Group(name, color, key, encryptionAlgorithm));
+    }
+
+    @JsonIgnore
+    // List all the groups in this vault
+    public void listGroups(SecretKey key) {
+        if(!groups.isEmpty()) {
+            for(Group group : groups) {
+                System.out.println(group.getName(key, encryptionAlgorithm));
+            }
+        }
+    }
+
+    @JsonIgnore
+    // Get the name of an entry in this vault
+    public String getEntryName(int groupIndex, int entryIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getEntryName(entryIndex, key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Set the name of an entry in this vault
+    public void setEntryName(int groupIndex, int entryIndex, SecretKey key, String name) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setEntryName(entryIndex, key, encryptionAlgorithm, name);
+    }
+
+    @JsonIgnore
+    // Get the username of an entry in this vault
+    public String getEntryUsername(int groupIndex, int entryIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getEntryUsername(entryIndex, key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Set the username of an entry in this vault
+    public void setEntryUsername(int groupIndex, int entryIndex, SecretKey key, String username) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setEntryUsername(entryIndex, key, encryptionAlgorithm, username);
+    }
+
+    @JsonIgnore
+    // Get the password of an entry in this vault
+    public String getEntryPassword(int groupIndex, int entryIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getEntryPassword(entryIndex, key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Set the password of an entry in this vault
+    public void setEntryPassword(int groupIndex, int entryIndex, SecretKey key, String password) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setEntryPassword(entryIndex, key, encryptionAlgorithm, password);
+    }
+
+    @JsonIgnore
+    // Get the URL of an entry in this vault
+    public String getEntryUrl(int groupIndex, int entryIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getEntryUrl(entryIndex, key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Set the URL of an entry in this vault
+    public void setEntryUrl(int groupIndex, int entryIndex, SecretKey key, String url) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setEntryUrl(entryIndex, key, encryptionAlgorithm, url);
+    }
+
+    @JsonIgnore
+    // Get the notes of an entry in this vault
+    public String getEntryNotes(int groupIndex, int entryIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).getEntryNotes(entryIndex, key, encryptionAlgorithm);
+    }
+
+    @JsonIgnore
+    // Set the notes of an entry in this vault
+    public void setEntryNotes(int groupIndex, int entryIndex, SecretKey key, String notes) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).setEntryNotes(entryIndex, key, encryptionAlgorithm, notes);
+    }
+
+    // List the entries of a group in the vault
+    public void listEntries(int groupIndex, SecretKey key) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).listEntries(key, encryptionAlgorithm);
     }
 }
