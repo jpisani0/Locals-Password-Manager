@@ -8,52 +8,65 @@
 
 package com.jgptech.Locals.CLI;
 
+import com.jgptech.Locals.Vault.Vault;
+
+import javax.crypto.SecretKey;
+import java.awt.*;
 import java.util.Scanner;
 
 public class Shell {
-    private static String VERSION = "0.1";
+    // Flag for when the user wants to exit the program
+    private boolean exit = false;
 
-    private static boolean exit = false; // Flag for when the user wants to exit the program
-    private static String fileName = ""; // Name of file that is currently open
-    private static boolean fileIsOpen = false; // Flag to check if a password file is open
-    private static String input = ""; // User input on command line
-    private static final Scanner scanner = new Scanner(System.in); // Scanner for user input on command line
+    // User input on command line
+    private String input = "";
+
+    // Scanner for user input on command line
+    private final Scanner scanner = new Scanner(System.in);
+
+    // The vault that is open
+    private final Vault vault;
+
+    // The group that is currently selected
+    private int groupIndex;
+
+    // Key for decryption of vault data
+    private final SecretKey key;
+
 
     // Constructor for the shell class
-    public Shell() {
-
+    public Shell(Vault vault, SecretKey key) {
+        this.vault = vault;
+        this.key = key;
+        this.groupIndex = 0;
     }
 
-    public static void start() {
+    // Start the shell
+    public void start() {
         runShell(); // Runs until the user requests to exit
-
-        System.out.println("Exiting Locals...");
     }
 
     // Runs the shell
-    private static void runShell() {
+    private void runShell() {
         while(!exit) {
-            if(fileIsOpen) {
-                System.out.print(">> (" + fileName + ") ");
-            } else {
-                System.out.print(">> ");
-            }
-
+            System.out.println(">> (" + vault.getName() + " | " + vault.getGroupName(groupIndex, key) + ") ");
             input = scanner.nextLine().toLowerCase(); // Wait for the user's input
+            String[] words = input.trim().split("\\s+"); // Split the input per word
 
-            runCommand();
+            try {
+                runCommand(words);
+            } catch(IndexOutOfBoundsException e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
         }
     }
 
     // Determine the command the user entered for what to do next
-    private static void runCommand() {
-        switch(input) {
+    private void runCommand(String[] words) throws IndexOutOfBoundsException {
+        switch(words[0]) {
             case "exit":
-                // Close the open password file if one is open before exiting
-                if(fileIsOpen) {
-                    closePasswordFile();
-                }
-
+            case "quit":
+            case "q":
                 exit = true;
                 break;
 
@@ -68,22 +81,32 @@ public class Shell {
 
             case "l":
             case "list":
-                listEntries();
+                list(words);
+                break;
+
+            case "o":
+            case "open":
+                open(words);
                 break;
 
             case "s":
             case "show":
-                showEntry();
+                show(words);
                 break;
 
             case "a":
             case "add":
-                addNewEntry();
+                add(words);
                 break;
 
             case "r":
             case "remove":
-                removeEntry();
+                remove(words);
+                break;
+
+            case "m":
+            case "move":
+                move(words);
                 break;
 
             default:
@@ -95,84 +118,118 @@ public class Shell {
     }
 
     // Manual type print out when requested or an invalid command is entered
-    private static  void printHelp() {
+    private  void printHelp() {
         System.out.println(
                 "exit\n" +
-                        "   close and exit Locals. If a password file is open when exit is called, it will be closed automatically.\n" +
+                        "\tclose and exit the vault.\n" +
                 "h, help\n" +
-                        "   print these commands and their function to com.jgptech.Locals.CLI.\n" +
-                "n, new\n" +
-                        "   create a new encrypted password file.\n" +
-                "d, delete\n" +
-                        "   delete an encrypted password file\n" +
-                "c, close\n" +
-                        "   close the password file that is currently open\n" +
+                        "\tprint these commands and their function.\n" +
                 "l, list\n" +
-                        "   list all entries of the open password file\n" +
+                        "\tlist all groups in the vault or entries in the group\n" +
+                "o, open\n" +
+                        "\topen a group in the vault" +
                 "s, show\n" +
-                        "   show the username and password saved in a certain entry\n" +
+                        "\tshow the saved data in an entry\n" +
                 "a, add\n" +
-                        "   add a new entry to an open password file\n" +
+                        "\tadd a new entry or group to the vault\n" +
                 "r, remove\n" +
-                        "   remove an entry from an open password file\n"
+                        "\tremove an entry or group from the vault\n" +
+                "m, move\n" +
+                        "\tmove an entry to another group\n"
         );
     }
 
-
-    /* -------------------------------------------------------------------------------- */
-    /* ------------------------------ FILE OPEN COMMANDS ------------------------------ */
-    /* -------------------------------------------------------------------------------- */
-    private  static void closePasswordFile() {
-        if(Shell.fileIsOpen) {
-
+    // List the groups in the vault or entries in the vault
+    private void list(String[] words) {
+        // Check if the user wants to list groups or entries
+        if(words[1].equals("groups") || words[1].equals("group")) {
+            vault.listGroups(key);
+        } else if(words[1].equals("entries") || words[1].equals("entry")) {
+            vault.listEntries(groupIndex, key);
         } else {
-            printFileNotOpenErrorMsg();
+            System.out.println("ERROR: use 'list groups' or 'list entries'\n");
+            printHelp();
         }
     }
 
-    private static void listEntries() {
-        if(Shell.fileIsOpen) {
+    // Open a group in the vault
+    private void open(String[] words) {
+        // TODO: also allow the user to pass the name of the group to select it
+        int newGroupIndex = Integer.parseInt(words[1]);
 
+        if(newGroupIndex < 0 || newGroupIndex > vault.size()) {
+            System.out.println("ERROR: invalid group index: " + words[1] + ". There are " + vault.size() + " groups in this vault.");
         } else {
-            printFileNotOpenErrorMsg();
+            groupIndex = Integer.parseInt(words[1]);
         }
     }
 
-    private static void showEntry() {
-        if(Shell.fileIsOpen) {
+    // Show an entry's data
+    private void show(String[] words) {
+        int entryIndex = Integer.parseInt(words[1]);
 
+        System.out.println();
+        System.out.println("Name: " + vault.getEntryName(groupIndex, entryIndex, key));
+        System.out.println("Username" + vault.getEntryUsername(groupIndex, entryIndex, key));
+        System.out.println("Password: " + vault.getEntryPassword(groupIndex,entryIndex, key));
+        System.out.println("URL: " + vault.getEntryUrl(groupIndex, entryIndex, key));
+        System.out.println("Notes: " + vault.getEntryNotes(groupIndex, entryIndex, key));
+        System.out.println();
+    }
+
+    // Add a group or entry to the vault
+    private void add(String[] words) {
+        // Check if the user wants to add a group or entry
+        if(words[1].equals("group") || words[1].equals("groups")) {
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+
+            System.out.print("Color: ");
+            Color color = Color.RED; // TODO: put switch statement to get color from user, just using red for all for now
+
+            vault.addGroup(name, color, key);
+        } else if(words[1].equals("entry") || words[1].equals("entries")) {
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+
+            System.out.print("Username: ");
+            String username = scanner.nextLine();
+
+            System.out.print("Password: ");
+            String password = scanner.nextLine();
+
+            System.out.print("URL: ");
+            String url = scanner.nextLine();
+
+            System.out.print("Notes: ");
+            String notes = scanner.nextLine();
+
+            vault.addEntry(groupIndex, key, name, username, password, url, notes);
         } else {
-            printFileNotOpenErrorMsg();
+            System.out.println("ERROR: use 'add group' or 'add entry'");
         }
     }
 
-    private static void addNewEntry() {
-        if(Shell.fileIsOpen) {
-
+    // Remove a group or entry from the vault
+    private void remove(String[] words) {
+        // Check if a user wants to remove a group or entry
+        if(words[1].equals("group") || words[1].equals("groups")) {
+            vault.removeGroup(Integer.parseInt(words[2]));
+        } else if(words[1].equals("entry") || words[1].equals("entries")) {
+            vault.removeEntry(groupIndex, Integer.parseInt(words[2]));
         } else {
-            printFileNotOpenErrorMsg();
+            System.out.println("ERROR: use 'remove group <groupIndex>' or 'remove entry <entryIndex>'");
         }
     }
 
-    private static void removeEntry() {
-        if(Shell.fileIsOpen) {
-
-        } else {
-            printFileNotOpenErrorMsg();
-        }
-    }
-
-    private static void printFileNotOpenErrorMsg() {
-        System.out.println("ERROR: no password file is open. Please open one before using the \"" + Shell.input + "\" command.");
-    }
+    // Move an entry from one group to another
+    private void move(String[] words) {
+        // TODO: add method to move groups in vault
+        int entryIndex = Integer.parseInt(words[1]);
+        int fromGroupIndex = Integer.parseInt(words[2]);
+        int toGroupIndex = Integer.parseInt(words[3]);
 
 
-    /* -------------------------------------------------------------------------------- */
-    /* ---------------------------- FILE NOT OPEN COMMANDS ---------------------------- */
-    /* -------------------------------------------------------------------------------- */
-
-    // Delete an existing vault
-    public static void deleteVault() {
-
+        vault.moveEntry(fromGroupIndex, toGroupIndex, entryIndex);
     }
 }

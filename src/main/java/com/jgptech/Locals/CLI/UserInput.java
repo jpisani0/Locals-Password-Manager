@@ -12,7 +12,7 @@ import java.io.Console;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Base64;
 import java.util.Scanner;
 
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
@@ -21,10 +21,21 @@ import com.jgptech.Locals.Encryption.KeyHasher;
 import com.jgptech.Locals.Encryption.PasswordGenerator;
 import com.jgptech.Locals.Vault.Vault;
 
+import javax.crypto.SecretKey;
+
 public abstract class  UserInput {
+    // Attempts for unlocking a vault before process is aborted
+    private final static int MAX_ATTEMPTS = 3;
+
+    // Handle to the console
     private final static Console console = System.console();
+
+    // Scanner for input
     private final static Scanner scanner = new Scanner(System.in);
+
+    // String to hold the input
     private static String input;
+
 
     // Get user information for creating a new vault
     public static void createNewVault(String vaultName) {
@@ -32,7 +43,7 @@ public abstract class  UserInput {
         EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.NoEncryptionAlgorithm;
         int iterations = 0;
         String masterPassword = "";
-        String masterHash = "";
+        byte[] masterHash;
 
         // If no name for the new vault is provided, get it from the user
         while(vaultName.isEmpty()) {
@@ -173,19 +184,57 @@ public abstract class  UserInput {
         KeyHasher hasher = new KeyHasher(masterPassword, salt, hashingAlgorithm, iterations);
 
         // Hash the master password using the chosen KDF to get a secure cryptographic key
-        try {
-            masterHash = hasher.hashMasterPassword();
-        } catch(NoSuchAlgorithmException e) {
-            System.out.println("Error: hashing algorithm " + hasher.algorithm + " is not a valid option");
-        } catch (InvalidKeySpecException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        SecretKey key = hasher.deriveSecretKey();
+        masterHash = key.getEncoded();
 
         // TODO: Base64 encode the salt before saving to the vault. Maybe change the setter and getter to be able to
         //  pass in a byte[] but converts to the base64 string before saving, and the getter converts to byte[] again before returning
-        Vault vault = new Vault(vaultName, hashingAlgorithm, encryptionAlgorithm, iterations, Arrays.toString(salt), masterHash);
-        vault.write();
+        Vault vault = new Vault(vaultName, hashingAlgorithm, encryptionAlgorithm, iterations, salt, hasher.hashKey(masterHash), key);
 
-        System.out.println("New vault " + vaultName + "created successfully! Use locals -o " + vaultName + " to open it and start adding passwords.");
+        if(vault.write()) {
+            System.out.println("New vault " + vaultName + " created successfully! Use locals " + vaultName + " to open it and start adding passwords.");
+        } else {
+            System.out.println("ERROR: unable to create the new vault at " + vaultName + "!");
+        }
+    }
+
+    // Open a vault file and a shell for the user to access it
+    public static void openVault(String vaultName) {
+        Vault vault;
+        String userPassword;
+        int attempts = 0;
+        SecretKey key = null;
+
+        // Try loading the file
+        vault = Vault.load(vaultName);
+
+        if(vault == null) {
+            System.out.println("ERROR: could not load vault " + vaultName);
+        } else {
+            // Allow the user to try entering the correct password 3 times before aborting
+            while(attempts < MAX_ATTEMPTS) {
+                userPassword = Arrays.toString(console.readPassword("Enter password for the vault: "));
+                KeyHasher hasher = new KeyHasher(userPassword, vault.getSalt(), vault.getHashingAlgorithm(), vault.getIterations());
+                key = hasher.deriveSecretKey();
+                String hashedUserPassword = Base64.getEncoder().encodeToString(hasher.hashKey(key.getEncoded())); // REVIEW: this should not be this complex of a line
+
+                // Break out of the loop if the passwords match
+                if(hashedUserPassword.equals(vault.getMasterHash())) {
+                    break;
+                }
+
+                System.out.println("That password was incorrect, please try again\n");
+                attempts++;
+            }
+
+            if(attempts >= MAX_ATTEMPTS) {
+                System.out.println("Max attempts reached.");
+                System.exit(-1); // REVIEW: exit code ?
+            }
+
+            // Password is correct, open the shell to allow the user to access the vault
+            Shell shell = new Shell(vault, key);
+            shell.start();
+        }
     }
 }

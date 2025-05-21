@@ -29,6 +29,8 @@ class Entry {
     // Notes written by the user for the entry
     private String notes;
 
+    // REVIEW: should fill any variable that has the password in it with garbage data or 0's after they are done being used to clear them from memory
+
 
     // Constructor for loading an existing entry from a vault file (Jackson requires an empty constructor)
     Entry() {}

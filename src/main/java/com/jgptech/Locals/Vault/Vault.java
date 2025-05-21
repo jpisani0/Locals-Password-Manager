@@ -45,6 +45,9 @@ public class Vault {
     // Groups in the vault
     private ArrayList<Group> groups = new ArrayList<>();
 
+    // The default/general group index
+    private final int GENERAL_GROUP_INDEX = 1;
+
 
     // Constructor for loading an existing vault (Jackson requires an empty constructor)
     public Vault() {}
@@ -115,6 +118,11 @@ public class Vault {
         this.masterHash = Base64.getEncoder().encodeToString(masterHash);
     }
 
+    // Get the amount of groups in this vault
+    public int size() {
+        return groups.size();
+    }
+
     @JsonIgnore
     // Checks if this vault is empty
     public boolean isEmpty() {
@@ -172,6 +180,10 @@ public class Vault {
         return success;
     }
 
+    /****************************************************************************************************************/
+    /***************************************************** GROUP ****************************************************/
+    /****************************************************************************************************************/
+
     @JsonIgnore
     // Get the name of a group in this vault
     public String getGroupName(int groupIndex, SecretKey key) throws IndexOutOfBoundsException {
@@ -228,6 +240,28 @@ public class Vault {
         groups.add(groupIndex, new Group(name, color, key, encryptionAlgorithm));
     }
 
+    public void removeGroup(int groupIndex) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        } else if(groupIndex == 1) {
+            throw new IndexOutOfBoundsException("Cannot remove 'General' group"); // REVIEW: general group should later be made to "All" and contain references to all entries in all groups
+        }
+
+        // Take all entries out of this group and place them in the General/Default group
+        for(int entryIndex = 0; entryIndex < groups.get(groupIndex).size(); entryIndex++) {
+            Entry entry = groups.get(groupIndex).getEntry(entryIndex);
+
+            // Add entry to the General group
+            groups.get(GENERAL_GROUP_INDEX).addEntry(entry);
+
+            // Remove the entry from the previous group
+            groups.get(groupIndex).removeEntry(entryIndex);
+        }
+
+        // We can now safely remove the group with no entries in it
+        groups.remove(groupIndex);
+    }
+
     @JsonIgnore
     // List all the groups in this vault
     public void listGroups(SecretKey key) {
@@ -237,6 +271,10 @@ public class Vault {
             }
         }
     }
+
+    /****************************************************************************************************************/
+    /***************************************************** ENTRY ****************************************************/
+    /****************************************************************************************************************/
 
     @JsonIgnore
     // Get the name of an entry in this vault
@@ -336,6 +374,48 @@ public class Vault {
         }
 
         groups.get(groupIndex).setEntryNotes(entryIndex, key, encryptionAlgorithm, notes);
+    }
+
+    // Add a new entry to a group in this vault
+    public void addEntry(int groupIndex, SecretKey key, String name, String username, String password, String url, String notes) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).addEntry(new Entry(name, username, password, url, notes, key, encryptionAlgorithm));
+    }
+
+    // Add a new entry to a group in this vault at a specific index
+    public void addEntry(int groupIndex, int entryIndex, SecretKey key, String name, String username, String password, String url, String notes) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).addEntry(new Entry(name, username, password, url, notes, key, encryptionAlgorithm), entryIndex);
+    }
+
+    // Remove an entry from a group in this vault
+    public void removeEntry(int groupIndex, int entryIndex) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        groups.get(groupIndex).removeEntry(entryIndex);
+    }
+
+    // Move an entry from one group to another
+    public void moveEntry(int fromGroupIndex, int toGroupIndex, int entryIndex) throws IndexOutOfBoundsException {
+        if(fromGroupIndex < 0 || fromGroupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid from group index: " + fromGroupIndex);
+        }
+
+        if(toGroupIndex < 0 || toGroupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid to group index:" + toGroupIndex);
+        }
+
+        Entry entry = groups.get(fromGroupIndex).getEntry(entryIndex);
+        groups.get(toGroupIndex).addEntry(entry);
+        groups.get(fromGroupIndex).removeEntry(entryIndex);
     }
 
     // List the entries of a group in the vault

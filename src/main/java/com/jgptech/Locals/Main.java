@@ -27,10 +27,16 @@ public class Main implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         if(newVault) {
+            // User set the flag to create a new vault. Will prompt the user if they didn't provide a filename
             UserInput.createNewVault(vaultName);
+        } else if(!vaultName.isEmpty()) {
+            // User called the program with the filename. Try to open it by asking the user for the password
+            UserInput.openVault(vaultName);
+        } else {
+            // Program called with no arguments, open GUI version of program.
+            // TODO
         }
 
-        System.out.println("Exiting Locals...");
         return 0;
     }
 

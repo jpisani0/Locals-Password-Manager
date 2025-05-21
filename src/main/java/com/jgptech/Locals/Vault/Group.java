@@ -59,9 +59,29 @@ class Group {
         this.color = color;
     }
 
-    // Check if this group is empty
+    // Get the amount of entries in this group
+    int size() {
+        return entries.size();
+    }
+
+    @JsonIgnore
+        // Check if this group is empty
     boolean isEmpty() {
         return entries.isEmpty();
+    }
+
+    /****************************************************************************************************************/
+    /***************************************************** ENTRY ****************************************************/
+    /****************************************************************************************************************/
+
+    @JsonIgnore
+    // Get an entry from this group
+    Entry getEntry(int entryIndex) throws IndexOutOfBoundsException {
+        if(entryIndex < 0 || entryIndex > entries.size()) {
+            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
+        }
+
+        return entries.get(entryIndex);
     }
 
     @JsonIgnore
