@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.util.Base64;
 import javax.crypto.*;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.HashingAlgorithm;
 
@@ -24,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Vault {
+    @JsonIgnore
     // Path object of the vault
     private Path path = null;
 
@@ -45,6 +49,7 @@ public class Vault {
     // Groups in the vault
     private ArrayList<Group> groups = new ArrayList<>();
 
+    @JsonIgnore
     // The default/general group index
     private final int GENERAL_GROUP_INDEX = 1;
 
@@ -63,9 +68,16 @@ public class Vault {
         groups.add(new Group("General", Color.blue, key, encryptionAlgorithm));
     }
 
+    @JsonIgnore
     // Get the name of the vault
     public String getName() {
         return path.toString();
+    }
+
+    @JsonIgnore
+    // Set the name of this vault
+    public void setName(String name) {
+        path = Paths.get(name);
     }
 
     // Get the hashing algorithm for this vault
@@ -132,6 +144,7 @@ public class Vault {
     // Load data from the vault file
     public static Vault load(String vaultName) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         Path vaultPath = Paths.get(vaultName);
 
         try {
@@ -150,6 +163,7 @@ public class Vault {
     // Write data to the vault file
     public boolean write() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         boolean success = true;
 
         // Check that this vault has enough data to write
@@ -184,6 +198,19 @@ public class Vault {
     /***************************************************** GROUP ****************************************************/
     /****************************************************************************************************************/
 
+    // REVIEW: can maybe remove these two
+    @JsonProperty
+    // Get the groups array (for Jackson)
+    ArrayList<Group> getGroups() {
+        return groups;
+    }
+
+    @JsonProperty
+    // Set the groups array (for Jackson)
+    void setGroups(ArrayList<Group> groups) {
+        this.groups = groups;
+    }
+
     @JsonIgnore
     // Get the name of a group in this vault
     public String getGroupName(int groupIndex, SecretKey key) throws IndexOutOfBoundsException {
@@ -204,25 +231,25 @@ public class Vault {
         groups.get(groupIndex).setName(name, key, encryptionAlgorithm);
     }
 
-    @JsonIgnore
-    // Get the color of a group in this vault
-    public Color getGroupColor(int groupIndex) throws IndexOutOfBoundsException {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
-            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
-        }
+//    @JsonIgnore
+//    // Get the color of a group in this vault
+//    public Color getGroupColor(int groupIndex) throws IndexOutOfBoundsException {
+//        if(groupIndex < 0 || groupIndex > groups.size()) {
+//            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+//        }
+//
+//        return groups.get(groupIndex).getColor();
+//    }
 
-        return groups.get(groupIndex).getColor();
-    }
-
-    @JsonIgnore
-    // Set the color of a group in this vault
-    public void setGroupColor(int groupIndex, Color color) throws IndexOutOfBoundsException {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
-            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
-        }
-
-        groups.get(groupIndex).setColor(color);
-    }
+//    @JsonIgnore
+//    // Set the color of a group in this vault
+//    public void setGroupColor(int groupIndex, Color color) throws IndexOutOfBoundsException {
+//        if(groupIndex < 0 || groupIndex > groups.size()) {
+//            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+//        }
+//
+//        groups.get(groupIndex).setColor(color);
+//    }
 
     @JsonIgnore
     // Add a group to the end of this vault
@@ -266,8 +293,8 @@ public class Vault {
     // List all the groups in this vault
     public void listGroups(SecretKey key) {
         if(!groups.isEmpty()) {
-            for(Group group : groups) {
-                System.out.println(group.getName(key, encryptionAlgorithm));
+            for(int index = 0; index < groups.size(); index++) {
+                System.out.println(index + ". " + groups.get(index).getName(key, encryptionAlgorithm));
             }
         }
     }

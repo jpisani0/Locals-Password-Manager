@@ -172,7 +172,7 @@ public abstract class  UserInput {
                 masterPassword = Arrays.toString(console.readPassword("Enter the password for this vault: "));
 
                 // Verify the password from the user
-                if(!masterPassword.equals(Arrays.toString(console.readPassword("Verify the password for this vault")))) {
+                if(!masterPassword.equals(Arrays.toString(console.readPassword("Verify the password for this vault: ")))) {
                     System.out.println("Passwords do not match, please try again");
                     masterPassword = "";
                 }
@@ -216,14 +216,14 @@ public abstract class  UserInput {
                 userPassword = Arrays.toString(console.readPassword("Enter password for the vault: "));
                 KeyHasher hasher = new KeyHasher(userPassword, vault.getSalt(), vault.getHashingAlgorithm(), vault.getIterations());
                 key = hasher.deriveSecretKey();
-                String hashedUserPassword = Base64.getEncoder().encodeToString(hasher.hashKey(key.getEncoded())); // REVIEW: this should not be this complex of a line
+                byte[] hashedUserPassword = hasher.hashKey(key.getEncoded());
 
                 // Break out of the loop if the passwords match
-                if(hashedUserPassword.equals(vault.getMasterHash())) {
+                if(Arrays.equals(hashedUserPassword, vault.getMasterHash())) {
                     break;
                 }
 
-                System.out.println("That password was incorrect, please try again\n");
+                System.out.println("That password was incorrect, please try again");
                 attempts++;
             }
 
@@ -232,9 +232,15 @@ public abstract class  UserInput {
                 System.exit(-1); // REVIEW: exit code ?
             }
 
+            // Set the name (path) of the vault
+            vault.setName(vaultName);
+
             // Password is correct, open the shell to allow the user to access the vault
             Shell shell = new Shell(vault, key);
             shell.start();
+
+            // Write the data back to the file in case anything changed
+            vault.write();
         }
     }
 }

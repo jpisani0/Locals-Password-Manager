@@ -21,8 +21,8 @@ class Group {
     // Name of the group
     private String name;
 
-    // Color for the group
-    private Color color;
+//    // Color for the group
+//    private Color color;
 
     // TODO: add predefined list of icons to identify the group as well
 
@@ -36,7 +36,7 @@ class Group {
     // Constructor for a new group
     Group(String name, Color color, SecretKey key, EncryptionAlgorithm encryptionAlgorithm /*Image groupImage*/) {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
-        this.color = color;
+//        this.color = color;
     }
 
     // Get the name of this group
@@ -49,15 +49,15 @@ class Group {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
     }
 
-    // Get the color of the group
-    Color getColor() {
-        return this.color;
-    }
+//    // Get the color of the group
+//    Color getColor() {
+//        return this.color;
+//    }
 
-    // Set the color of this group
-    void setColor(Color color) {
-        this.color = color;
-    }
+//    // Set the color of this group
+//    void setColor(Color color) {
+//        this.color = color;
+//    }
 
     // Get the amount of entries in this group
     int size() {
@@ -73,6 +73,16 @@ class Group {
     /****************************************************************************************************************/
     /***************************************************** ENTRY ****************************************************/
     /****************************************************************************************************************/
+
+    // Get the entries array (for Jackson)
+    ArrayList<Entry> getEntries() {
+        return entries;
+    }
+
+    // Set the entries array (for Jackson)
+    void setEntries(ArrayList<Entry> entries) {
+        this.entries = entries;
+    }
 
     @JsonIgnore
     // Get an entry from this group
@@ -231,8 +241,8 @@ class Group {
     void listEntries(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entries.isEmpty()) {
-            for (Entry entry : entries) {
-                System.out.println(entry.getName(key, encryptionAlgorithm));
+            for (int index = 0; index < entries.size(); index++) {
+                System.out.println(index + ". " + entries.get(index).getName(key, encryptionAlgorithm));
             }
         }
     }

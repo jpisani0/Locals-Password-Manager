@@ -49,7 +49,7 @@ public class Shell {
     // Runs the shell
     private void runShell() {
         while(!exit) {
-            System.out.println(">> (" + vault.getName() + " | " + vault.getGroupName(groupIndex, key) + ") ");
+            System.out.print("(" + vault.getName() + " | " + vault.getGroupName(groupIndex, key) + ") >> ");
             input = scanner.nextLine().toLowerCase(); // Wait for the user's input
             String[] words = input.trim().split("\\s+"); // Split the input per word
 
@@ -170,7 +170,7 @@ public class Shell {
 
         System.out.println();
         System.out.println("Name: " + vault.getEntryName(groupIndex, entryIndex, key));
-        System.out.println("Username" + vault.getEntryUsername(groupIndex, entryIndex, key));
+        System.out.println("Username: " + vault.getEntryUsername(groupIndex, entryIndex, key));
         System.out.println("Password: " + vault.getEntryPassword(groupIndex,entryIndex, key));
         System.out.println("URL: " + vault.getEntryUrl(groupIndex, entryIndex, key));
         System.out.println("Notes: " + vault.getEntryNotes(groupIndex, entryIndex, key));

@@ -58,7 +58,8 @@ public class KeyHasher {
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, KEY_LENGTH);
 
             skf = SecretKeyFactory.getInstance(algorithmName);
-            return skf.generateSecret(spec);
+            byte[] keyBytes =  skf.generateSecret(spec).getEncoded();
+            return new SecretKeySpec(keyBytes, "AES");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             System.out.println("ERROR: " + e.getMessage());
             return null;
