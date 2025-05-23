@@ -8,19 +8,15 @@
 
 package com.jgptech.Locals.CLI;
 
-import java.io.Console;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Scanner;
-
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.HashingAlgorithm;
 import com.jgptech.Locals.Encryption.KeyHasher;
 import com.jgptech.Locals.Encryption.PasswordGenerator;
 import com.jgptech.Locals.Vault.Vault;
 
+import java.io.Console;
+import java.util.Arrays;
+import java.util.Scanner;
 import javax.crypto.SecretKey;
 
 public abstract class  UserInput {
@@ -50,8 +46,6 @@ public abstract class  UserInput {
             System.out.print("Name of new vault: ");
             vaultName = scanner.nextLine();
         }
-
-        // TODO: add a default option where the user can just hit enter to choose it
 
         // Loop until we get a valid hashing algorithm from the user
         while(hashingAlgorithm == HashingAlgorithm.NoHashingAlgorithm) {
@@ -187,8 +181,6 @@ public abstract class  UserInput {
         SecretKey key = hasher.deriveSecretKey();
         masterHash = key.getEncoded();
 
-        // TODO: Base64 encode the salt before saving to the vault. Maybe change the setter and getter to be able to
-        //  pass in a byte[] but converts to the base64 string before saving, and the getter converts to byte[] again before returning
         Vault vault = new Vault(vaultName, hashingAlgorithm, encryptionAlgorithm, iterations, salt, hasher.hashKey(masterHash), key);
 
         if(vault.write()) {
@@ -235,6 +227,7 @@ public abstract class  UserInput {
             // Set the name (path) of the vault
             vault.setName(vaultName);
 
+            // REVIEW: can change shell to open an alternate terminal so that the information is not readable after its closed?
             // Password is correct, open the shell to allow the user to access the vault
             Shell shell = new Shell(vault, key);
             shell.start();

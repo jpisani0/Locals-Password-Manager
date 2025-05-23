@@ -8,14 +8,13 @@
 
 package com.jgptech.Locals.Vault;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 import javax.crypto.SecretKey;
 import java.awt.*;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 class Group {
     // Name of the group
@@ -241,9 +240,13 @@ class Group {
     void listEntries(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entries.isEmpty()) {
+            System.out.println();
+
             for (int index = 0; index < entries.size(); index++) {
-                System.out.println(index + ". " + entries.get(index).getName(key, encryptionAlgorithm));
+                System.out.println((index + 1) + ". " + entries.get(index).getName(key, encryptionAlgorithm));
             }
+
+            System.out.println();
         }
     }
 }

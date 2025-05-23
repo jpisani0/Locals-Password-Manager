@@ -9,12 +9,12 @@
 package com.jgptech.Locals;
 
 import com.jgptech.Locals.CLI.UserInput;
+
+import java.util.concurrent.Callable;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-
-import java.util.concurrent.Callable;
 
 @Command(name = "locals", mixinStandardHelpOptions = true, version = "locals 0.1", description = "Locally stored and encrypted password manager")
 public class Main implements Callable<Integer> {

@@ -15,7 +15,6 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.*;
-import java.util.Base64;
 
 public class KeyHasher {
     // Length of salts generated (bytes)

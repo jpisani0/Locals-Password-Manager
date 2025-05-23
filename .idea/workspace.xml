@@ -14,7 +14,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/UserInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/UserInput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/KeyHasher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/KeyHasher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/VaultEncryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/VaultEncryptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Group.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Vault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Vault.java" afterDir="false" />
     </list>

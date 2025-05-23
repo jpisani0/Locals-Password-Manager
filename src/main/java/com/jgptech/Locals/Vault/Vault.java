@@ -8,19 +8,18 @@
 
 package com.jgptech.Locals.Vault;
 
+import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
+import com.jgptech.Locals.Encryption.HashingAlgorithm;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.Base64;
 import javax.crypto.*;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
-import com.jgptech.Locals.Encryption.HashingAlgorithm;
-
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -154,7 +153,7 @@ public class Vault {
         } catch (DatabindException e) {
             System.out.println("Error: JSON formatting incorrect for vault file: " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("Error: could not read vault file" + e.getMessage());
+            System.out.println("Error: could not read vault file: " + e.getMessage());
         }
 
         return null;
@@ -293,9 +292,13 @@ public class Vault {
     // List all the groups in this vault
     public void listGroups(SecretKey key) {
         if(!groups.isEmpty()) {
+            System.out.println();
+
             for(int index = 0; index < groups.size(); index++) {
-                System.out.println(index + ". " + groups.get(index).getName(key, encryptionAlgorithm));
+                System.out.println((index + 1) + ". " + groups.get(index).getName(key, encryptionAlgorithm));
             }
+
+            System.out.println();
         }
     }
 
