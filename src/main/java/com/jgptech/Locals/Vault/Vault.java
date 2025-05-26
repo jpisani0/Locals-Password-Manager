@@ -289,6 +289,16 @@ public class Vault {
     }
 
     @JsonIgnore
+    // Get the size of the group in this vault
+    public int getGroupSize(int groupIndex) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
+        }
+
+        return groups.get(groupIndex).size();
+    }
+
+    @JsonIgnore
     // List all the groups in this vault
     public void listGroups(SecretKey key) {
         if(!groups.isEmpty()) {

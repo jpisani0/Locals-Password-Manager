@@ -13,6 +13,7 @@ import com.jgptech.Locals.Vault.Vault;
 import javax.crypto.SecretKey;
 import java.awt.*;
 import java.io.Console;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -123,7 +124,7 @@ public class Shell {
     }
 
     // Manual type print out when requested or an invalid command is entered
-    private  void printHelp() {
+    private void printHelp() {
         System.out.println(
                 "exit\n" +
                         "\tclose and exit the vault.\n" +
@@ -144,9 +145,15 @@ public class Shell {
         );
     }
 
+    // Prints out an error message along with the help list
+    private void printErrorMsg(String errorMsg) {
+        System.out.println(errorMsg);
+        printHelp();
+    }
+
     // List the groups in the vault or entries in the vault
     private void list(String[] words) {
-        // Check that the user supplied the second argument
+        // Check that the user supplied all needed arguments
         if(words.length > 1) {
             // Check if the user wants to list groups or entries
             if(isGroupSelected(words[1])) {
@@ -154,18 +161,16 @@ public class Shell {
             } else if(isEntrySelected(words[1])) {
                 vault.listEntries(groupIndex, key);
             } else {
-                System.out.println("ERROR: use 'list groups' or 'list entries'\n");
-                printHelp();
+                printErrorMsg("ERROR: use 'list groups' or 'list entries'\n");
             }
         } else {
-            System.out.println("ERROR: use 'list groups' or 'list entries'\n");
-            printHelp();
+            printErrorMsg("ERROR: use 'list groups' or 'list entries'\n");
         }
     }
 
     // Open a group in the vault
     private void open(String[] words) {
-        // Check that the user supplied the second argument
+        // Check that the user supplied all needed arguments
         if(words.length > 1) {
             // TODO: also allow the user to pass the name of the group to select it
             int newGroupIndex = Integer.parseInt(words[1]) - 1;
@@ -195,8 +200,7 @@ public class Shell {
             System.out.println("Notes: " + vault.getEntryNotes(groupIndex, entryIndex, key));
             System.out.println();
         } else {
-            System.out.println("ERROR: add the entry number you wish to show: 'show <entry-number>'");
-            printHelp();
+            printErrorMsg("ERROR: add the entry number or name you wish to show: 'show <entry>'");
         }
     }
 
@@ -209,7 +213,7 @@ public class Shell {
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
 
-                System.out.print("Color: ");
+//                System.out.print("Color: ");
                 Color color = Color.RED; // TODO: put switch statement to get color from user, just using red for all for now
 
                 vault.addGroup(name, color, key);
@@ -230,14 +234,13 @@ public class Shell {
 
                 vault.addEntry(groupIndex, key, name, username, password, url, notes);
             } else {
-                System.out.println("ERROR: use 'add group' or 'add entry'");
+                printErrorMsg("ERROR: use 'add group' or 'add entry'");
             }
 
             // Write this to the vault to avoid data loss in the event the shell does not close properly
             vault.write();
         } else {
-            System.out.println("ERROR: use 'add group' or 'add entry'");
-            printHelp();
+            printErrorMsg("ERROR: use 'add group' or 'add entry'");
         }
     }
 
@@ -251,14 +254,13 @@ public class Shell {
             } else if(isEntrySelected(words[1])) {
                 vault.removeEntry(groupIndex, Integer.parseInt(words[2]) - 1);
             } else {
-                System.out.println("ERROR: use 'delete group <group-number>' or 'delete entry <entry-number>'");
+                printErrorMsg("ERROR: use 'delete group <group-number>' or 'delete entry <entry-number>'");
             }
 
             // Write this to the vault to avoid data loss in the event the shell does not close properly
             vault.write();
         } else {
-            System.out.println("ERROR:  use 'delete group <group-number>' or 'delete entry <entry-number>'");
-            printHelp();
+            printErrorMsg("ERROR:  use 'delete group <group-number>' or 'delete entry <entry-number>'");
         }
     }
 
@@ -273,8 +275,7 @@ public class Shell {
 
             vault.moveEntry(fromGroupIndex, toGroupIndex, entryIndex);
         } else {
-            System.out.println("ERROR: use 'move <entry-number> <current-group> <next-group>'");
-            printHelp();
+            printErrorMsg("ERROR: use 'move <entry-number> <current-group> <next-group>'");
         }
     }
 
