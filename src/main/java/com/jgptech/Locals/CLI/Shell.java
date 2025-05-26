@@ -8,6 +8,7 @@
 
 package com.jgptech.Locals.CLI;
 
+import com.jgptech.Locals.Encryption.PasswordGenerator;
 import com.jgptech.Locals.Vault.Vault;
 
 import javax.crypto.SecretKey;
@@ -224,7 +225,46 @@ public class Shell {
                 System.out.print("Username: ");
                 String username = scanner.nextLine();
 
-                String password = new String(console.readPassword("Password: "));
+                // See if the user wants to enter their own password or generate a random one
+                System.out.print("Do you want to generate a random password? [y/N]: ");
+                String input = scanner.nextLine();
+                String password = "";
+
+                if(input.equals("n") || input.equals("N") || input.isEmpty()) {
+                    while(password.isEmpty()) {
+                        password = new String(console.readPassword("Password: "));
+
+                        String verifiedPassword = new String(console.readPassword("Verify password: "));
+
+                        if(!password.equals(verifiedPassword)) {
+                            System.out.println("Passwords did not match, please try again");
+                            password = "";
+                        }
+                    }
+                } else {
+                    int length = 0;
+
+                    while(length < 1) {
+                        System.out.print("Length of randomly generated password: ");
+                        length = Integer.parseInt(scanner.nextLine());
+
+                        if(length < 1) {
+                            System.out.println("Please enter a valid length for the password");
+                        }
+                    }
+
+                    while(password.isEmpty()) {
+                        password = PasswordGenerator.generatePassword(length);
+                        System.out.println("Your randomly generated password is: " + password);
+                        System.out.print("Do you want to regenerate this password? [Y/n]: ");
+
+                        input = scanner.nextLine();
+
+                        if(input.equals("Y") || input.equals("y") || input.isEmpty()) {
+                            password = "";
+                        }
+                    }
+                }
 
                 System.out.print("URL: ");
                 String url = scanner.nextLine();
