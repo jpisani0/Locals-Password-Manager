@@ -12,6 +12,7 @@
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="changed setters/getters for sensitive data in vault, group, and entry to automatically encrypt/decrypt the data for easy and safe reading and writing, changed VaultEncryptor to abstract class and methods to be static">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +39,7 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2jWM4BnR72rcCYT0uQ4uqUH8QI2" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+  <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">

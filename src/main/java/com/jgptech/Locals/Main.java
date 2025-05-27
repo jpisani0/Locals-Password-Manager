@@ -16,6 +16,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+// REVIEW: should consider switching build to JDK21
+
 @Command(name = "locals", mixinStandardHelpOptions = true, version = "locals 0.1", description = "Locally stored and encrypted password manager")
 public class Main implements Callable<Integer> {
     @Parameters(index = "0", paramLabel = "VAULT", arity = "0..1", description = "Name of the vault file to create/open")
