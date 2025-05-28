@@ -133,33 +133,35 @@ public class Shell {
     // Manual type print out when requested or an invalid command is entered
     private void printHelp() {
         System.out.println(
-                "exit\n" +
-                        "\tclose and exit the vault.\n" +
-                            "\t\t[exit|quit]\n" +
-                "h, help\n" +
-                        "\tprint these commands and their function.\n" +
-                            "\t\thelp\n" +
-                "l, list\n" +
-                        "\tlist all groups in the vault or entries in the group\n" +
-                            "\t\tlist [groups|entries]\n" +
-                "o, open\n" +
-                        "\topen a group in the vault\n" +
-                            "\t\topen [group]\n" +
-                "s, show\n" +
-                        "\tshow the saved data in an entry\n" +
-                            "\t\tshow [entry]\n" +
-                "a, add\n" +
-                        "\tadd a new entry or group to the vault\n" +
-                            "\t\tadd [entry|group]\n" +
-                "d, delete\n" +
-                        "\tdelete an entry or group from the vault\n" +
-                            "\t\tdelete [entry|group]\n" +
-                "e, edit\n" +
-                        "\tedit the data in an entry\n" +
-                            "\t\tedit [entry] [name|username|password|URL|notes]\n" +
-                "m, move\n" +
-                        "\tmove an entry to another group\n" +
-                            "\t\tmove [entry] [new-group]\n"
+                """
+                exit
+                \tclose and exit the vault.
+                \t\t[exit|quit]
+                h, help
+                \tprint these commands and their function.
+                \t\thelp
+                l, list
+                \tlist all groups in the vault or entries in the group
+                \t\tlist [groups|entries]
+                o, open
+                \topen a group in the vault
+                \t\topen [group]
+                s, show
+                \tshow the saved data in an entry
+                \t\tshow [entry]
+                a, add
+                \tadd a new entry or group to the vault
+                \t\tadd [entry|group]
+                d, delete
+                \tdelete an entry or group from the vault
+                \t\tdelete [entry|group]
+                e, edit
+                \tedit the data in an entry
+                \t\tedit [entry] [name|username|password|URL|notes]
+                m, move
+                \tmove an entry to another group
+                \t\tmove [entry] [new-group]
+                """
         );
     }
 
@@ -190,37 +192,7 @@ public class Shell {
     private void open(String[] words) {
         // Check that the user supplied all needed arguments
         if(words.length > 1) {
-            // TODO: also allow the user to pass the name of the group to select it
-            int newGroupIndex = INVALID_INDEX;
-
-            // Check if the user entered the group number
-            try {
-                newGroupIndex = Integer.parseInt(words[1]) - 1;
-
-                // Check that this is a valid group index
-                if(newGroupIndex < 0 || newGroupIndex > vault.size() - 1) {
-                    printErrorMsg("ERROR: " + words[1] + " is not a valid group number. Use 'list groups' to see all group names and numbers.");
-                    newGroupIndex = INVALID_INDEX;
-                }
-            } catch(NumberFormatException e) {
-                // Check if the user entered the name of a group
-                for(int index = 0; index < vault.size(); index++) {
-                    if(words[1].equals(vault.getGroupName(index, key))) {
-                        newGroupIndex = index;
-                        break;
-                    }
-                }
-
-                // Check if the name was found in this vault
-                if(newGroupIndex == INVALID_INDEX) {
-                    printErrorMsg("ERROR: " + words[1] + " is not the name of a group in this vault. Use 'list groups' to see all group names and numbers.");
-                }
-            }
-
-            // Only update the group index if the entered one was valid
-            if(newGroupIndex != INVALID_INDEX) {
-                groupIndex = newGroupIndex;
-            }
+            openGroup(words[1]);
         } else {
             printErrorMsg("ERROR: add the group name or number that you wish to open: 'open <group>'");
         }
@@ -230,41 +202,7 @@ public class Shell {
     private void show(String[] words) {
         // Check that the user supplied the second argument
         if(words.length > 1) {
-            int entryIndex = INVALID_INDEX;
-
-            // Check if the user entered an entry number
-            try {
-                entryIndex = Integer.parseInt(words[1]) - 1;
-
-                if(entryIndex < 0 || entryIndex > vault.getGroupSize(groupIndex) - 1) {
-                    printErrorMsg("ERROR: " + words[1] + " is not a valid entry number. Use 'list entries' to see all entry names and numbers.");
-                    entryIndex = INVALID_INDEX;
-                }
-            } catch(NumberFormatException e) {
-                // Check if the user entered the name of an entry in this group
-                for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                    if(words[1].equals(vault.getEntryName(groupIndex, index, key))) {
-                        entryIndex = index;
-                        break;
-                    }
-                }
-
-                // Check if the name was found in this group
-                if(entryIndex == INVALID_INDEX) {
-                    printErrorMsg("ERROR: " + words[1] + " is not the name of an entry in this group. Use 'list entries' to see all entry names and numbers.");
-                }
-            }
-
-            // Check that a valid entry index was given
-            if(entryIndex != INVALID_INDEX) {
-                System.out.println();
-                System.out.println("Name: " + vault.getEntryName(groupIndex, entryIndex, key));
-                System.out.println("Username: " + vault.getEntryUsername(groupIndex, entryIndex, key));
-                System.out.println("Password: " + vault.getEntryPassword(groupIndex,entryIndex, key));
-                System.out.println("URL: " + vault.getEntryUrl(groupIndex, entryIndex, key));
-                System.out.println("Notes: " + vault.getEntryNotes(groupIndex, entryIndex, key));
-                System.out.println();
-            }
+            showEntry(words[1]);
         } else {
             printErrorMsg("ERROR: add the entry name or number you wish to show: 'show <entry>'");
         }
@@ -276,75 +214,9 @@ public class Shell {
         if(words.length > 1) {
             // Check if the user wants to add a group or entry
             if(isGroupSelected(words[1])) {
-                System.out.print("Name: ");
-                String name = scanner.nextLine();
-
-//                System.out.print("Color: ");
-                Color color = Color.RED; // TODO: put switch statement to get color from user, just using red for all for now
-
-                vault.addGroup(name, color, key);
+                addGroup();
             } else if(isEntrySelected(words[1])) {
-                System.out.print("Name: ");
-                String name = scanner.nextLine();
-
-                System.out.print("Username: ");
-                String username = scanner.nextLine();
-
-                // See if the user wants to enter their own password or generate a random one
-                System.out.print("Do you want to generate a random password? [y/N]: ");
-                String input = scanner.nextLine();
-                String password = "";
-
-                if(input.equals("n") || input.equals("N") || input.isEmpty()) {
-                    while(password.isEmpty()) {
-                        password = new String(console.readPassword("Password: "));
-
-                        String verifiedPassword = new String(console.readPassword("Verify password: "));
-
-                        if(!password.equals(verifiedPassword)) {
-                            System.out.println("Passwords did not match, please try again");
-                            password = "";
-                        }
-                    }
-                } else {
-                    int length = 0;
-
-                    while(length < 1) {
-                        System.out.print("Length of randomly generated password: ");
-
-                        try {
-                            length = Integer.parseInt(scanner.nextLine());
-
-                            // REVIEW: 512 good max for password length?
-                            // Check that this is a valid length
-                            if(length < 1 || length > 512) {
-                                throw new NumberFormatException("Out of range");
-                            }
-                        } catch(NumberFormatException e) {
-                            printErrorMsg("Please enter a valid length for the password");
-                        }
-                    }
-
-                    while(password.isEmpty()) {
-                        password = PasswordGenerator.generatePassword(length);
-                        System.out.println("Your randomly generated password is: " + password);
-                        System.out.print("Do you want to regenerate this password? [Y/n]: ");
-
-                        input = scanner.nextLine();
-
-                        if(input.equals("Y") || input.equals("y") || input.isEmpty()) {
-                            password = "";
-                        }
-                    }
-                }
-
-                System.out.print("URL: ");
-                String url = scanner.nextLine();
-
-                System.out.print("Notes: ");
-                String notes = scanner.nextLine();
-
-                vault.addEntry(groupIndex, key, name, username, password, url, notes);
+                addEntry();
             } else {
                 printErrorMsg("ERROR: use 'add group' or 'add entry'");
             }
@@ -362,66 +234,9 @@ public class Shell {
         if(words.length > 2) {
             // Check if a user wants to remove a group or entry
             if(isGroupSelected(words[1])) {
-                int removeGroupIndex = INVALID_INDEX;
-
-                // Check if the user entered the group number
-                try {
-                    removeGroupIndex = Integer.parseInt(words[2]) - 1;
-
-                    // Check that it is a valid group index
-                    if(removeGroupIndex < 0 || removeGroupIndex > vault.size() - 1) {
-                        printErrorMsg("ERROR: " + words[2] + " is not a valid group number. Use 'list groups' to show all group names and numbers.");
-                        removeGroupIndex = INVALID_INDEX;
-                    }
-                } catch(NumberFormatException e) {
-                    // Check if the user entered the group name
-                    for(int index = 0; index < vault.size(); index++) {
-                        if(words[2].equals(vault.getGroupName(index, key))) {
-                            removeGroupIndex = index;
-                            break;
-                        }
-                    }
-
-                    // Check that the name was found in this vault
-                    if(removeGroupIndex == INVALID_INDEX) {
-                        printErrorMsg("ERROR: " + words[2] + " is not a valid group name. Use 'list groups' to show all group names and numbers.");
-                    }
-                }
-
-                // See if we found a valid group index
-                if(removeGroupIndex != INVALID_INDEX) {
-                    vault.removeGroup(removeGroupIndex);
-                }
+                deleteGroup(words[2]);
             } else if(isEntrySelected(words[1])) {
-                int removeEntryIndex = INVALID_INDEX;
-
-                // Check if the user entered the entry number
-                try {
-                    removeEntryIndex = Integer.parseInt(words[2]) - 1;
-
-                    if(removeEntryIndex < 0 || removeEntryIndex > vault.getGroupSize(groupIndex) - 1) {
-                        printErrorMsg("ERROR: " + words[2] + " is not a valid entry number. Use 'list entries' to show all entry names and numbers.");
-                        removeEntryIndex = INVALID_INDEX;
-                    }
-                } catch(NumberFormatException e) {
-                    // Check if the user entered an entry name
-                    for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                        if(words[2].equals(vault.getEntryName(groupIndex, index, key))) {
-                            removeEntryIndex = index;
-                            break;
-                        }
-                    }
-
-                    // Check if the entry name was found
-                    if(removeEntryIndex == INVALID_INDEX) {
-                        printErrorMsg("ERROR: " + words[2] + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
-                    }
-                }
-
-                // Check if a valid entry index was found
-                if(removeEntryIndex != INVALID_INDEX) {
-                    vault.removeEntry(groupIndex, removeEntryIndex);
-                }
+                deleteEntry(words[2]);
             } else {
                 printErrorMsg("ERROR: use 'delete group <group-number>' or 'delete entry <entry-number>'");
             }
@@ -435,73 +250,10 @@ public class Shell {
 
     // Edit data in an entry
     private void edit(String[] words) {
+        // TODO: add support for editting a group as well
         // Check that the user supplied all needed arguments
         if(words.length > 2) {
-            int entryIndex = INVALID_INDEX;
-
-            // Check if the user entered the entry number
-            try {
-                entryIndex = Integer.parseInt(words[1]) - 1;
-
-                // Check that this is a valid entry index
-                if(entryIndex < 0 || entryIndex > vault.getGroupSize(groupIndex) - 1) {
-                    printErrorMsg("ERROR: " + words[1] + " is not a valid entry index. Use 'list entries' to show all entry names and numbers.");
-                    entryIndex = INVALID_INDEX;
-                }
-            } catch(NumberFormatException e) {
-                // Check if the user entered the entry name
-                for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                    if(words[1].equals(vault.getEntryName(groupIndex, index, key))) {
-                        entryIndex = index;
-                        break;
-                    }
-                }
-
-                // Check if the entry index was found
-                if(entryIndex == INVALID_INDEX) {
-                    printErrorMsg("ERROR: " + words[1] + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
-                }
-            }
-
-            // Only continue if the entry index is valid
-            if(entryIndex != INVALID_INDEX) {
-                switch(words[2]) {
-                    case "name":
-                        System.out.print("Name: ");
-                        String name = scanner.nextLine();
-                        vault.setEntryName(groupIndex, entryIndex, key, name);
-                        break;
-
-                    case "username":
-                        System.out.print("Username: ");
-                        String username = scanner.nextLine();
-                        vault.setEntryUsername(groupIndex, entryIndex, key, username);
-                        break;
-
-                    case "password":
-                        String password = new String(console.readPassword("Password: "));
-                        vault.setEntryPassword(groupIndex, entryIndex, key, password);
-                        break;
-
-                    case "url":
-                        System.out.print("URL: ");
-                        String url = scanner.nextLine();
-                        vault.setEntryUrl(groupIndex, entryIndex, key, url);
-                        break;
-
-                    case "notes":
-                        System.out.print("Notes: ");
-                        String notes = scanner.nextLine();
-                        vault.setEntryNotes(groupIndex, entryIndex, key, notes);
-                        break;
-
-                    default:
-                        printErrorMsg("ERROR: " + words[2] + " is not a valid element of an entry to edit.");
-                        break;
-                }
-
-                vault.write();
-            }
+            editEntry(words[1], words[2]);
         } else {
             printErrorMsg("ERROR: use 'edit <element> <entry>");
         }
@@ -509,58 +261,348 @@ public class Shell {
 
     // Move an entry from one group to another
     private void move(String[] words) {
+        // TODO: add method to move groups in vault
         // Check that the user supplied all needed arguments
-        if(words.length > 3) {
-            int entryIndex = INVALID_INDEX;
-            int toGroupIndex = INVALID_INDEX;
-
-            // TODO: add method to move groups in vault
-            try {
-                entryIndex = Integer.parseInt(words[1]) - 1;
-
-                // Check that this is a valid entry index
-                if(entryIndex < 0 || entryIndex > vault.getGroupSize(groupIndex) - 1) {
-                    printErrorMsg("ERROR: " + words[1] + " is not a valid entry number. Use 'list entries' to show all entry names and numbers.");
-                    entryIndex = INVALID_INDEX;
-                }
-            } catch(NumberFormatException e) {
-                // Check if the user entered an entry name
-                for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                    if(words[1].equals(vault.getEntryName(groupIndex, index, key))) {
-                        entryIndex = index;
-                        break;
-                    }
-                }
-
-                // Check if the name was found
-                if(entryIndex == INVALID_INDEX) {
-                    printErrorMsg("ERROR: " + words[1] + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
-                }
-            }
-
-            try {
-                toGroupIndex = Integer.parseInt(words[2]) - 1;
-
-                // Check it is a valid group number
-                if(toGroupIndex < 0 || toGroupIndex > vault.size() - 1) {
-                    printErrorMsg("ERROR: " + words[2] + " is not a valid group number. Use 'list group' to show all group names and numbers.");
-                    toGroupIndex = INVALID_INDEX;
-                }
-            } catch(NumberFormatException e) {
-                // Check if the user entered a group name
-                for(int index = 0; index < vault.size(); index++) {
-                    if(words[2].equals(vault.getGroupName(index, key))) {
-                        toGroupIndex = index;
-                        break;
-                    }
-                }
-            }
-
-            if(entryIndex != INVALID_INDEX && toGroupIndex != INVALID_INDEX) {
-                vault.moveEntry(groupIndex, toGroupIndex, entryIndex);
-            }
+        if(words.length > 2) {
+            moveEntry(words[1], words[2]);
         } else {
             printErrorMsg("ERROR: use 'move <entry-number> <new-group>'");
+        }
+    }
+
+    // Open a group in the vault
+    private void openGroup(String word) {
+        int newGroupIndex = INVALID_INDEX;
+
+        // Check if the user entered the group number
+        try {
+            newGroupIndex = Integer.parseInt(word) - 1;
+
+            // Check that this is a valid group index
+            if(newGroupIndex < 0 || newGroupIndex > vault.size() - 1) {
+                printErrorMsg("ERROR: " + word + " is not a valid group number. Use 'list groups' to see all group names and numbers.");
+                newGroupIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the name of a group
+            for(int index = 0; index < vault.size(); index++) {
+                if(word.equals(vault.getGroupName(index, key))) {
+                    newGroupIndex = index;
+                    break;
+                }
+            }
+
+            // Check if the name was found in this vault
+            if(newGroupIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + word + " is not the name of a group in this vault. Use 'list groups' to see all group names and numbers.");
+            }
+        }
+
+        // Only update the group index if the entered one was valid
+        if(newGroupIndex != INVALID_INDEX) {
+            groupIndex = newGroupIndex;
+        }
+    }
+
+    // Display information from an entry
+    private void showEntry(String word) {
+        int entryIndex = INVALID_INDEX;
+
+        // Check if the user entered an entry number
+        try {
+            entryIndex = Integer.parseInt(word) - 1;
+
+            if(entryIndex < 0 || entryIndex > vault.getGroupSize(groupIndex) - 1) {
+                printErrorMsg("ERROR: " + word + " is not a valid entry number. Use 'list entries' to see all entry names and numbers.");
+                entryIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the name of an entry in this group
+            for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
+                if(word.equals(vault.getEntryName(groupIndex, index, key))) {
+                    entryIndex = index;
+                    break;
+                }
+            }
+
+            // Check if the name was found in this group
+            if(entryIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + word + " is not the name of an entry in this group. Use 'list entries' to see all entry names and numbers.");
+            }
+        }
+
+        // Check that a valid entry index was given
+        if(entryIndex != INVALID_INDEX) {
+            System.out.println();
+            System.out.println("Name: " + vault.getEntryName(groupIndex, entryIndex, key));
+            System.out.println("Username: " + vault.getEntryUsername(groupIndex, entryIndex, key));
+            System.out.println("Password: " + vault.getEntryPassword(groupIndex,entryIndex, key));
+            System.out.println("URL: " + vault.getEntryUrl(groupIndex, entryIndex, key));
+            System.out.println("Notes: " + vault.getEntryNotes(groupIndex, entryIndex, key));
+            System.out.println();
+        }
+    }
+
+    // Add a new group to the vault
+    private void addGroup() {
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+
+//                System.out.print("Color: ");
+        Color color = Color.RED; // TODO: put switch statement to get color from user, just using red for all for now
+
+        vault.addGroup(name, color, key);
+    }
+
+    // Add an entry to the group
+    private void addEntry() {
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+
+        // See if the user wants to enter their own password or generate a random one
+        System.out.print("Do you want to generate a random password? [y/N]: ");
+        String input = scanner.nextLine();
+        String password = "";
+
+        if(input.equals("n") || input.equals("N") || input.isEmpty()) {
+            while(password.isEmpty()) {
+                password = new String(console.readPassword("Password: "));
+
+                String verifiedPassword = new String(console.readPassword("Verify password: "));
+
+                if(!password.equals(verifiedPassword)) {
+                    System.out.println("Passwords did not match, please try again");
+                    password = "";
+                }
+            }
+        } else {
+            int length = 0;
+
+            while(length < 1) {
+                System.out.print("Length of randomly generated password: ");
+
+                try {
+                    length = Integer.parseInt(scanner.nextLine());
+
+                    // REVIEW: 512 good max for password length?
+                    // Check that this is a valid length
+                    if(length < 1 || length > 512) {
+                        throw new NumberFormatException("Out of range");
+                    }
+                } catch(NumberFormatException e) {
+                    printErrorMsg("Please enter a valid length for the password");
+                }
+            }
+
+            while(password.isEmpty()) {
+                password = PasswordGenerator.generatePassword(length);
+                System.out.println("Your randomly generated password is: " + password);
+                System.out.print("Do you want to regenerate this password? [Y/n]: ");
+
+                input = scanner.nextLine();
+
+                if(input.equals("Y") || input.equals("y") || input.isEmpty()) {
+                    password = "";
+                }
+            }
+        }
+
+        System.out.print("URL: ");
+        String url = scanner.nextLine();
+
+        System.out.print("Notes: ");
+        String notes = scanner.nextLine();
+
+        vault.addEntry(groupIndex, key, name, username, password, url, notes);
+    }
+
+    // Delete a group from the vault
+    private void deleteGroup(String word) {
+        int removeGroupIndex = INVALID_INDEX;
+
+        // Check if the user entered the group number
+        try {
+            removeGroupIndex = Integer.parseInt(word) - 1;
+
+            // Check that it is a valid group index
+            if(removeGroupIndex < 0 || removeGroupIndex > vault.size() - 1) {
+                printErrorMsg("ERROR: " + word + " is not a valid group number. Use 'list groups' to show all group names and numbers.");
+                removeGroupIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the group name
+            for(int index = 0; index < vault.size(); index++) {
+                if(word.equals(vault.getGroupName(index, key))) {
+                    removeGroupIndex = index;
+                    break;
+                }
+            }
+
+            // Check that the name was found in this vault
+            if(removeGroupIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + word + " is not a valid group name. Use 'list groups' to show all group names and numbers.");
+            }
+        }
+
+        // See if we found a valid group index
+        if(removeGroupIndex != INVALID_INDEX) {
+            vault.removeGroup(removeGroupIndex);
+        }
+    }
+
+    // Delete an entry from the group
+    private void deleteEntry(String word) {
+        int removeEntryIndex = INVALID_INDEX;
+
+        // Check if the user entered the entry number
+        try {
+            removeEntryIndex = Integer.parseInt(word) - 1;
+
+            if(removeEntryIndex < 0 || removeEntryIndex > vault.getGroupSize(groupIndex) - 1) {
+                printErrorMsg("ERROR: " + word + " is not a valid entry number. Use 'list entries' to show all entry names and numbers.");
+                removeEntryIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered an entry name
+            for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
+                if(word.equals(vault.getEntryName(groupIndex, index, key))) {
+                    removeEntryIndex = index;
+                    break;
+                }
+            }
+
+            // Check if the entry name was found
+            if(removeEntryIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + word + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
+            }
+        }
+
+        // Check if a valid entry index was found
+        if(removeEntryIndex != INVALID_INDEX) {
+            vault.removeEntry(groupIndex, removeEntryIndex);
+        }
+    }
+
+    // Edit an entry in the vault
+    private void editEntry(String entryWord, String fieldWord) {
+        int entryIndex = INVALID_INDEX;
+
+        // Check if the user entered the entry number
+        try {
+            entryIndex = Integer.parseInt(entryWord) - 1;
+
+            // Check that this is a valid entry index
+            if(entryIndex < 0 || entryIndex > vault.getGroupSize(groupIndex) - 1) {
+                printErrorMsg("ERROR: " + entryWord + " is not a valid entry index. Use 'list entries' to show all entry names and numbers.");
+                entryIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the entry name
+            for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
+                if(entryWord.equals(vault.getEntryName(groupIndex, index, key))) {
+                    entryIndex = index;
+                    break;
+                }
+            }
+
+            // Check if the entry index was found
+            if(entryIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + entryWord + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
+            }
+        }
+
+        // Only continue if the entry index is valid
+        if(entryIndex != INVALID_INDEX) {
+            switch(fieldWord) {
+                case "name":
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+                    vault.setEntryName(groupIndex, entryIndex, key, name);
+                    break;
+
+                case "username":
+                    System.out.print("Username: ");
+                    String username = scanner.nextLine();
+                    vault.setEntryUsername(groupIndex, entryIndex, key, username);
+                    break;
+
+                case "password":
+                    String password = new String(console.readPassword("Password: "));
+                    vault.setEntryPassword(groupIndex, entryIndex, key, password);
+                    break;
+
+                case "url":
+                    System.out.print("URL: ");
+                    String url = scanner.nextLine();
+                    vault.setEntryUrl(groupIndex, entryIndex, key, url);
+                    break;
+
+                case "notes":
+                    System.out.print("Notes: ");
+                    String notes = scanner.nextLine();
+                    vault.setEntryNotes(groupIndex, entryIndex, key, notes);
+                    break;
+
+                default:
+                    printErrorMsg("ERROR: " + fieldWord + " is not a valid element of an entry to edit.");
+                    break;
+            }
+
+            vault.write();
+        }
+    }
+
+    // Move an entry from one group to another
+    private void moveEntry(String entryWord, String groupWord) {
+        int entryIndex = INVALID_INDEX;
+        int toGroupIndex = INVALID_INDEX;
+
+        try {
+            entryIndex = Integer.parseInt(entryWord) - 1;
+
+            // Check that this is a valid entry index
+            if(entryIndex < 0 || entryIndex > vault.getGroupSize(groupIndex) - 1) {
+                printErrorMsg("ERROR: " + entryWord + " is not a valid entry number. Use 'list entries' to show all entry names and numbers.");
+                entryIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered an entry name
+            for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
+                if(entryWord.equals(vault.getEntryName(groupIndex, index, key))) {
+                    entryIndex = index;
+                    break;
+                }
+            }
+
+            // Check if the name was found
+            if(entryIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + entryWord + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
+            }
+        }
+
+        try {
+            toGroupIndex = Integer.parseInt(groupWord) - 1;
+
+            // Check it is a valid group number
+            if(toGroupIndex < 0 || toGroupIndex > vault.size() - 1) {
+                printErrorMsg("ERROR: " + groupWord + " is not a valid group number. Use 'list group' to show all group names and numbers.");
+                toGroupIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered a group name
+            for(int index = 0; index < vault.size(); index++) {
+                if(groupWord.equals(vault.getGroupName(index, key))) {
+                    toGroupIndex = index;
+                    break;
+                }
+            }
+        }
+
+        if(entryIndex != INVALID_INDEX && toGroupIndex != INVALID_INDEX) {
+            vault.moveEntry(groupIndex, toGroupIndex, entryIndex);
         }
     }
 
