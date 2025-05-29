@@ -268,10 +268,10 @@ public class Shell {
 
     // Move an entry from one group to another
     private void move(String[] words) {
-        // TODO: add method to move groups in vault
         // Check that the user supplied all needed arguments
         if(words.length > 3) {
             if(isGroupSelected(words[1])) {
+                // TODO look into the vault.moveGroups() method, has weird behavior and still needs to be figured out
                 moveGroup(words[2], words[3]);
             } else if(isEntrySelected(words[1])) {
                 moveEntry(words[2], words[3]);
