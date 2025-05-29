@@ -9,6 +9,7 @@
 package com.jgptech.Locals.Encryption;
 
 public enum HashingAlgorithm {
+    NoHashingAlgorithm(0),
     PBKDF2(1),
     Argon2(2);
 
@@ -26,7 +27,7 @@ public enum HashingAlgorithm {
     }
 
     // Get the correct enum based on the value
-    public static HashingAlgorithm fromValue(int value) {
+    public static HashingAlgorithm fromValue(int value) throws IllegalArgumentException {
         for(HashingAlgorithm algorithm : HashingAlgorithm.values()) {
             if(algorithm.getValue() == value) {
                 return algorithm;

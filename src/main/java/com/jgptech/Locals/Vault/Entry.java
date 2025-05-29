@@ -8,7 +8,12 @@
 
 package com.jgptech.Locals.Vault;
 
-public class Entry {
+import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
+import com.jgptech.Locals.Encryption.VaultEncryptor;
+
+import javax.crypto.SecretKey;
+
+class Entry {
     // Name or title of the entry
     private String name;
 
@@ -24,66 +29,68 @@ public class Entry {
     // Notes written by the user for the entry
     private String notes;
 
+    // REVIEW: should fill any variable that has the password in it with garbage data or 0's after they are done being used to clear them from memory
+
 
     // Constructor for loading an existing entry from a vault file (Jackson requires an empty constructor)
-    public Entry() {}
+    Entry() {}
 
     // Constructor for a new entry
-    public Entry(String name, String username, String password, String url, String notes) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.url = url;
-        this.notes = notes;
+    Entry(String name, String username, String password, String url, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
+        this.username = VaultEncryptor.encrypt(username, key, encryptionAlgorithm);
+        this.password = VaultEncryptor.encrypt(password, key, encryptionAlgorithm);
+        this.url = VaultEncryptor.encrypt(url, key, encryptionAlgorithm);
+        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
     }
 
     // Get the name of this entry
-    public String getName() {
-        return this.name;
+    String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        return VaultEncryptor.decrypt(name, key, encryptionAlgorithm);
     }
 
     // Set the name of this entry
-    public void setName(String name) {
-        this.name = name;
+    void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
     }
 
     // Get the username for this entry
-    public String getUsername() {
-        return this.username;
+    String getUsername(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        return VaultEncryptor.decrypt(username, key, encryptionAlgorithm);
     }
 
     // Set the username for this entry
-    public void setUsername(String username) {
-        this.username = username;
+    void setUsername(String username, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.username = VaultEncryptor.encrypt(username, key, encryptionAlgorithm);
     }
 
     // Get the password for this entry
-    public String getPassword() {
-        return this.password;
+    String getPassword(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        return VaultEncryptor.decrypt(password, key, encryptionAlgorithm);
     }
 
     // Set the password for this entry
-    public void setPassword(String password) {
-        this.password = password;
+    void setPassword(String password, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.password = VaultEncryptor.encrypt(password, key, encryptionAlgorithm);
     }
 
     // Get the URL for this entry
-    public String getUrl() {
-        return this.url;
+    String getUrl(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        return VaultEncryptor.decrypt(url, key, encryptionAlgorithm);
     }
 
     // Set the URL for this entry
-    public void setUrl(String url) {
-        this.url = url;
+    void setUrl(String url, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.url = VaultEncryptor.encrypt(url, key, encryptionAlgorithm);
     }
 
     // Get the notes for this entry
-    public String getNotes() {
-        return this.notes;
+    String getNotes(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        return VaultEncryptor.decrypt(notes, key, encryptionAlgorithm);
     }
 
     // Set the notes for this entry
-    public void setNotes(String notes) {
-        this.notes = notes;
+    void setNotes(String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
     }
 }
