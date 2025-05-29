@@ -134,33 +134,35 @@ public class Shell {
     private void printHelp() {
         System.out.println(
                 """
+                
                 exit
-                \tclose and exit the vault.
-                \t\t[exit|quit]
+                    close and exit the vault.
+                        [exit|quit]
                 h, help
-                \tprint these commands and their function.
-                \t\thelp
+                    print these commands and their function.
+                        help
                 l, list
-                \tlist all groups in the vault or entries in the group
-                \t\tlist [groups|entries]
+                    list all groups in the vault or entries in the group
+                        list [groups|entries]
                 o, open
-                \topen a group in the vault
-                \t\topen [group]
+                    open a group in the vault
+                        open [group]
                 s, show
-                \tshow the saved data in an entry
-                \t\tshow [entry]
+                    show the saved data in an entry
+                        show [entry]
                 a, add
-                \tadd a new entry or group to the vault
-                \t\tadd [entry|group]
+                    add a new entry or group to the vault
+                        add [entry|group]
                 d, delete
-                \tdelete an entry or group from the vault
-                \t\tdelete [entry|group]
+                    delete an entry or group from the vault
+                        delete [entry|group]
                 e, edit
-                \tedit the data in an entry
-                \t\tedit [entry] [name|username|password|URL|notes]
+                    edit the data in an entry or group
+                        edit entry [entry] [name|username|password|URL|notes]
+                        edit group [group] [name|color]
                 m, move
-                \tmove an entry to another group
-                \t\tmove [entry] [new-group]
+                    move an entry to another group
+                        move [entry] [new-group]
                 """
         );
     }
@@ -252,10 +254,16 @@ public class Shell {
     private void edit(String[] words) {
         // TODO: add support for editting a group as well
         // Check that the user supplied all needed arguments
-        if(words.length > 2) {
-            editEntry(words[1], words[2]);
+        if(words.length > 3) {
+            if(isGroupSelected(words[1])) {
+                editGroup(words[2], words[3]);
+            } else if(isEntrySelected(words[1])) {
+                editEntry(words[2], words[3]);
+            } else {
+                printErrorMsg("ERROR: Use 'edit group <group> <field>' or 'edit entry <entry> <field>'.");
+            }
         } else {
-            printErrorMsg("ERROR: use 'edit <element> <entry>");
+            printErrorMsg("ERROR: Use 'edit group <group> <field>' or 'edit entry <entry> <field>'.");
         }
     }
 
@@ -286,7 +294,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered the name of a group
             for(int index = 0; index < vault.size(); index++) {
-                if(word.equals(vault.getGroupName(index, key))) {
+                if(word.equals(vault.getGroupName(index, key).toLowerCase())) {
                     newGroupIndex = index;
                     break;
                 }
@@ -319,7 +327,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered the name of an entry in this group
             for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                if(word.equals(vault.getEntryName(groupIndex, index, key))) {
+                if(word.equals(vault.getEntryName(groupIndex, index, key).toLowerCase())) {
                     entryIndex = index;
                     break;
                 }
@@ -435,7 +443,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered the group name
             for(int index = 0; index < vault.size(); index++) {
-                if(word.equals(vault.getGroupName(index, key))) {
+                if(word.equals(vault.getGroupName(index, key).toLowerCase())) {
                     removeGroupIndex = index;
                     break;
                 }
@@ -468,7 +476,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered an entry name
             for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                if(word.equals(vault.getEntryName(groupIndex, index, key))) {
+                if(word.equals(vault.getEntryName(groupIndex, index, key).toLowerCase())) {
                     removeEntryIndex = index;
                     break;
                 }
@@ -483,6 +491,56 @@ public class Shell {
         // Check if a valid entry index was found
         if(removeEntryIndex != INVALID_INDEX) {
             vault.removeEntry(groupIndex, removeEntryIndex);
+        }
+    }
+
+    // Edit a group in the vault
+    private void editGroup(String groupWord, String fieldWord) {
+        int editGroupIndex = INVALID_INDEX;
+
+        // Check if the user entered the group number
+        try {
+            editGroupIndex = Integer.parseInt(groupWord) - 1;
+
+            // Check that this is a valid group index
+            if(editGroupIndex < 0 || editGroupIndex > vault.size() - 1) {
+                printErrorMsg("ERROR: " + groupWord + " is not a valid group index. Use 'list groups' to show all group names and numbers.");
+                editGroupIndex = INVALID_INDEX;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the group number
+            for(int index = 0; index < vault.size(); index++) {
+                if(groupWord.equals(vault.getGroupName(index, key).toLowerCase())) {
+                    editGroupIndex = index;
+                    break;
+                }
+            }
+
+            // Check if the group index was found
+            if(editGroupIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + groupWord + " is not a valid group name. Use 'list groups' to see all group names and numbers.");
+            }
+        }
+
+        // Only continue if the group index is valid
+        if(editGroupIndex != INVALID_INDEX) {
+            switch(fieldWord) {
+                case "name":
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+                    vault.setGroupName(editGroupIndex, key, name);
+                    break;
+
+                case "color":
+                    System.out.println("Color not supported yet!");
+                    break;
+
+                default:
+                    printErrorMsg("ERROR: " + fieldWord + " is not a valid field.");
+                    break;
+            }
+
+            vault.write();
         }
     }
 
@@ -502,7 +560,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered the entry name
             for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                if(entryWord.equals(vault.getEntryName(groupIndex, index, key))) {
+                if(entryWord.equals(vault.getEntryName(groupIndex, index, key).toLowerCase())) {
                     entryIndex = index;
                     break;
                 }
@@ -571,7 +629,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered an entry name
             for(int index = 0; index < vault.getGroupSize(groupIndex); index++) {
-                if(entryWord.equals(vault.getEntryName(groupIndex, index, key))) {
+                if(entryWord.equals(vault.getEntryName(groupIndex, index, key).toLowerCase())) {
                     entryIndex = index;
                     break;
                 }
@@ -594,7 +652,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered a group name
             for(int index = 0; index < vault.size(); index++) {
-                if(groupWord.equals(vault.getGroupName(index, key))) {
+                if(groupWord.equals(vault.getGroupName(index, key).toLowerCase())) {
                     toGroupIndex = index;
                     break;
                 }
