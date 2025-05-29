@@ -58,6 +58,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <outputDirectory>${project.build.directory}/jars</outputDirectory>
                             <finalName>${app.name}</finalName>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
@@ -106,12 +107,15 @@
                                         <argument>app-image</argument>
 
                                         <argument>--name</argument>
-                                        <argument>${app.name}.AppImage</argument>
+                                        <argument>${app.name}</argument>
 
                                         <argument>--app-version</argument>
                                         <argument>${app.version}</argument>
 
                                         <argument>--input</argument>
+                                        <argument>${project.build.directory}/jars</argument>
+
+                                        <argument>--dest</argument>
                                         <argument>${project.build.directory}</argument>
 
                                         <argument>--main-jar</argument>
@@ -172,13 +176,13 @@
                                         <argument>${project.build.directory}</argument>
 
                                         <argument>--main-jar</argument>
-                                        <argument>${app.name}.jar}</argument>
+                                        <argument>${app.name}.jar</argument>
 
                                         <argument>--main-class</argument>
                                         <argument>${main.class}</argument>
 
-                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
-                                        <!--                                        <argument>${icon.path}</argument>-->
+<!--                                        <argument>&#45;&#45;icon</argument>-->
+<!--                                        <argument>${icon.path}</argument>-->
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -229,13 +233,13 @@
                                         <argument>${project.build.directory}</argument>
 
                                         <argument>--main-jar</argument>
-                                        <argument>${app.name}.jar}</argument>
+                                        <argument>${app.name}.jar</argument>
 
                                         <argument>--main-class</argument>
                                         <argument>${main.class}</argument>
 
-                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
-                                        <!--                                        <argument>${icon.path}</argument>-->
+<!--                                        <argument>&#45;&#45;icon</argument>-->
+<!--                                        <argument>${icon.path}</argument>-->
                                     </arguments>
                                 </configuration>
                             </execution>
