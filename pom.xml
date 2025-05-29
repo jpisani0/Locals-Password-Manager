@@ -9,18 +9,17 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <main.class>com.jgptech.Locals.Main</main.class>
+        <app.name>locals</app.name>
+        <app.version>1.0</app.version>
+        <icon.path>src/main/resources/icon.png</icon.path>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>4.7.5</version>
-        </dependency>
-
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
@@ -59,11 +58,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>locals</finalName>
+                            <finalName>${app.name}</finalName>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.jgptech.Locals.Main</mainClass>
+                                    <mainClass>${main.class}</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -72,5 +71,179 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Linux -->
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage-linux</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>
+                                        exec
+                                    </goal>
+                                </goals>
+                                <configuration>
+                                    <executable>
+                                        jpackage
+                                    </executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>app-image</argument>
+
+                                        <argument>--name</argument>
+                                        <argument>${app.name}.AppImage</argument>
+
+                                        <argument>--app-version</argument>
+                                        <argument>${app.version}</argument>
+
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}</argument>
+
+                                        <argument>--main-jar</argument>
+                                        <argument>${app.name}.jar</argument>
+
+                                        <argument>--main-class</argument>
+                                        <argument>${main.class}</argument>
+
+<!--                                        <argument>&#45;&#45;icon</argument>-->
+<!--                                        <argument>${icon.path}</argument>-->
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Windows -->
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage-windows</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>
+                                        exec
+                                    </goal>
+                                </goals>
+                                <configuration>
+                                    <executable>
+                                        jpackage
+                                    </executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>exe</argument>
+
+                                        <argument>--name</argument>
+                                        <argument>${app.name}</argument>
+
+                                        <argument>--app-version</argument>
+                                        <argument>${app.version}</argument>
+
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}</argument>
+
+                                        <argument>--main-jar</argument>
+                                        <argument>${app.name}.jar}</argument>
+
+                                        <argument>--main-class</argument>
+                                        <argument>${main.class}</argument>
+
+                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
+                                        <!--                                        <argument>${icon.path}</argument>-->
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- MacOS -->
+        <profile>
+            <id>macos</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage-macos</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>
+                                        exec
+                                    </goal>
+                                </goals>
+                                <configuration>
+                                    <executable>
+                                        jpackage
+                                    </executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>dmg</argument>
+
+                                        <argument>--name</argument>
+                                        <argument>${app.name}</argument>
+
+                                        <argument>--app-version</argument>
+                                        <argument>${app.version}</argument>
+
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}</argument>
+
+                                        <argument>--main-jar</argument>
+                                        <argument>${app.name}.jar}</argument>
+
+                                        <argument>--main-class</argument>
+                                        <argument>${main.class}</argument>
+
+                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
+                                        <!--                                        <argument>${icon.path}</argument>-->
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

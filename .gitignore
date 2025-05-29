@@ -32,5 +32,8 @@ bin/
 ### Maven ###
 target/
 
+### JPackage ###
+locals/
+
 ### Testing ###
 vaults/
