@@ -266,6 +266,25 @@ public class Vault {
         groups.add(groupIndex, new Group(name, color, key, encryptionAlgorithm));
     }
 
+    @JsonIgnore
+    // Move a group in the array
+    public void moveGroup(int currentGroupIndex, int newGroupIndex) throws IndexOutOfBoundsException {
+        if(currentGroupIndex < 0 || currentGroupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + currentGroupIndex);
+        } else if(newGroupIndex < 0 || newGroupIndex > groups.size()) {
+            throw new IndexOutOfBoundsException("Invalid group index: " + newGroupIndex);
+        }
+
+        Group group = groups.get(currentGroupIndex);
+        groups.remove(currentGroupIndex);
+
+        if(newGroupIndex == groups.size() - 1) {
+            groups.add(group);
+        } else {
+            groups.add(newGroupIndex, group);
+        }
+    }
+
     public void removeGroup(int groupIndex) throws IndexOutOfBoundsException {
         if(groupIndex < 0 || groupIndex > groups.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);

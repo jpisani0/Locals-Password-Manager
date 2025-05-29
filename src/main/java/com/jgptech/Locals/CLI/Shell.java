@@ -252,7 +252,6 @@ public class Shell {
 
     // Edit data in an entry
     private void edit(String[] words) {
-        // TODO: add support for editting a group as well
         // Check that the user supplied all needed arguments
         if(words.length > 3) {
             if(isGroupSelected(words[1])) {
@@ -271,10 +270,16 @@ public class Shell {
     private void move(String[] words) {
         // TODO: add method to move groups in vault
         // Check that the user supplied all needed arguments
-        if(words.length > 2) {
-            moveEntry(words[1], words[2]);
+        if(words.length > 3) {
+            if(isGroupSelected(words[1])) {
+                moveGroup(words[2], words[3]);
+            } else if(isEntrySelected(words[1])) {
+                moveEntry(words[2], words[3]);
+            } else {
+                printErrorMsg("ERROR: use 'move group <group> <new-index>' or 'move entry <entry> <new-group>");
+            }
         } else {
-            printErrorMsg("ERROR: use 'move <entry-number> <new-group>'");
+            printErrorMsg("ERROR: use 'move group <group> <new-index>' or 'move entry <entry> <new-index>' or 'move entry <entry> <new-group>");
         }
     }
 
@@ -610,6 +615,61 @@ public class Shell {
             }
 
             vault.write();
+        }
+    }
+
+    // Move a group to a new index in the vault
+    private void moveGroup(String groupWord, String indexWord) {
+        int selectedGroupIndex = INVALID_INDEX;
+        int newIndex = INVALID_INDEX;
+
+        // Check if the user entered a group number
+        try {
+            selectedGroupIndex = Integer.parseInt(groupWord) - 1;
+
+            // Check that this is a valid group index
+            if(selectedGroupIndex < 0 || selectedGroupIndex > vault.size() - 1) {
+                printErrorMsg("ERROR: " + groupWord + " is not a valid group number. Use 'list groups' to show all group names and numbers.");
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the group name
+            for(int index = 0; index < vault.size(); index++) {
+                if(groupWord.equals(vault.getGroupName(index, key).toLowerCase())) {
+                    selectedGroupIndex = groupIndex;
+                    break;
+                }
+            }
+
+            // Check if the group name was found
+            if(selectedGroupIndex == INVALID_INDEX) {
+                printErrorMsg("ERROR: " + groupWord + " is not a valid group name. Use 'list groups' to show all group names and numbers.");
+            }
+        }
+
+        // Only continue if a valid group index was entered
+        if(selectedGroupIndex != INVALID_INDEX) {
+            // Get the new index to move it to
+            try {
+                newIndex = Integer.parseInt(indexWord);
+
+                // Check that this is a valid group index
+                if(newIndex < 0 || newIndex > vault.size()) {
+                    printErrorMsg("ERROR: " + indexWord + " is not a valid index to place this group.");
+                    newIndex = INVALID_INDEX;
+                }
+            } catch(NumberFormatException e) {
+                printErrorMsg("ERROR: " + indexWord + " is not a valid index to place this group.");
+            }
+
+            // Only continue if a valid new index was found
+            if(newIndex != INVALID_INDEX) {
+                vault.moveGroup(selectedGroupIndex, newIndex);
+
+                // If the move group was the one we are currently in, also change to that group index
+                if(selectedGroupIndex == groupIndex) {
+                    groupIndex = newIndex;
+                }
+            }
         }
     }
 

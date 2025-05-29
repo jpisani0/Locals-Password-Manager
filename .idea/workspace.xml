@@ -11,6 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="changed setters/getters for sensitive data in vault, group, and entry to automatically encrypt/decrypt the data for easy and safe reading and writing, changed VaultEncryptor to abstract class and methods to be static">
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Vault.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Vault.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
