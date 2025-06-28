@@ -9,6 +9,7 @@
 package com.jgptech.Locals;
 
 import com.jgptech.Locals.CLI.UserInput;
+import com.jgptech.Locals.GUI.MainFrame;
 
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
@@ -36,7 +37,7 @@ public class Main implements Callable<Integer> {
             UserInput.openVault(vaultName);
         } else {
             // Program called with no arguments, open GUI version of program.
-            // TODO
+            new MainFrame();
         }
 
         return 0;
