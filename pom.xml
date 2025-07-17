@@ -85,6 +85,26 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- Delete the jpackage dest dir before building it to avoid error if not cleaned already -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>clean-jpackage-dest</id>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${project.build.directory}/${app.name}" failonerror="false"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -124,8 +144,8 @@
                                         <argument>--main-class</argument>
                                         <argument>${main.class}</argument>
 
-<!--                                        <argument>&#45;&#45;icon</argument>-->
-<!--                                        <argument>${icon.path}</argument>-->
+                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
+                                        <!--                                        <argument>${icon.path}</argument>-->
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -145,6 +165,26 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- Delete the jpackage dest dir before building it to avoid error if not cleaned already -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>clean-jpackage-dest</id>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${project.build.directory}/${app.name}" failonerror="false"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -181,8 +221,8 @@
                                         <argument>--main-class</argument>
                                         <argument>${main.class}</argument>
 
-<!--                                        <argument>&#45;&#45;icon</argument>-->
-<!--                                        <argument>${icon.path}</argument>-->
+                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
+                                        <!--                                        <argument>${icon.path}</argument>-->
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -202,6 +242,26 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- Delete the jpackage dest dir before building it to avoid error if not cleaned already -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>clean-jpackage-dest</id>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${project.build.directory}/${app.name}" failonerror="false"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -238,8 +298,8 @@
                                         <argument>--main-class</argument>
                                         <argument>${main.class}</argument>
 
-<!--                                        <argument>&#45;&#45;icon</argument>-->
-<!--                                        <argument>${icon.path}</argument>-->
+                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
+                                        <!--                                        <argument>${icon.path}</argument>-->
                                     </arguments>
                                 </configuration>
                             </execution>
