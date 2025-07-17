@@ -8,16 +8,23 @@
 
 package com.jgptech.Locals.Vault;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
-import com.jgptech.Locals.Encryption.VaultEncryptor;
-
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 
+import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
+import com.jgptech.Locals.Encryption.VaultEncryptor;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
 abstract class Entry {
     // The name of the entry
     protected String name;
 
+    // TODO
     // The salt of the entry
     protected String salt;
 

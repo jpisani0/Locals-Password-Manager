@@ -3,16 +3,19 @@
  * AUTHOR:  J. Pisani
  * DATE: 10/11/24
  *
- * DESCRIPTION: Class to hold data for reading/writing entry information from/to password files
+ * DESCRIPTION: Class to hold data for a login entry
  */
 
 package com.jgptech.Locals.Vault;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 import javax.crypto.SecretKey;
 
+@JsonTypeName("login")
 class Login {
     // Name or title of the entry
     private String name;

@@ -44,7 +44,7 @@ enum EntryType {
     // Return the entry type in string format
     public String toString() {
         return switch(this) {
-            case Login -> "Login";
+            case Login -> "login";
             case sshToken -> "sshKey";
             case secureNote -> "secureNote";
             case paymentCard -> "paymentCard";
@@ -54,7 +54,7 @@ enum EntryType {
     // Get the enum from a string
     public EntryType fromString(String type) {
         return switch(type) {
-            case "Login" -> Login;
+            case "login" -> Login;
             case "sshKey" -> sshToken;
             case "secureNote" -> secureNote;
             case "paymentCard" -> paymentCard;
