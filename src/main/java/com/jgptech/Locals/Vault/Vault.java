@@ -294,7 +294,7 @@ public class Vault {
 
         // Take all entries out of this group and place them in the General/Default group
         for(int entryIndex = 0; entryIndex < groups.get(groupIndex).size(); entryIndex++) {
-            Entry entry = groups.get(groupIndex).getEntry(entryIndex);
+            Login entry = groups.get(groupIndex).getEntry(entryIndex);
 
             // Add entry to the General group
             groups.get(GENERAL_GROUP_INDEX).addEntry(entry);
@@ -441,7 +441,7 @@ public class Vault {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        groups.get(groupIndex).addEntry(new Entry(name, username, password, url, notes, key, encryptionAlgorithm));
+        groups.get(groupIndex).addEntry(new Login(name, username, password, url, notes, key, encryptionAlgorithm));
     }
 
     // Add a new entry to a group in this vault at a specific index
@@ -450,7 +450,7 @@ public class Vault {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        groups.get(groupIndex).addEntry(new Entry(name, username, password, url, notes, key, encryptionAlgorithm), entryIndex);
+        groups.get(groupIndex).addEntry(new Login(name, username, password, url, notes, key, encryptionAlgorithm), entryIndex);
     }
 
     // Remove an entry from a group in this vault
@@ -472,7 +472,7 @@ public class Vault {
             throw new IndexOutOfBoundsException("Invalid to group index:" + toGroupIndex);
         }
 
-        Entry entry = groups.get(fromGroupIndex).getEntry(entryIndex);
+        Login entry = groups.get(fromGroupIndex).getEntry(entryIndex);
         groups.get(toGroupIndex).addEntry(entry);
         groups.get(fromGroupIndex).removeEntry(entryIndex);
     }

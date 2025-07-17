@@ -26,7 +26,7 @@ class Group {
     // TODO: add predefined list of icons to identify the group as well
 
     // Array list to hold entries in this group
-    private ArrayList<Entry> entries = new ArrayList<>();
+    private ArrayList<Login> entries = new ArrayList<>();
 
 
     // Constructor for loading a group from an existing vault file (Jackson requires an empty constructor)
@@ -74,18 +74,18 @@ class Group {
     /****************************************************************************************************************/
 
     // Get the entries array (for Jackson)
-    ArrayList<Entry> getEntries() {
+    ArrayList<Login> getEntries() {
         return entries;
     }
 
     // Set the entries array (for Jackson)
-    void setEntries(ArrayList<Entry> entries) {
+    void setEntries(ArrayList<Login> entries) {
         this.entries = entries;
     }
 
     @JsonIgnore
     // Get an entry from this group
-    Entry getEntry(int entryIndex) throws IndexOutOfBoundsException {
+    Login getEntry(int entryIndex) throws IndexOutOfBoundsException {
         if(entryIndex < 0 || entryIndex > entries.size()) {
             throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
         }
@@ -196,12 +196,12 @@ class Group {
 
     // REVIEW: needed?
     // Add an entry to the end of this group
-    void addEntry(Entry entry) {
+    void addEntry(Login entry) {
         entries.add(entry);
     }
 
     // Add an entry at a specific index of this group
-    boolean addEntry(Entry entry, int entryIndex) {
+    boolean addEntry(Login entry, int entryIndex) {
         // Check that the requested index is not outside bounds of array
         if(entryIndex < 0 || entryIndex > entries.size()) {
             return false;
@@ -230,7 +230,7 @@ class Group {
             return false;
         }
 
-        Entry bufferEntry = entries.get(currentEntryIndex);
+        Login bufferEntry = entries.get(currentEntryIndex);
         entries.remove(currentEntryIndex);
         entries.add(newEntryIndex, bufferEntry);
         return true;
