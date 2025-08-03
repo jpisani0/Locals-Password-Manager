@@ -8,7 +8,6 @@
 
 package com.jgptech.Locals.Vault;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
@@ -16,10 +15,7 @@ import com.jgptech.Locals.Encryption.VaultEncryptor;
 import javax.crypto.SecretKey;
 
 @JsonTypeName("login")
-class Login {
-    // Name or title of the entry
-    private String name;
-
+public class Login extends Entry {
     // Username for the account login
     private String username;
 
@@ -29,17 +25,10 @@ class Login {
     // URL or website for this entry
     private String url;
 
-    // Notes written by the user for the entry
-    private String notes;
-
     // REVIEW: should fill any variable that has the password in it with garbage data or 0's after they are done being used to clear them from memory
 
-
-    // Constructor for loading an existing entry from a vault file (Jackson requires an empty constructor)
-    Login() {}
-
     // Constructor for a new entry
-    Login(String name, String username, String password, String url, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public Login(String name, String username, String password, String url, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
         this.username = VaultEncryptor.encrypt(username, key, encryptionAlgorithm);
         this.password = VaultEncryptor.encrypt(password, key, encryptionAlgorithm);
@@ -47,53 +36,44 @@ class Login {
         this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
     }
 
-    // Get the name of this entry
-    String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(name, key, encryptionAlgorithm);
-    }
-
-    // Set the name of this entry
-    void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
-    }
-
     // Get the username for this entry
-    String getUsername(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getUsername(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(username, key, encryptionAlgorithm);
     }
 
     // Set the username for this entry
-    void setUsername(String username, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setUsername(String username, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.username = VaultEncryptor.encrypt(username, key, encryptionAlgorithm);
     }
 
-    // Get the password for this entry
-    String getPassword(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    // Get the password for this login
+    public String getPassword(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(password, key, encryptionAlgorithm);
     }
 
     // Set the password for this entry
-    void setPassword(String password, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setPassword(String password, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.password = VaultEncryptor.encrypt(password, key, encryptionAlgorithm);
     }
 
     // Get the URL for this entry
-    String getUrl(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getUrl(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(url, key, encryptionAlgorithm);
     }
 
     // Set the URL for this entry
-    void setUrl(String url, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setUrl(String url, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.url = VaultEncryptor.encrypt(url, key, encryptionAlgorithm);
     }
 
-    // Get the notes for this entry
-    String getNotes(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(notes, key, encryptionAlgorithm);
-    }
-
-    // Set the notes for this entry
-    void setNotes(String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
+    // Print the relevant details for this entry
+    public void print() {
+        System.out.println();
+        System.out.println("Name: " + name);
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password); // REVIEW: add way to print without the password showing, like '******'
+        System.out.println("URL: " + url);
+        System.out.println("Notes: " + notes);
+        System.out.println();
     }
 }

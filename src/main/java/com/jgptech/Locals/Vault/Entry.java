@@ -20,7 +20,7 @@ import com.jgptech.Locals.Encryption.VaultEncryptor;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 )
-abstract class Entry {
+public abstract class Entry {
     // The name of the entry
     protected String name;
 
@@ -36,32 +36,55 @@ abstract class Entry {
     Entry() {}
 
     // Get the name of the entry
-    String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(name, key, encryptionAlgorithm);
     }
 
     // Set the name of the entry
-    void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
     }
 
     // Get the salt of this entry
-    byte[] getSalt() {
+    public byte[] getSalt() {
         return Base64.getDecoder().decode(salt);
     }
 
     // Set the salt of this entry
-    void setSalt(byte[] salt) {
+    public void setSalt(byte[] salt) {
         this.salt = Base64.getEncoder().encodeToString(salt);
     }
 
     // Get the notes for this entry
-    String getNotes(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getNotes(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(notes, key, encryptionAlgorithm);
     }
 
     // Set the notes for this entry
-    void setNotes(String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setNotes(String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
     }
+
+    // Returns true if this entry is a Login
+    public boolean isLogin() {
+        return this instanceof Login;
+    }
+
+    // Returns true if this entry is a Payment Card
+    public boolean isPaymentCard() {
+        return this instanceof PaymentCard;
+    }
+
+    // Returns true if this entry is an SSH Key
+    public boolean isSSHKey() {
+        return this instanceof SSHKey;
+    }
+
+    // Returns true if this entry is a Secure Note
+    public boolean isSecureNote() {
+        return this instanceof SecureNote;
+    }
+
+    // Print the details of this entry. Must be implemented per subclass due to differentiating elements.
+    public abstract void print();
 }

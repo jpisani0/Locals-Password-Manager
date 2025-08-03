@@ -15,7 +15,7 @@ import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 @JsonTypeName("paymentCard")
-class PaymentCard extends Entry {
+public class PaymentCard extends Entry {
     // Name on the card
     private String cardholderName;
 
@@ -23,7 +23,7 @@ class PaymentCard extends Entry {
     private String cardNumber;
 
     // The brand of the card
-    private String brand;
+    private String brand; // TODO: add enum for brands
 
     // The expiration date of the card
     private String expireDate;
@@ -33,7 +33,7 @@ class PaymentCard extends Entry {
 
 
     // Constructor for a new payment card
-    PaymentCard(String name, String cardholderName, String cardNumber, String brand, String expireDate, String securityCode, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public PaymentCard(String name, String cardholderName, String cardNumber, String brand, String expireDate, String securityCode, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
         this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, encryptionAlgorithm);
         this.cardNumber = VaultEncryptor.encrypt( cardNumber, key, encryptionAlgorithm);
@@ -44,52 +44,65 @@ class PaymentCard extends Entry {
     }
 
     // Get the cardholder name
-    String getCardholderName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getCardholderName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(cardholderName, key, encryptionAlgorithm);
     }
 
     // Set the cardholder name
-    void setCardholderName(String cardholderName, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setCardholderName(String cardholderName, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, encryptionAlgorithm);
     }
 
     // Get the card number
-    String getCardNumber(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getCardNumber(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(cardNumber, key, encryptionAlgorithm);
     }
 
     // Set the card number
-    void setCardNumber(String cardNumber, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setCardNumber(String cardNumber, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.cardNumber = VaultEncryptor.encrypt(cardNumber, key, encryptionAlgorithm);
     }
 
     // Get the brand
-    String getBrand(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getBrand(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(brand, key, encryptionAlgorithm);
     }
 
     // Set the brand
-    void setBrand(String brand, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setBrand(String brand, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.brand = VaultEncryptor.encrypt(brand, key, encryptionAlgorithm);
     }
 
     // Get the expiration date
-    String getExpireDate(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getExpireDate(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(expireDate, key, encryptionAlgorithm);
     }
 
     // Set the expiration date
-    void setExpireDate(String expireDate, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setExpireDate(String expireDate, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.expireDate = VaultEncryptor.encrypt(expireDate, key, encryptionAlgorithm);
     }
 
     // Get the security code
-    String getSecurityCode(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getSecurityCode(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(securityCode, key, encryptionAlgorithm);
     }
 
     // Set the security code
-    void setSecurityCode(String securityCode, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setSecurityCode(String securityCode, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.securityCode = VaultEncryptor.encrypt(securityCode, key, encryptionAlgorithm);
+    }
+
+    // Print the relevant details for this payment card
+    public void print() {
+        System.out.println();
+        System.out.println("Name: " + name);
+        System.out.println("Cardholder Name: " + cardholderName);
+        System.out.println("Card Number: " + cardNumber); // REVIEW: add way to display without showing card number, like '**** **** **** ****'
+        System.out.println("Brand: " + brand);
+        System.out.println("Expiration Date: " + expireDate);
+        System.out.println("Security Code: " + securityCode);
+        System.out.println("Notes: " + notes);
+        System.out.println();
     }
 }
