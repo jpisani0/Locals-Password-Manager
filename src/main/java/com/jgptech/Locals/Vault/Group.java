@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Group {
+    // Shows that a given index is invalid
+    private final int INVALID_INDEX = -1; // TODO: need to make this something "global" for the project
+
     // Name of the group
     private String name;
 
@@ -147,5 +150,30 @@ public class Group {
 
             System.out.println();
         }
+    }
+
+    // Check if a given entry index is valid for this group
+    public int isValidEntryIndex(String entryWord, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        int entryIndex = -1;
+
+        // Check if the user entered the entry number
+        try {
+            entryIndex = Integer.parseInt(entryWord) - 1;
+
+            // Check that this is a valid entry index
+            if(entryIndex < 0 || entryIndex > size() - 1) {
+                entryIndex = INVALID_INDEX;
+            }
+        } catch (NumberFormatException e) {
+            // Check if the user entered the entry name
+            for(int index = 0; index < size() - 1; index++) {
+                if(entryWord.equals(getEntry(index).getName(key, encryptionAlgorithm).toLowerCase())) {
+                    entryIndex = index;
+                    break;
+                }
+            }
+        }
+
+        return entryIndex;
     }
 }

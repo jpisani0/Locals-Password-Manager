@@ -273,7 +273,6 @@ public class Shell {
         // Check that the user supplied all needed arguments
         if(words.length > 3) {
             if(isGroupSelected(words[1])) {
-                // TODO look into the vault.moveGroups() method, has weird behavior and still needs to be figured out
                 moveGroup(words[2], words[3]);
             } else if(isEntrySelected(words[1])) {
                 moveEntry(words[2], words[3]);
@@ -321,34 +320,13 @@ public class Shell {
 
     // Display information from an entry
     private void showEntry(String word) {
-        int entryIndex = INVALID_INDEX;
-
-        // Check if the user entered an entry number
-        try {
-            entryIndex = Integer.parseInt(word) - 1;
-
-            if(entryIndex < 0 || entryIndex > vault.getGroup(groupIndex).size() - 1) {
-                printErrorMsg("ERROR: " + word + " is not a valid entry number. Use 'list entries' to see all entry names and numbers.");
-                entryIndex = INVALID_INDEX;
-            }
-        } catch(NumberFormatException e) {
-            // Check if the user entered the name of an entry in this group
-            for(int index = 0; index < vault.getGroup(groupIndex).size(); index++) {
-                if(word.equals(vault.getGroup(groupIndex).getEntry(index).getName(key, vault.getEncryptionAlgorithm()).toLowerCase())) {
-                    entryIndex = index;
-                    break;
-                }
-            }
-
-            // Check if the name was found in this group
-            if(entryIndex == INVALID_INDEX) {
-                printErrorMsg("ERROR: " + word + " is not the name of an entry in this group. Use 'list entries' to see all entry names and numbers.");
-            }
-        }
+        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(word, key, vault.getEncryptionAlgorithm());
 
         // Check that a valid entry index was given
         if(entryIndex != INVALID_INDEX) {
             vault.getGroup(groupIndex).getEntry(entryIndex).print();
+        } else {
+            printErrorMsg("ERROR: " + word + " is not a valid entry. Please use 'list entries' to see all entry names and numbers.");
         }
     }
 
@@ -706,29 +684,9 @@ public class Shell {
 
     // Edit an entry in the vault
     private void editEntry(String entryWord, String fieldWord) {
-        int entryIndex = INVALID_INDEX;
+        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key, vault.getEncryptionAlgorithm());
 
-        // REVIEW: maybe this can be made as a method for the Group class?
-        // Check if the user entered the entry number
-        try {
-            entryIndex = Integer.parseInt(entryWord) - 1;
-
-            // Check that this is a valid entry index
-            if(entryIndex < 0 || entryIndex > vault.getGroup(groupIndex).size() - 1) {
-                printErrorMsg("ERROR: " + entryWord + " is not a valid entry index. Use 'list entries' to show all entry names and numbers.");
-                entryIndex = INVALID_INDEX;
-            }
-        } catch (NumberFormatException e) {
-            // Check if the user entered the entry name
-            for(int index = 0; index < vault.getGroup(groupIndex).size() - 1; index++) {
-                if(entryWord.equals(vault.getGroup(groupIndex).getEntry(index).getName(key, vault.getEncryptionAlgorithm()).toLowerCase())) {
-                    entryIndex = index;
-                    break;
-                }
-            }
-        }
-
-        // Only continue if entry index is valid
+        // Check that the user gave a valid entry index or name
         if(entryIndex != INVALID_INDEX) {
             // Find which type of entry we are editing
             Entry entry = vault.getGroup(groupIndex).getEntry(entryIndex);
@@ -745,6 +703,8 @@ public class Shell {
                 // Should never happen
                 printErrorMsg("ERROR: entry " + entryWord + " is an unknown entry type. Please report this issue at jgp9201@gmail.com.");
             }
+        } else {
+            printErrorMsg("ERROR: " + entryWord + " is not a valid entry index. Use 'list entries' to show all entry names and numbers.");
         }
     }
 
@@ -978,32 +938,8 @@ public class Shell {
 
     // Move an entry from one group to another
     private void moveEntry(String entryWord, String groupWord) {
-        int entryIndex = INVALID_INDEX;
+        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key, vault.getEncryptionAlgorithm());
         int toGroupIndex = INVALID_INDEX;
-
-        try {
-            entryIndex = Integer.parseInt(entryWord) - 1;
-
-            // Check that this is a valid entry index
-            if(entryIndex < 0 || entryIndex > vault.getGroup(groupIndex).size() - 1) {
-                printErrorMsg("ERROR: " + entryWord + " is not a valid entry number. Use 'list entries' to show all entry names and numbers.");
-                entryIndex = INVALID_INDEX;
-            }
-        } catch(NumberFormatException e) {
-            // Check if the user entered an entry name
-            for(int index = 0; index < vault.getGroup(groupIndex).size(); index++) {
-                // REVIEW: need to probably just add the encryption algorithm and maybe even the key to the vault encryptor class to avoid having to pass it everytime
-                if(entryWord.equals(vault.getGroup(groupIndex).getEntry(index).getName(key, vault.getEncryptionAlgorithm()).toLowerCase())) {
-                    entryIndex = index;
-                    break;
-                }
-            }
-
-            // Check if the name was found
-            if(entryIndex == INVALID_INDEX) {
-                printErrorMsg("ERROR: " + entryWord + " is not a valid entry name. Use 'list entries' to show all entry names and numbers.");
-            }
-        }
 
         try {
             toGroupIndex = Integer.parseInt(groupWord) - 1;
@@ -1023,8 +959,12 @@ public class Shell {
             }
         }
 
-        if(entryIndex != INVALID_INDEX && toGroupIndex != INVALID_INDEX) {
-            vault.moveEntry(groupIndex, toGroupIndex, entryIndex);
+        if(entryIndex != INVALID_INDEX) {
+            if(toGroupIndex != INVALID_INDEX) {
+                vault.moveEntry(groupIndex, toGroupIndex, entryIndex);
+            }
+        } else {
+            printErrorMsg("ERROR: " + entryWord + " is not a valid entry. Use 'list entries' to show all entry names and numbers.");
         }
     }
 
