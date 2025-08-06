@@ -154,7 +154,7 @@ public class Group {
 
     // Check if a given entry index is valid for this group
     public int isValidEntryIndex(String entryWord, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        int entryIndex = -1;
+        int entryIndex = -1; // REVIEW: make INVALID INDEX accessible from somewhere across this package
 
         // Check if the user entered the entry number
         try {
@@ -166,7 +166,7 @@ public class Group {
             }
         } catch (NumberFormatException e) {
             // Check if the user entered the entry name
-            for(int index = 0; index < size() - 1; index++) {
+            for(int index = 0; index < size(); index++) {
                 if(entryWord.equals(getEntry(index).getName(key, encryptionAlgorithm).toLowerCase())) {
                     entryIndex = index;
                     break;

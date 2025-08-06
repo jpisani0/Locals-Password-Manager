@@ -309,6 +309,31 @@ public class Vault {
         }
     }
 
+    // Check if a given group index is valid for this group
+    public int isValidGroupIndex(String groupWord, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        int groupIndex = -1;
+
+        // Check if the user entered the group number
+        try {
+            groupIndex = Integer.parseInt(groupWord) - 1;
+
+            // Check if this is a valid group index
+            if(groupIndex < 0 || groupIndex > size() - 1) {
+                groupIndex = -1;
+            }
+        } catch(NumberFormatException e) {
+            // Check if the user entered the group name
+            for(int index = 0; index < size(); index++) {
+                if(groupWord.equals(getGroup(index).getName(key, encryptionAlgorithm).toLowerCase())) {
+                    groupIndex = index;
+                    break;
+                }
+            }
+        }
+
+        return groupIndex;
+    }
+
     /****************************************************************************************************************/
     /***************************************************** ENTRY ****************************************************/
     /****************************************************************************************************************/
