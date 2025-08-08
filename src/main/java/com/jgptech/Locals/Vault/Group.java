@@ -16,7 +16,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-class Group {
+public class Group {
+    // Shows that a given index is invalid
+    private final int INVALID_INDEX = -1; // TODO: need to make this something "global" for the project
+
     // Name of the group
     private String name;
 
@@ -33,39 +36,39 @@ class Group {
     Group() {}
 
     // Constructor for a new group
-    Group(String name, Color color, SecretKey key, EncryptionAlgorithm encryptionAlgorithm /*Image groupImage*/) {
+    public Group(String name, Color color, SecretKey key, EncryptionAlgorithm encryptionAlgorithm /*Image groupImage*/) {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
 //        this.color = color;
     }
 
     // Get the name of this group
-    String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         return VaultEncryptor.decrypt(name, key, encryptionAlgorithm);
     }
 
     // Set the name of this group
-    void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
     }
 
 //    // Get the color of the group
-//    Color getColor() {
+//    public Color getColor() {
 //        return this.color;
 //    }
 
 //    // Set the color of this group
-//    void setColor(Color color) {
+//    public void setColor(Color color) {
 //        this.color = color;
 //    }
 
     // Get the amount of entries in this group
-    int size() {
+    public int size() {
         return entries.size();
     }
 
     @JsonIgnore
-        // Check if this group is empty
-    boolean isEmpty() {
+    // Check if this group is empty
+    public boolean isEmpty() {
         return entries.isEmpty();
     }
 
@@ -74,18 +77,18 @@ class Group {
     /****************************************************************************************************************/
 
     // Get the entries array (for Jackson)
-    ArrayList<Entry> getEntries() {
+    public ArrayList<Entry> getEntries() {
         return entries;
     }
 
     // Set the entries array (for Jackson)
-    void setEntries(ArrayList<Entry> entries) {
+    public void setEntries(ArrayList<Entry> entries) {
         this.entries = entries;
     }
 
     @JsonIgnore
     // Get an entry from this group
-    Entry getEntry(int entryIndex) throws IndexOutOfBoundsException {
+    public Entry getEntry(int entryIndex) throws IndexOutOfBoundsException {
         if(entryIndex < 0 || entryIndex > entries.size()) {
             throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
         }
@@ -93,115 +96,14 @@ class Group {
         return entries.get(entryIndex);
     }
 
-    @JsonIgnore
-    // Get the name of an entry
-    String getEntryName(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) throws IndexOutOfBoundsException {
-        // Check that requested index is not outside bounds of array
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        return entries.get(entryIndex).getName(key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Set the name of an entry in this group
-    void setEntryName(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm, String name) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        entries.get(entryIndex).setName(name, key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Get the username of an entry in this group
-    String getEntryUsername(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        return entries.get(entryIndex).getUsername(key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Set the username of an entry in this group
-    void setEntryUsername(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm, String username) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        entries.get(entryIndex).setUsername(username, key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Get the password of an entry in this group
-    String getEntryPassword(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        return entries.get(entryIndex).getPassword(key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Set the password if an entry in this group
-    void setEntryPassword(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm, String password) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        entries.get(entryIndex).setPassword(password, key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Get the URL of an entry in this group
-    String getEntryUrl(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        return entries.get(entryIndex).getUrl(key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Set the URL of an entry in this group
-    void setEntryUrl(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm, String url) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        entries.get(entryIndex).setUrl(url, key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Get the notes of an entry in this group
-    String getEntryNotes(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        return entries.get(entryIndex).getNotes(key, encryptionAlgorithm);
-    }
-
-    @JsonIgnore
-    // Set the notes of an entry in this group
-    void setEntryNotes(int entryIndex, SecretKey key, EncryptionAlgorithm encryptionAlgorithm, String notes) throws IndexOutOfBoundsException {
-        if(entryIndex < 0 || entryIndex > entries.size()) {
-            throw new IndexOutOfBoundsException("Invalid entry index: " + entryIndex);
-        }
-
-        entries.get(entryIndex).setNotes(notes, key, encryptionAlgorithm);
-    }
-
     // REVIEW: needed?
     // Add an entry to the end of this group
-    void addEntry(Entry entry) {
+    public void addEntry(Entry entry) {
         entries.add(entry);
     }
 
     // Add an entry at a specific index of this group
-    boolean addEntry(Entry entry, int entryIndex) {
+    public boolean addEntry(Entry entry, int entryIndex) {
         // Check that the requested index is not outside bounds of array
         if(entryIndex < 0 || entryIndex > entries.size()) {
             return false;
@@ -212,7 +114,7 @@ class Group {
     }
 
     // Remove an entry from this group
-    boolean removeEntry(int entryIndex) {
+    public boolean removeEntry(int entryIndex) {
         // Check that the requested index is not outside bounds of array
         if(entryIndex < 0 || entryIndex > entries.size()) {
             return false;
@@ -223,7 +125,7 @@ class Group {
     }
 
     // Move an existing entry to another index of this group
-    boolean moveEntry(int currentEntryIndex, int newEntryIndex) {
+    public boolean moveEntry(int currentEntryIndex, int newEntryIndex) {
         // Check that both indices are within bounds of array
         if(currentEntryIndex < 0 || currentEntryIndex > entries.size() ||
            newEntryIndex < 0 || newEntryIndex > entries.size()) {
@@ -237,7 +139,7 @@ class Group {
     }
 
     // List all the entries in this group
-    void listEntries(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void listEntries(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entries.isEmpty()) {
             System.out.println();
@@ -248,5 +150,30 @@ class Group {
 
             System.out.println();
         }
+    }
+
+    // Check if a given entry index is valid for this group
+    public int isValidEntryIndex(String entryWord, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+        int entryIndex = -1; // REVIEW: make INVALID INDEX accessible from somewhere across this package
+
+        // Check if the user entered the entry number
+        try {
+            entryIndex = Integer.parseInt(entryWord) - 1;
+
+            // Check that this is a valid entry index
+            if(entryIndex < 0 || entryIndex > size() - 1) {
+                entryIndex = INVALID_INDEX;
+            }
+        } catch (NumberFormatException e) {
+            // Check if the user entered the entry name
+            for(int index = 0; index < size(); index++) {
+                if(entryWord.equals(getEntry(index).getName(key, encryptionAlgorithm).toLowerCase())) {
+                    entryIndex = index;
+                    break;
+                }
+            }
+        }
+
+        return entryIndex;
     }
 }

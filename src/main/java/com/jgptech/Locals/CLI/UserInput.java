@@ -181,7 +181,7 @@ public abstract class  UserInput {
         SecretKey key = hasher.deriveSecretKey();
         masterHash = key.getEncoded();
 
-        Vault vault = new Vault(vaultName, hashingAlgorithm, encryptionAlgorithm, iterations, salt, hasher.hashKey(masterHash), key);
+        Vault vault = new Vault(vaultName, key, hashingAlgorithm, encryptionAlgorithm, iterations, salt, hasher.hashKey(masterHash));
 
         if(vault.write()) {
             System.out.println("New vault " + vaultName + " created successfully! Use locals " + vaultName + " to open it and start adding passwords.");

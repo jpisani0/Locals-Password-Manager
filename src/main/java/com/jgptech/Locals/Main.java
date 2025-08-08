@@ -20,10 +20,10 @@ import picocli.CommandLine.Parameters;
 
 @Command(name = "locals", mixinStandardHelpOptions = true, version = "locals 0.1", description = "Locally stored and encrypted password manager")
 public class Main implements Callable<Integer> {
-    @Parameters(index = "0", paramLabel = "VAULT", arity = "0..1", description = "Name of the vault file to create/open")
+    @Parameters(index = "0", paramLabel = "VAULT", arity = "0..1", description = "Name of the vault file to create/open.")
     private String vaultName = "";
 
-    @Option(names = {"-n", "--new"}, description = "Create a new vault")
+    @Option(names = {"-n", "--new"}, description = "Create a new vault.")
     private boolean newVault;
 
     @Override
