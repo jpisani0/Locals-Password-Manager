@@ -40,6 +40,7 @@ public class Group {
 
     // Constructor for a new group
     public Group(String name, Color color, byte[] key /*Image groupImage*/) {
+        this.iv = Base64.getEncoder().encodeToString(VaultEncryptor.generateIV());
         this.name = VaultEncryptor.encrypt(name, key, getIV());
 //        this.color = color;
     }
