@@ -8,13 +8,10 @@
 
 package com.jgptech.Locals.CLI;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.PasswordGenerator;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 import com.jgptech.Locals.Vault.*;
 
-import javax.crypto.SecretKey;
-import javax.print.attribute.standard.PrinterMessageFromOperator;
 import java.awt.*;
 import java.io.Console;
 import java.util.Scanner;
@@ -409,7 +406,7 @@ public class Shell {
                     length = Integer.parseInt(scanner.nextLine());
 
                     // REVIEW: 512 good max for password length?
-                    // Check t        vault.addEntry(groupIndex, key, name, username, password, url, notes);hat this is a valid length
+                    // Check that this is a valid length
                     if(length < 1 || length > 512) {
                         throw new NumberFormatException("Out of range");
                     }
