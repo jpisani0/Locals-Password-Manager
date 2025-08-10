@@ -9,9 +9,7 @@
 package com.jgptech.Locals.Vault;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import javax.crypto.SecretKey;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 @JsonTypeName("paymentCard")
@@ -33,64 +31,64 @@ public class PaymentCard extends Entry {
 
 
     // Constructor for a new payment card
-    public PaymentCard(String name, String cardholderName, String cardNumber, String brand, String expireDate, String securityCode, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
-        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, encryptionAlgorithm);
-        this.cardNumber = VaultEncryptor.encrypt( cardNumber, key, encryptionAlgorithm);
-        this.brand = VaultEncryptor.encrypt(brand, key, encryptionAlgorithm);
-        this.expireDate = VaultEncryptor.encrypt(expireDate, key, encryptionAlgorithm);
-        this.securityCode = VaultEncryptor.encrypt(securityCode, key, encryptionAlgorithm);
-        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
+    public PaymentCard(String name, String cardholderName, String cardNumber, String brand, String expireDate, String securityCode, String notes, byte[] key) {
+        this.name = VaultEncryptor.encrypt(name, key, getIV());
+        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, getIV());
+        this.cardNumber = VaultEncryptor.encrypt( cardNumber, key, getIV());
+        this.brand = VaultEncryptor.encrypt(brand, key, getIV());
+        this.expireDate = VaultEncryptor.encrypt(expireDate, key, getIV());
+        this.securityCode = VaultEncryptor.encrypt(securityCode, key, getIV());
+        this.notes = VaultEncryptor.encrypt(notes, key, getIV());
     }
 
     // Get the cardholder name
-    public String getCardholderName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(cardholderName, key, encryptionAlgorithm);
+    public String getCardholderName(byte[] key) {
+        return VaultEncryptor.decrypt(cardholderName, key, getIV());
     }
 
     // Set the cardholder name
-    public void setCardholderName(String cardholderName, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, encryptionAlgorithm);
+    public void setCardholderName(String cardholderName, byte[] key) {
+        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, getIV());
     }
 
     // Get the card number
-    public String getCardNumber(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(cardNumber, key, encryptionAlgorithm);
+    public String getCardNumber(byte[] key) {
+        return VaultEncryptor.decrypt(cardNumber, key, getIV());
     }
 
     // Set the card number
-    public void setCardNumber(String cardNumber, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.cardNumber = VaultEncryptor.encrypt(cardNumber, key, encryptionAlgorithm);
+    public void setCardNumber(String cardNumber, byte[] key) {
+        this.cardNumber = VaultEncryptor.encrypt(cardNumber, key, getIV());
     }
 
     // Get the brand
-    public String getBrand(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(brand, key, encryptionAlgorithm);
+    public String getBrand(byte[] key) {
+        return VaultEncryptor.decrypt(brand, key, getIV());
     }
 
     // Set the brand
-    public void setBrand(String brand, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.brand = VaultEncryptor.encrypt(brand, key, encryptionAlgorithm);
+    public void setBrand(String brand, byte[] key) {
+        this.brand = VaultEncryptor.encrypt(brand, key, getIV());
     }
 
     // Get the expiration date
-    public String getExpireDate(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(expireDate, key, encryptionAlgorithm);
+    public String getExpireDate(byte[] key) {
+        return VaultEncryptor.decrypt(expireDate, key, getIV());
     }
 
     // Set the expiration date
-    public void setExpireDate(String expireDate, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.expireDate = VaultEncryptor.encrypt(expireDate, key, encryptionAlgorithm);
+    public void setExpireDate(String expireDate, byte[] key) {
+        this.expireDate = VaultEncryptor.encrypt(expireDate, key, getIV());
     }
 
     // Get the security code
-    public String getSecurityCode(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(securityCode, key, encryptionAlgorithm);
+    public String getSecurityCode(byte[] key) {
+        return VaultEncryptor.decrypt(securityCode, key, getIV());
     }
 
     // Set the security code
-    public void setSecurityCode(String securityCode, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.securityCode = VaultEncryptor.encrypt(securityCode, key, encryptionAlgorithm);
+    public void setSecurityCode(String securityCode, byte[] key) {
+        this.securityCode = VaultEncryptor.encrypt(securityCode, key, getIV());
     }
 
     // Print the relevant details for this payment card

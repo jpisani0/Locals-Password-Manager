@@ -10,7 +10,7 @@ package com.jgptech.Locals.Encryption;
 
 import java.security.SecureRandom;
 
-public abstract class PasswordGenerator {
+public final class PasswordGenerator {
     // Strings that hold all possible characters for the password
     private static final String LOWERCASE_LETTERS = "qwertyuiopasdfghjklzxcvbnm";
     private static final String UPPERCASE_LETTERS = "QWERTYUIOPASDFGHJKLZXCVBNM";
@@ -18,6 +18,10 @@ public abstract class PasswordGenerator {
     private static final String SYMBOLS = "`~!@#$%^&*()-_=+[{]};:'\",<.>/?";
 
     private static final SecureRandom rand = new SecureRandom();
+
+
+    // Prevent instantiation
+    private PasswordGenerator() {}
 
     // REVIEW: should this include flags to not include lowercase, uppercase, digits, symbols if the user requests?
     // Generate a password with a specific length

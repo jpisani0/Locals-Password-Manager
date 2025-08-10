@@ -9,9 +9,7 @@
 package com.jgptech.Locals.Vault;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import javax.crypto.SecretKey;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 @JsonTypeName("secureNote")
@@ -20,9 +18,9 @@ public class SecureNote extends Entry {
     // It is still given its own class and file since Entry is meant to be an abstract class that cannot be called
     // directly and for better organization of our data.
 
-    public SecureNote(String name, String notes, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
-        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
+    public SecureNote(String name, String notes, byte[] key) {
+        this.name = VaultEncryptor.encrypt(name, key, getIV());
+        this.notes = VaultEncryptor.encrypt(notes, key, getIV());
     }
 
     // Print the relevant details for this secure note

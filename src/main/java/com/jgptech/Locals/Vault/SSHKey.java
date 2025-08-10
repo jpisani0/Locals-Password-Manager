@@ -9,9 +9,7 @@
 package com.jgptech.Locals.Vault;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import javax.crypto.SecretKey;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 @JsonTypeName("sshKey")
@@ -27,42 +25,42 @@ public class SSHKey extends Entry {
 
 
     // Constructor for a new SSH Key
-    public SSHKey(String name, String privateKey, String publicKey, String fingerprint, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
-        this.privateKey = VaultEncryptor.encrypt(privateKey, key, encryptionAlgorithm);
-        this.publicKey = VaultEncryptor.encrypt(publicKey, key, encryptionAlgorithm);
-        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key, encryptionAlgorithm);
-        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
+    public SSHKey(String name, String privateKey, String publicKey, String fingerprint, byte[] key) {
+        this.name = VaultEncryptor.encrypt(name, key, getIV());
+        this.privateKey = VaultEncryptor.encrypt(privateKey, key, getIV());
+        this.publicKey = VaultEncryptor.encrypt(publicKey, key, getIV());
+        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key, getIV());
+        this.notes = VaultEncryptor.encrypt(notes, key, getIV());
     }
 
     // Get the private key
-    public String getPrivateKey(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(privateKey, key, encryptionAlgorithm);
+    public String getPrivateKey(byte[] key) {
+        return VaultEncryptor.decrypt(privateKey, key, getIV());
     }
 
     // Set the private key
-    public void setPrivateKey(String privateKey, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.privateKey = VaultEncryptor.encrypt(privateKey, key, encryptionAlgorithm);
+    public void setPrivateKey(String privateKey, byte[] key) {
+        this.privateKey = VaultEncryptor.encrypt(privateKey, key, getIV());
     }
 
     // Get the public key
-    public String getPublicKey(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(publicKey, key, encryptionAlgorithm);
+    public String getPublicKey(byte[] key) {
+        return VaultEncryptor.decrypt(publicKey, key, getIV());
     }
 
     // Set the public key
-    public void setPublicKey(String publicKey, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.publicKey = VaultEncryptor.encrypt(publicKey, key, encryptionAlgorithm);
+    public void setPublicKey(String publicKey, byte[] key) {
+        this.publicKey = VaultEncryptor.encrypt(publicKey, key, getIV());
     }
 
     // Get the fingerprint
-    public String getFingerprint(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(fingerprint, key, encryptionAlgorithm);
+    public String getFingerprint(byte[] key) {
+        return VaultEncryptor.decrypt(fingerprint, key, getIV());
     }
 
     // Set the fingerprint
-    public void setFingerprint(String fingerprint, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key, encryptionAlgorithm);
+    public void setFingerprint(String fingerprint, byte[] key) {
+        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key, getIV());
     }
 
     // Print the relevant details for ssh key

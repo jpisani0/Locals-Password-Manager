@@ -10,6 +10,7 @@ package com.jgptech.Locals.CLI;
 
 import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.PasswordGenerator;
+import com.jgptech.Locals.Encryption.VaultEncryptor;
 import com.jgptech.Locals.Vault.*;
 
 import javax.crypto.SecretKey;
@@ -41,11 +42,11 @@ public class Shell {
     private int groupIndex;
 
     // Key for decryption of vault data
-    private final SecretKey key;
+    private final byte[] key;
 
 
     // Constructor for the shell class
-    public Shell(Vault vault, SecretKey key) {
+    public Shell(Vault vault, byte[] key) {
         this.vault = vault;
         this.key = key;
         this.groupIndex = 0;
@@ -59,7 +60,7 @@ public class Shell {
     // Runs the shell
     private void runShell() {
         while(!exit) {
-            System.out.print("(" + vault.getName() + " | " + vault.getGroup(groupIndex).getName(key, vault.getEncryptionAlgorithm()) + ") >> ");
+            System.out.print("(" + vault.getName() + " | " + vault.getGroup(groupIndex).getName(key) + ") >> ");
             input = scanner.nextLine().toLowerCase(); // Wait for the user's input
             String[] words = input.trim().split("\\s+"); // Split the input per word
 
@@ -286,7 +287,7 @@ public class Shell {
 
     // Open a group in the vault
     private void openGroup(String word) {
-        int newGroupIndex = vault.isValidGroupIndex(word, key, vault.getEncryptionAlgorithm());
+        int newGroupIndex = vault.isValidGroupIndex(word, key);
 
         // Only update the group index if the entered one was valid
         if(newGroupIndex != INVALID_INDEX) {
@@ -298,7 +299,7 @@ public class Shell {
 
     // Display information from an entry
     private void showEntry(String word) {
-        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(word, key, vault.getEncryptionAlgorithm());
+        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(word, key);
 
         // Check that a valid entry index was given
         if(entryIndex != INVALID_INDEX) {
@@ -316,7 +317,7 @@ public class Shell {
 //                System.out.print("Color: ");
         Color color = Color.RED; // TODO: put switch statement to get color from user, just using red for all for now
 
-        vault.addGroup(new Group(name, color, key, vault.getEncryptionAlgorithm()));
+        vault.addGroup(new Group(name, color, key));
     }
 
     // Add an entry to the group
@@ -436,7 +437,7 @@ public class Shell {
         System.out.print("Notes: ");
         String notes = scanner.nextLine();
 
-        vault.getGroup(groupIndex).getEntries().add(new Login(name, username, password, url, notes, key, vault.getEncryptionAlgorithm()));
+        vault.getGroup(groupIndex).getEntries().add(new Login(name, VaultEncryptor.generateIV(), username, password, url, notes, key));
     }
 
     // Add a payment card to the group
@@ -484,7 +485,7 @@ public class Shell {
             notes = scanner.nextLine();
         }
 
-        vault.getGroup(groupIndex).getEntries().add(new PaymentCard(name, brand, cardholderName, cardNumber, expireDate, securityCode, notes, key, vault.getEncryptionAlgorithm()));
+        vault.getGroup(groupIndex).getEntries().add(new PaymentCard(name, brand, cardholderName, cardNumber, expireDate, securityCode, notes, key));
     }
 
     // Add an SSH Key to the group
@@ -520,7 +521,7 @@ public class Shell {
             notes = scanner.nextLine();
         }
 
-        vault.getGroup(groupIndex).getEntries().add(new SSHKey(name, privateKey, publicKey, fingerprint, key, vault.getEncryptionAlgorithm()));
+        vault.getGroup(groupIndex).getEntries().add(new SSHKey(name, privateKey, publicKey, fingerprint, key));
     }
 
     // Add a secure note to the group
@@ -538,12 +539,12 @@ public class Shell {
             notes = scanner.nextLine();
         }
 
-        vault.getGroup(groupIndex).getEntries().add(new SecureNote(name, notes, key, vault.getEncryptionAlgorithm()));
+        vault.getGroup(groupIndex).getEntries().add(new SecureNote(name, notes, key));
     }
 
     // Delete a group from the vault
     private void deleteGroup(String word) {
-        int removeGroupIndex = vault.isValidGroupIndex(word, key, vault.getEncryptionAlgorithm());
+        int removeGroupIndex = vault.isValidGroupIndex(word, key);
 
         // See if we found a valid group index
         if(removeGroupIndex != INVALID_INDEX) {
@@ -568,7 +569,7 @@ public class Shell {
         } catch(NumberFormatException e) {
             // Check if the user entered an entry name
             for(int index = 0; index < vault.getGroup(groupIndex).size(); index++) {
-                if(word.equals(vault.getGroup(groupIndex).getEntry(index).getName(key, vault.getEncryptionAlgorithm()).toLowerCase())) {
+                if(word.equals(vault.getGroup(groupIndex).getEntry(index).getName(key).toLowerCase())) {
                     removeEntryIndex = index;
                     break;
                 }
@@ -588,7 +589,7 @@ public class Shell {
 
     // Edit a group in the vault
     private void editGroup(String groupWord, String fieldWord) {
-        int editGroupIndex = vault.isValidGroupIndex(groupWord, key, vault.getEncryptionAlgorithm());
+        int editGroupIndex = vault.isValidGroupIndex(groupWord, key);
         String field = "";
         int fieldNum = INVALID_INDEX;
 
@@ -598,7 +599,7 @@ public class Shell {
                 case "name":
                     System.out.print("Name: ");
                     String name = scanner.nextLine();
-                    vault.getGroup(editGroupIndex).setName(name, key, vault.getEncryptionAlgorithm());
+                    vault.getGroup(editGroupIndex).setName(name, key);
                     break;
 
                 case "color":
@@ -618,7 +619,7 @@ public class Shell {
 
     // Edit an entry in the vault
     private void editEntry(String entryWord, String fieldWord) {
-        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key, vault.getEncryptionAlgorithm());
+        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key);
 
         // Check that the user gave a valid entry index or name
         if(entryIndex != INVALID_INDEX) {
@@ -648,13 +649,13 @@ public class Shell {
             case "name":
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
-                login.setName(name, key, vault.getEncryptionAlgorithm());
+                login.setName(name, key);
                 break;
 
             case "username":
                 System.out.print("Username: ");
                 String username = scanner.nextLine();
-                login.setUsername(username, key, vault.getEncryptionAlgorithm());
+                login.setUsername(username, key);
                 break;
 
             case "password":
@@ -662,7 +663,7 @@ public class Shell {
                 String verifyPassword = new String(console.readPassword("Verify Password: "));
 
                 if(password.equals(verifyPassword)) {
-                    login.setPassword(password, key, vault.getEncryptionAlgorithm());
+                    login.setPassword(password, key);
                 } else {
                     System.out.println("ERROR: password do not match. Please try again.");
                 }
@@ -671,14 +672,14 @@ public class Shell {
             case "url":
                 System.out.print("URL: ");
                 String url = scanner.nextLine();
-                login.setUrl(url, key, vault.getEncryptionAlgorithm());
+                login.setUrl(url, key);
                 break;
 
             case "note":
             case "notes":
                 System.out.print("Notes: ");
                 String notes = scanner.nextLine();
-                login.setNotes(notes, key, vault.getEncryptionAlgorithm());
+                login.setNotes(notes, key);
                 break;
 
             default:
@@ -695,27 +696,27 @@ public class Shell {
             case "name":
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
-                paymentCard.setName(name, key, vault.getEncryptionAlgorithm());
+                paymentCard.setName(name, key);
                 break;
 
             case "cardholdername":
             case "cardholder name":
                 System.out.print("Cardholder name: ");
                 String cardholderName = scanner.nextLine();
-                paymentCard.setCardholderName(cardholderName, key, vault.getEncryptionAlgorithm());
+                paymentCard.setCardholderName(cardholderName, key);
                 break;
 
             case "cardnumber":
             case "card number":
                 System.out.print("Card number: ");
                 String cardNumber = scanner.nextLine();
-                paymentCard.setCardNumber(cardNumber, key, vault.getEncryptionAlgorithm());
+                paymentCard.setCardNumber(cardNumber, key);
                 break;
 
             case "brand":
                 System.out.print("Brand: ");
                 String brand = scanner.nextLine();
-                paymentCard.setBrand(brand, key, vault.getEncryptionAlgorithm());
+                paymentCard.setBrand(brand, key);
                 break;
 
             case "expiredate":
@@ -724,21 +725,21 @@ public class Shell {
             case "expiration date":
                 System.out.print("Expiration Date: ");
                 String expireDate = scanner.nextLine();
-                paymentCard.setExpireDate(expireDate, key, vault.getEncryptionAlgorithm());
+                paymentCard.setExpireDate(expireDate, key);
                 break;
 
             case "securitycode":
             case "security code":
                 System.out.print("Security Code: ");
                 String securityCode = scanner.nextLine();
-                paymentCard.setSecurityCode(securityCode, key, vault.getEncryptionAlgorithm());
+                paymentCard.setSecurityCode(securityCode, key);
                 break;
 
             case "note":
             case "notes":
                 System.out.print("Notes: ");
                 String notes = scanner.nextLine();
-                paymentCard.setNotes(notes, key, vault.getEncryptionAlgorithm());
+                paymentCard.setNotes(notes, key);
                 break;
 
             default:
@@ -755,34 +756,34 @@ public class Shell {
             case "name":
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
-                sshKey.setName(name, key, vault.getEncryptionAlgorithm());
+                sshKey.setName(name, key);
                 break;
 
             case "privatekey":
             case "private key":
                 System.out.print("Private Key: ");
                 String privateKey = scanner.nextLine();
-                sshKey.setPrivateKey(privateKey, key, vault.getEncryptionAlgorithm());
+                sshKey.setPrivateKey(privateKey, key);
                 break;
 
             case "pubickey":
             case "public key":
                 System.out.print("Public Key: ");
                 String publicKey = scanner.nextLine();
-                sshKey.setPublicKey(publicKey, key, vault.getEncryptionAlgorithm());
+                sshKey.setPublicKey(publicKey, key);
                 break;
 
             case "fingerprint":
                 System.out.print("Fingerprint: ");
                 String fingerprint = scanner.nextLine();
-                sshKey.setFingerprint(fingerprint, key, vault.getEncryptionAlgorithm());
+                sshKey.setFingerprint(fingerprint, key);
                 break;
 
             case "note":
             case "notes":
                 System.out.print("Notes: ");
                 String notes = scanner.nextLine();
-                sshKey.setNotes(notes, key, vault.getEncryptionAlgorithm());
+                sshKey.setNotes(notes, key);
                 break;
 
             default:
@@ -798,14 +799,14 @@ public class Shell {
             case "name":
                 System.out.print("Name: ");
                 String name = scanner.nextLine();
-                secureNote.setName(name, key, vault.getEncryptionAlgorithm());
+                secureNote.setName(name, key);
                 break;
 
             case "note":
             case "notes":
                 System.out.print("Notes: ");
                 String notes = scanner.nextLine();
-                secureNote.setNotes(notes, key, vault.getEncryptionAlgorithm());
+                secureNote.setNotes(notes, key);
                 break;
 
             default:
@@ -817,8 +818,8 @@ public class Shell {
 
     // Move a group to a new index in the vault
     private void moveGroup(String groupWord, String indexWord) {
-        int selectedGroupIndex = vault.isValidGroupIndex(groupWord, key, vault.getEncryptionAlgorithm());
-        int newIndex = vault.isValidGroupIndex(indexWord, key, vault.getEncryptionAlgorithm());;
+        int selectedGroupIndex = vault.isValidGroupIndex(groupWord, key);
+        int newIndex = vault.isValidGroupIndex(indexWord, key);;
 
         // Only continue if a valid group index was entered
         if(selectedGroupIndex != INVALID_INDEX) {
@@ -840,8 +841,8 @@ public class Shell {
 
     // Move an entry from one group to another
     private void moveEntry(String entryWord, String groupWord) {
-        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key, vault.getEncryptionAlgorithm());
-        int toGroupIndex = vault.isValidGroupIndex(groupWord, key, vault.getEncryptionAlgorithm());
+        int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key);
+        int toGroupIndex = vault.isValidGroupIndex(groupWord, key);
 
         if(entryIndex != INVALID_INDEX) {
             if(toGroupIndex != INVALID_INDEX) {
