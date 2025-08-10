@@ -8,6 +8,7 @@
 
 package com.jgptech.Locals.Vault;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.Base64;
 
@@ -63,26 +64,31 @@ public abstract class Entry {
         this.notes = VaultEncryptor.encrypt(notes, key, getIV());
     }
 
+    @JsonIgnore
     // Returns true if this entry is a Login
     public boolean isLogin() {
         return this instanceof Login;
     }
 
+    @JsonIgnore
     // Returns true if this entry is a Payment Card
     public boolean isPaymentCard() {
         return this instanceof PaymentCard;
     }
 
+    @JsonIgnore
     // Returns true if this entry is an SSH Key
     public boolean isSSHKey() {
         return this instanceof SSHKey;
     }
 
+    @JsonIgnore
     // Returns true if this entry is a Secure Note
     public boolean isSecureNote() {
         return this instanceof SecureNote;
     }
 
+    @JsonIgnore
     // Print the details of this entry. Must be implemented per subclass due to differentiating elements.
     public abstract void print();
 }

@@ -24,6 +24,9 @@ public class SSHKey extends Entry {
     private String fingerprint;
 
 
+    // Empty constructor for Jackson
+    SSHKey() {}
+
     // Constructor for a new SSH Key
     public SSHKey(String name, String privateKey, String publicKey, String fingerprint, byte[] key) {
         this.name = VaultEncryptor.encrypt(name, key, getIV());

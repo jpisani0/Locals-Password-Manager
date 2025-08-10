@@ -1,0 +1,18 @@
+{
+  "saltEnc" : "7LChmW5WH6TI09avRKFlDw==",
+  "saltAuth" : "mTRlbpDrwCFmnxJdey0aGA==",
+  "masterHash" : "jDLtxZqF5DY/9EcSc8OXcYsyDEM/CGdN/gWsJxPmJC8=",
+  "groups" : [ {
+    "name" : "0oZXvgpgBq4POhgkov92m5epQelJPu4=",
+    "iv" : "ChHsTTFU3ZfApkWy",
+    "entries" : [ {
+      "type" : "login",
+      "name" : "FLlP+gf5IWf/eaNa0wIkoayrrfK/gQ==",
+      "iv" : "mjcI009XSCLBuhB3",
+      "notes" : "Hbhc4RDomi1IGQR6ObAKgKeYSmpQsZAnqzRyLvR675U=",
+      "username" : "FLlP+gf5vCdXWAF5cLoL3KRqS+3yNpCgH95ekfEWirs=",
+      "password" : "DLNF429p9Hq2BwfnzuT0TwWRvzw=",
+      "url" : "FLlP+gf50iFVVLYv5aw4BCgKb3d003mYd6g="
+    } ]
+  } ]
+}

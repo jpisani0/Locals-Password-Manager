@@ -26,6 +26,9 @@ public class Login extends Entry {
 
     // REVIEW: should fill any variable that has the password in it with garbage data or 0's after they are done being used to clear them from memory
 
+    // Empty constructor for Jackson
+    Login() {}
+
     // Constructor for a new entry
     public Login(String name, byte[] iv, String username, String password, String url, String notes, byte[] key) {
         this.name = VaultEncryptor.encrypt(name, key, iv);

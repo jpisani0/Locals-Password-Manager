@@ -18,6 +18,9 @@ public class SecureNote extends Entry {
     // It is still given its own class and file since Entry is meant to be an abstract class that cannot be called
     // directly and for better organization of our data.
 
+    // Empty constructor for Jackson
+    SecureNote() {}
+
     public SecureNote(String name, String notes, byte[] key) {
         this.name = VaultEncryptor.encrypt(name, key, getIV());
         this.notes = VaultEncryptor.encrypt(notes, key, getIV());

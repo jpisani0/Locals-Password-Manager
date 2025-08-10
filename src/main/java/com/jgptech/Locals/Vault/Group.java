@@ -17,6 +17,7 @@ import java.util.Base64;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Group {
+    @JsonIgnore
     // Shows that a given index is invalid
     private final int INVALID_INDEX = -1; // TODO: need to make this something "global" for the project
 

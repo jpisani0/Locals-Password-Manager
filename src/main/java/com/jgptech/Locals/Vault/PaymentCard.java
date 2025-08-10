@@ -30,6 +30,9 @@ public class PaymentCard extends Entry {
     private String securityCode;
 
 
+    // Empty constructor for Jackson
+    PaymentCard() {}
+
     // Constructor for a new payment card
     public PaymentCard(String name, String cardholderName, String cardNumber, String brand, String expireDate, String securityCode, String notes, byte[] key) {
         this.name = VaultEncryptor.encrypt(name, key, getIV());
