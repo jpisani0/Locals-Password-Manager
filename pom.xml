@@ -44,6 +44,7 @@
             <version>2.15.3</version>
         </dependency>
 
+        <!-- For Argon2 -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
@@ -72,6 +73,7 @@
                                     <mainClass>${main.class}</mainClass>
                                 </transformer>
                             </transformers>
+                            <!-- This prevents a runtime crash due to the shade plugin unpacking and repacking jars, erasing signatures and causing a check to stop the program -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
