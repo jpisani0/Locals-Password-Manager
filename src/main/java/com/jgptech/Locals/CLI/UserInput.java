@@ -8,8 +8,6 @@
 
 package com.jgptech.Locals.CLI;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
-import com.jgptech.Locals.Encryption.HashingAlgorithm;
 import com.jgptech.Locals.Encryption.KeyHasher;
 import com.jgptech.Locals.Encryption.PasswordGenerator;
 import com.jgptech.Locals.Vault.Vault;
@@ -17,7 +15,6 @@ import com.jgptech.Locals.Vault.Vault;
 import java.io.Console;
 import java.util.Arrays;
 import java.util.Scanner;
-import javax.crypto.SecretKey;
 
 public final class  UserInput {
     // Attempts for unlocking a vault before process is aborted
@@ -40,7 +37,7 @@ public final class  UserInput {
     public static void createNewVault(String vaultName) {
 //        HashingAlgorithm hashingAlgorithm = HashingAlgorithm.NoHashingAlgorithm;
 //        EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.NoEncryptionAlgorithm;
-        int iterations = 0;
+//        int iterations = 0;
         String masterPassword = "";
         byte[] masterHash;
 
