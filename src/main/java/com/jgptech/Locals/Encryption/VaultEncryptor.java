@@ -41,8 +41,12 @@ public final class VaultEncryptor {
 
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, spec);
-            byte[] encryptedData = cipher.doFinal(data.getBytes());
-            return Base64.getEncoder().encodeToString(encryptedData); // Encode with Base64 here as the resulting bytes from encryption may not correspond to actual characters
+            byte[] cipherText = cipher.doFinal(data.getBytes());
+
+            byte[] encrypted = new byte[iv.length + cipherText.length];
+            System.arraycopy(iv, 0, encrypted, 0, iv.length);
+            System.arraycopy(cipherText, 0, encrypted, iv.length, cipherText.length);
+            return Base64.getEncoder().encodeToString(cipherText); // Encode with Base64 here as the resulting bytes from encryption may not correspond to actual characters
         } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
             // TODO: better handling of exceptions
             System.out.println("ERROR: VaultEncryptor.encrypt(): " + e.toString());
@@ -59,9 +63,14 @@ public final class VaultEncryptor {
             SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
             GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
 
+            byte[] encrypted = Base64.getDecoder().decode(data);
+
+            byte[] ciphertext = new byte[encrypted.length - iv.length];
+            System.arraycopy(encrypted, iv.length, ciphertext, 0, ciphertext.length);
+
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, keySpec, spec);
-            byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(data));
+            byte[] decryptedData = cipher.doFinal(encrypted);
             return new String(decryptedData); // Return as a string cast here as we know the decrypted data will be able to be represented this way
         } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException e) {
             // TODO: better handling of exceptions

@@ -95,15 +95,15 @@ public class PaymentCard extends Entry {
     }
 
     // Print the relevant details for this payment card
-    public void print() {
+    public void print(byte[] key) {
         System.out.println();
-        System.out.println("Name: " + name);
-        System.out.println("Cardholder Name: " + cardholderName);
-        System.out.println("Card Number: " + cardNumber); // REVIEW: add way to display without showing card number, like '**** **** **** ****'
-        System.out.println("Brand: " + brand);
-        System.out.println("Expiration Date: " + expireDate);
-        System.out.println("Security Code: " + securityCode);
-        System.out.println("Notes: " + notes);
+        System.out.println("Name: " + getName(key));
+        System.out.println("Cardholder Name: " + getCardholderName(key));
+        System.out.println("Card Number: " + getCardNumber(key)); // REVIEW: add way to display without showing card number, like '**** **** **** ****'
+        System.out.println("Brand: " + getBrand(key));
+        System.out.println("Expiration Date: " + getExpireDate(key));
+        System.out.println("Security Code: " + getSecurityCode(key));
+        System.out.println("Notes: " + getNotes(key));
         System.out.println();
     }
 }

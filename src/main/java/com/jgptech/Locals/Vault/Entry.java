@@ -90,5 +90,5 @@ public abstract class Entry {
 
     @JsonIgnore
     // Print the details of this entry. Must be implemented per subclass due to differentiating elements.
-    public abstract void print();
+    public abstract void print(byte[] key);
 }

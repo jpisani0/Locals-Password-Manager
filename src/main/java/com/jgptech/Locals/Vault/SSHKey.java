@@ -67,13 +67,13 @@ public class SSHKey extends Entry {
     }
 
     // Print the relevant details for ssh key
-    public void print() {
+    public void print(byte[] key) {
         System.out.println();
-        System.out.println("Name: " + name);
-        System.out.println("Private Key: " + privateKey); // REVIEW: add way to hide private key
-        System.out.println("Public Key: " + publicKey);
-        System.out.println("Fingerprint: " + fingerprint);
-        System.out.println("Notes: " + notes);
+        System.out.println("Name: " + getName(key));
+        System.out.println("Private Key: " + getPrivateKey(key)); // REVIEW: add way to hide private key
+        System.out.println("Public Key: " + getPublicKey(key));
+        System.out.println("Fingerprint: " + getFingerprint(key));
+        System.out.println("Notes: " + getNotes(key));
         System.out.println();
     }
 }

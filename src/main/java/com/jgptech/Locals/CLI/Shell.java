@@ -303,7 +303,7 @@ public class Shell {
 
         // Check that a valid entry index was given
         if(entryIndex != INVALID_INDEX) {
-            vault.getGroup(groupIndex).getEntry(entryIndex).print();
+            vault.getGroup(groupIndex).getEntry(entryIndex).print(key);
         } else {
             printErrorMsg("ERROR: " + word + " is not a valid entry. Please use 'list entries' to see all entry names and numbers.");
         }

@@ -70,13 +70,13 @@ public class Login extends Entry {
     }
 
     // Print the relevant details for this entry
-    public void print() {
+    public void print(byte[] key) {
         System.out.println();
-        System.out.println("Name: " + name);
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password); // REVIEW: add way to print without the password showing, like '******'
-        System.out.println("URL: " + url);
-        System.out.println("Notes: " + notes);
+        System.out.println("Name: " + getName(key));
+        System.out.println("Username: " + getUsername(key));
+        System.out.println("Password: " + getPassword(key)); // REVIEW: add way to print without the password showing, like '******'
+        System.out.println("URL: " + getUrl(key));
+        System.out.println("Notes: " + getNotes(key));
         System.out.println();
     }
 }
