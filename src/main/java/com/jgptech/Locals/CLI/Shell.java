@@ -518,7 +518,7 @@ public class Shell {
             notes = scanner.nextLine();
         }
 
-        vault.getGroup(groupIndex).getEntries().add(new SSHKey(name, privateKey, publicKey, fingerprint, key));
+        vault.getGroup(groupIndex).getEntries().add(new SSHKey(name, privateKey, publicKey, fingerprint, notes, key));
     }
 
     // Add a secure note to the group
