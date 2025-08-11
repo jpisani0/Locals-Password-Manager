@@ -9,9 +9,7 @@
 package com.jgptech.Locals.Vault;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import javax.crypto.SecretKey;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 @JsonTypeName("sshKey")
@@ -26,53 +24,56 @@ public class SSHKey extends Entry {
     private String fingerprint;
 
 
+    // Empty constructor for Jackson
+    SSHKey() {}
+
     // Constructor for a new SSH Key
-    public SSHKey(String name, String privateKey, String publicKey, String fingerprint, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
-        this.privateKey = VaultEncryptor.encrypt(privateKey, key, encryptionAlgorithm);
-        this.publicKey = VaultEncryptor.encrypt(publicKey, key, encryptionAlgorithm);
-        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key, encryptionAlgorithm);
-        this.notes = VaultEncryptor.encrypt(notes, key, encryptionAlgorithm);
+    public SSHKey(String name, String privateKey, String publicKey, String fingerprint, byte[] key) {
+        this.name = VaultEncryptor.encrypt(name, key);
+        this.privateKey = VaultEncryptor.encrypt(privateKey, key);
+        this.publicKey = VaultEncryptor.encrypt(publicKey, key);
+        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key);
+        this.notes = VaultEncryptor.encrypt(notes, key);
     }
 
     // Get the private key
-    public String getPrivateKey(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(privateKey, key, encryptionAlgorithm);
+    public String getPrivateKey(byte[] key) {
+        return VaultEncryptor.decrypt(privateKey, key);
     }
 
     // Set the private key
-    public void setPrivateKey(String privateKey, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.privateKey = VaultEncryptor.encrypt(privateKey, key, encryptionAlgorithm);
+    public void setPrivateKey(String privateKey, byte[] key) {
+        this.privateKey = VaultEncryptor.encrypt(privateKey, key);
     }
 
     // Get the public key
-    public String getPublicKey(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(publicKey, key, encryptionAlgorithm);
+    public String getPublicKey(byte[] key) {
+        return VaultEncryptor.decrypt(publicKey, key);
     }
 
     // Set the public key
-    public void setPublicKey(String publicKey, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.publicKey = VaultEncryptor.encrypt(publicKey, key, encryptionAlgorithm);
+    public void setPublicKey(String publicKey, byte[] key) {
+        this.publicKey = VaultEncryptor.encrypt(publicKey, key);
     }
 
     // Get the fingerprint
-    public String getFingerprint(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(fingerprint, key, encryptionAlgorithm);
+    public String getFingerprint(byte[] key) {
+        return VaultEncryptor.decrypt(fingerprint, key);
     }
 
     // Set the fingerprint
-    public void setFingerprint(String fingerprint, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key, encryptionAlgorithm);
+    public void setFingerprint(String fingerprint, byte[] key) {
+        this.fingerprint = VaultEncryptor.encrypt(fingerprint, key);
     }
 
     // Print the relevant details for ssh key
-    public void print() {
+    public void print(byte[] key) {
         System.out.println();
-        System.out.println("Name: " + name);
-        System.out.println("Private Key: " + privateKey); // REVIEW: add way to hide private key
-        System.out.println("Public Key: " + publicKey);
-        System.out.println("Fingerprint: " + fingerprint);
-        System.out.println("Notes: " + notes);
+        System.out.println("Name: " + getName(key));
+        System.out.println("Private Key: " + getPrivateKey(key)); // REVIEW: add way to hide private key
+        System.out.println("Public Key: " + getPublicKey(key));
+        System.out.println("Fingerprint: " + getFingerprint(key));
+        System.out.println("Notes: " + getNotes(key));
         System.out.println();
     }
 }

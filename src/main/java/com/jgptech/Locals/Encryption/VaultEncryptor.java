@@ -9,48 +9,93 @@
 package com.jgptech.Locals.Encryption;
 
 import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 
-// REVIEW: these may be able to be moved to the vault class as private methods and remove this class entirely
+public final class VaultEncryptor {
+    // Length (in bits) of the tag for the GCM parameter
+    private final static int GCM_TAG_LENGTH = 128;
 
-public abstract class VaultEncryptor {
+    // Size (in bytes) of generated IVs
+    private final static int IV_LENGTH = 12; // REVIEW could bring this to 16 bytes
+
+
+    // Prevent instantiation
+    private VaultEncryptor() {}
+
     // TODO: add support for other encryption algorithms, likely using a private method that converts the EncryptionAlgorithm enum to the string for Cipher
+    // REVIEW: possibly add AAD (Additional Authenticated Data) to the project based off the file name or other meta data
 
     // Encrypt the data to be stored in the vault
-    public static String encrypt(String data, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        String encryptedString = "";
-
+    public static String encrypt(String data, byte[] key) {
         try {
-            String algorithmName = encryptionAlgorithm.toString();
-            Cipher cipher = Cipher.getInstance(algorithmName);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] encryptedData = cipher.doFinal(data.getBytes());
-            return Base64.getEncoder().encodeToString(encryptedData); // Encode with Base64 here as the resulting bytes from encryption may not correspond to actual characters
-        } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException e) {
+            // Generate a new unique IV
+            byte[] iv = new byte[IV_LENGTH];
+            SecureRandom rand = new SecureRandom();
+            rand.nextBytes(iv);
+
+            // Create the spec objects for the key and GCM parameters
+            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+            GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
+
+            // Get the cipher object in encrypt mode using AES with GCM and no padding
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, spec);
+
+            // Encrypt the data
+            byte[] cipherText = cipher.doFinal(data.getBytes());
+
+            // Create the array to hold the resulting encrypted string in
+            byte[] encrypted = new byte[iv.length + cipherText.length];
+
+            // Copy the ciphertext with the IV prepended into the array
+            System.arraycopy(iv, 0, encrypted, 0, iv.length);
+            System.arraycopy(cipherText, 0, encrypted, iv.length, cipherText.length);
+
+            // Encode with Base64 here as the resulting bytes from encryption may not correspond to actual characters
+            return Base64.getEncoder().encodeToString(encrypted);
+        } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
             // TODO: better handling of exceptions
             System.out.println("ERROR: VaultEncryptor.encrypt(): " + e.toString());
+            return "";
         }
-
-        return encryptedString;
     }
 
     // Decrypt the data from the vault
-    public static String decrypt(String data, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        String decryptedString = "";
-
+    public static String decrypt(String data, byte[] key) {
         try {
-            String algorithmName = encryptionAlgorithm.toString();
-            Cipher cipher = Cipher.getInstance(algorithmName);
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(data));
-            return new String(decryptedData); // Return as a string cast here as we know the decrypted data will be able to be represented this way
-        } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException e) {
+            // Decode the base64 encoded string to bytes
+            byte[] encrypted = Base64.getDecoder().decode(data);
+
+            // Extract the IV from the encrypted array
+            byte[] iv = Arrays.copyOfRange(encrypted, 0, IV_LENGTH);
+
+            // Extract the ciphertext from the rest of the array
+            byte[] cipherText = Arrays.copyOfRange(encrypted, IV_LENGTH, encrypted.length);
+
+            // Get the spec objects for the key and GCM parameters
+            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+            GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
+
+            // Get the cipher object in decrypt mode using AES with GCM and no padding
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, spec);
+
+            // Decrypt the cipher text
+            byte[] decryptedData = cipher.doFinal(cipherText);
+
+            // Return as a string cast here as we know the decrypted data will be able to be represented this way
+            return new String(decryptedData);
+        } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
             // TODO: better handling of exceptions
             System.out.println("ERROR: VaultEncryptor.decrypt(): " + e.toString() + ": " + e.getMessage());
+            return "";
         }
-
-        return decryptedString;
     }
 }

@@ -8,15 +8,16 @@
 
 package com.jgptech.Locals.Vault;
 
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
 import com.jgptech.Locals.Encryption.VaultEncryptor;
 
-import javax.crypto.SecretKey;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Base64;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Group {
+    @JsonIgnore
     // Shows that a given index is invalid
     private final int INVALID_INDEX = -1; // TODO: need to make this something "global" for the project
 
@@ -36,19 +37,19 @@ public class Group {
     Group() {}
 
     // Constructor for a new group
-    public Group(String name, Color color, SecretKey key, EncryptionAlgorithm encryptionAlgorithm /*Image groupImage*/) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
+    public Group(String name, Color color, byte[] key /*Image groupImage*/) {
+        this.name = VaultEncryptor.encrypt(name, key);
 //        this.color = color;
     }
 
     // Get the name of this group
-    public String getName(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        return VaultEncryptor.decrypt(name, key, encryptionAlgorithm);
+    public String getName(byte[] key) {
+        return VaultEncryptor.decrypt(name, key);
     }
 
     // Set the name of this group
-    public void setName(String name, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
-        this.name = VaultEncryptor.encrypt(name, key, encryptionAlgorithm);
+    public void setName(String name, byte[] key) {
+        this.name = VaultEncryptor.encrypt(name, key);
     }
 
 //    // Get the color of the group
@@ -139,13 +140,13 @@ public class Group {
     }
 
     // List all the entries in this group
-    public void listEntries(SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public void listEntries(byte[] key) {
         // REVIEW: need this if? or will work same if removed? better coding practice to leave it anyways?
         if(!entries.isEmpty()) {
             System.out.println();
 
             for (int index = 0; index < entries.size(); index++) {
-                System.out.println((index + 1) + ". " + entries.get(index).getName(key, encryptionAlgorithm));
+                System.out.println((index + 1) + ". " + entries.get(index).getName(key));
             }
 
             System.out.println();
@@ -153,7 +154,7 @@ public class Group {
     }
 
     // Check if a given entry index is valid for this group
-    public int isValidEntryIndex(String entryWord, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public int isValidEntryIndex(String entryWord, byte[] key) {
         int entryIndex = -1; // REVIEW: make INVALID INDEX accessible from somewhere across this package
 
         // Check if the user entered the entry number
@@ -167,7 +168,7 @@ public class Group {
         } catch (NumberFormatException e) {
             // Check if the user entered the entry name
             for(int index = 0; index < size(); index++) {
-                if(entryWord.equals(getEntry(index).getName(key, encryptionAlgorithm).toLowerCase())) {
+                if(entryWord.equals(getEntry(index).getName(key).toLowerCase())) {
                     entryIndex = index;
                     break;
                 }

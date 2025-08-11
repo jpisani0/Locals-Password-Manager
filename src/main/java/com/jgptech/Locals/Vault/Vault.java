@@ -9,8 +9,6 @@
 package com.jgptech.Locals.Vault;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
-import com.jgptech.Locals.Encryption.EncryptionAlgorithm;
-import com.jgptech.Locals.Encryption.HashingAlgorithm;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,17 +29,17 @@ public class Vault {
     // Path object of the vault
     private Path path = null;
 
-    // Hashing algorithm used for this vault
-    private HashingAlgorithm hashingAlgorithm;
+//    // Hashing algorithm used for this vault
+//    private HashingAlgorithm hashingAlgorithm;
+//
+//    // Encryption algorithm used for this vault
+//    private EncryptionAlgorithm encryptionAlgorithm;
 
-    // Encryption algorithm used for this vault
-    private EncryptionAlgorithm encryptionAlgorithm;
+    // The salt used with the master password to derive the secret key for encryption/decryption in this vault
+    private String saltEnc;
 
-    // Iterations for the hashing algorithm
-    private int iterations;
-
-    // The salt for this vault
-    private String salt;
+    // The salt used with the master password to output a hash used for authentication purposes
+    private String saltAuth;
 
     // Hash of the master password for this vault
     private String masterHash;
@@ -58,14 +56,12 @@ public class Vault {
     Vault() {}
 
     // Constructor for creating a new vault
-    public Vault(String filename, SecretKey key, HashingAlgorithm hashingAlgorithm, EncryptionAlgorithm encryptionAlgorithm, int iterations, byte[] salt, byte[] masterHash) {
+    public Vault(String filename, byte[] key, byte[] saltEnc, byte[] saltAuth, byte[] masterHash) {
         this.path = Paths.get(filename);
-        this.hashingAlgorithm = hashingAlgorithm;
-        this.encryptionAlgorithm = encryptionAlgorithm;
-        this.iterations = iterations;
-        this.salt = Base64.getEncoder().encodeToString(salt);
+        this.saltEnc = Base64.getEncoder().encodeToString(saltEnc);
+        this.saltAuth = Base64.getEncoder().encodeToString(saltAuth);
         this.masterHash = Base64.getEncoder().encodeToString(masterHash);
-        groups.add(new Group("General", Color.blue, key, encryptionAlgorithm));
+        groups.add(new Group("General", Color.blue, key));
     }
 
     @JsonIgnore
@@ -80,44 +76,44 @@ public class Vault {
         path = Paths.get(name);
     }
 
-    // Get the hashing algorithm for this vault
-    public HashingAlgorithm getHashingAlgorithm() {
-        return hashingAlgorithm;
+//    // Get the hashing algorithm for this vault
+//    public HashingAlgorithm getHashingAlgorithm() {
+//        return hashingAlgorithm;
+//    }
+//
+//    // Set the hashing algorithm for this vault
+//    public void setHashingAlgorithm(HashingAlgorithm hashingAlgorithm) {
+//        this.hashingAlgorithm = hashingAlgorithm;
+//    }
+//
+//    // Get the encryption algorithm for this vault
+//    public EncryptionAlgorithm getEncryptionAlgorithm() {
+//        return encryptionAlgorithm;
+//    }
+//
+//    // Set the encryption algorithm for this vault
+//    public void setEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm) {
+//        this.encryptionAlgorithm = encryptionAlgorithm;
+//    }
+
+    // Get the saltEnc for this vault
+    public byte[] getSaltEnc() {
+        return Base64.getDecoder().decode(saltEnc);
     }
 
-    // Set the hashing algorithm for this vault
-    public void setHashingAlgorithm(HashingAlgorithm hashingAlgorithm) {
-        this.hashingAlgorithm = hashingAlgorithm;
+    // Set the saltEnc for this vault
+    public void setSaltEnc(byte[] saltEnc) {
+        this.saltEnc = Base64.getEncoder().encodeToString(saltEnc);
     }
 
-    // Get the encryption algorithm for this vault
-    public EncryptionAlgorithm getEncryptionAlgorithm() {
-        return encryptionAlgorithm;
+    // Get the saltAuth for this vault
+    public byte[] getSaltAuth() {
+        return Base64.getDecoder().decode(saltAuth);
     }
 
-    // Set the encryption algorithm for this vault
-    public void setEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm) {
-        this.encryptionAlgorithm = encryptionAlgorithm;
-    }
-
-    // Get the number of iterations for this vault
-    public int getIterations() {
-        return iterations;
-    }
-
-    // Set the number of iterations for this vault
-    public void setIterations(int iterations) {
-        this.iterations = iterations;
-    }
-
-    // Get the salt for this vault
-    public byte[] getSalt() {
-        return Base64.getDecoder().decode(salt);
-    }
-
-    // Set the salt for this vault
-    public void setSalt(byte[] salt) {
-        this.salt = Base64.getEncoder().encodeToString(salt);
+    // Set the saltAuth for this vault
+    public void setSaltAuth(byte[] saltAuth) {
+        this.saltAuth = Base64.getEncoder().encodeToString(saltAuth);
     }
 
     // Get the hash of the master password for this vault
@@ -185,8 +181,7 @@ public class Vault {
         boolean success = true;
 
         // Check that this vault has enough data to write
-        if(path == null || hashingAlgorithm == HashingAlgorithm.NoHashingAlgorithm ||
-                encryptionAlgorithm == EncryptionAlgorithm.NoEncryptionAlgorithm || iterations < 1 || salt.isEmpty()) {
+        if(path == null || saltEnc.isEmpty() || saltAuth.isEmpty()) {
             System.out.println("ERROR: not enough data to write to vault");
             success = false;
         } else {
@@ -246,12 +241,12 @@ public class Vault {
 
     @JsonIgnore
     // Add a group at a specific index of this vault
-    public void addGroup(int groupIndex, String name, Color color, SecretKey key) throws IndexOutOfBoundsException {
+    public void addGroup(int groupIndex, String name, Color color, byte[] key) throws IndexOutOfBoundsException {
         if(groupIndex < 0 || groupIndex > groups.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        groups.add(groupIndex, new Group(name, color, key, encryptionAlgorithm));
+        groups.add(groupIndex, new Group(name, color, key));
     }
 
     @JsonIgnore
@@ -297,12 +292,12 @@ public class Vault {
 
     @JsonIgnore
     // List all the groups in this vault
-    public void listGroups(SecretKey key) {
+    public void listGroups(byte[] key) {
         if(!groups.isEmpty()) {
             System.out.println();
 
             for(int index = 0; index < groups.size(); index++) {
-                System.out.println((index + 1) + ". " + groups.get(index).getName(key, encryptionAlgorithm));
+                System.out.println((index + 1) + ". " + groups.get(index).getName(key));
             }
 
             System.out.println();
@@ -310,7 +305,7 @@ public class Vault {
     }
 
     // Check if a given group index is valid for this group
-    public int isValidGroupIndex(String groupWord, SecretKey key, EncryptionAlgorithm encryptionAlgorithm) {
+    public int isValidGroupIndex(String groupWord, byte[] key) {
         int groupIndex = -1;
 
         // Check if the user entered the group number
@@ -324,7 +319,7 @@ public class Vault {
         } catch(NumberFormatException e) {
             // Check if the user entered the group name
             for(int index = 0; index < size(); index++) {
-                if(groupWord.equals(getGroup(index).getName(key, encryptionAlgorithm).toLowerCase())) {
+                if(groupWord.equals(getGroup(index).getName(key).toLowerCase())) {
                     groupIndex = index;
                     break;
                 }
@@ -354,11 +349,11 @@ public class Vault {
     }
 
     // List the entries of a group in the vault
-    public void listEntries(int groupIndex, SecretKey key) throws IndexOutOfBoundsException {
+    public void listEntries(int groupIndex, byte[] key) throws IndexOutOfBoundsException {
         if(groupIndex < 0 || groupIndex > groups.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        groups.get(groupIndex).listEntries(key, encryptionAlgorithm);
+        groups.get(groupIndex).listEntries(key);
     }
 }
