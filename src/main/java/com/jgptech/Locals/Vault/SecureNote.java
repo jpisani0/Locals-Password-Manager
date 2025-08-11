@@ -22,8 +22,8 @@ public class SecureNote extends Entry {
     SecureNote() {}
 
     public SecureNote(String name, String notes, byte[] key) {
-        this.name = VaultEncryptor.encrypt(name, key, getIV());
-        this.notes = VaultEncryptor.encrypt(notes, key, getIV());
+        this.name = VaultEncryptor.encrypt(name, key);
+        this.notes = VaultEncryptor.encrypt(notes, key);
     }
 
     // Print the relevant details for this secure note

@@ -10,6 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ab17e68-7909-4f08-83fa-c36cbd0efdbf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/CLI/Shell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/VaultEncryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Encryption/VaultEncryptor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Entry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Group.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jgptech/Locals/Vault/Login.java" afterDir="false" />

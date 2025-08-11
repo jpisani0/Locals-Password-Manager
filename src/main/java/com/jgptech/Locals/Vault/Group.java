@@ -24,9 +24,6 @@ public class Group {
     // Name of the group
     private String name;
 
-    // The initialization vector of this group. Base64 encoded.
-    private String iv;
-
 //    // Color for the group
 //    private Color color;
 
@@ -41,29 +38,18 @@ public class Group {
 
     // Constructor for a new group
     public Group(String name, Color color, byte[] key /*Image groupImage*/) {
-        this.iv = Base64.getEncoder().encodeToString(VaultEncryptor.generateIV());
-        this.name = VaultEncryptor.encrypt(name, key, getIV());
+        this.name = VaultEncryptor.encrypt(name, key);
 //        this.color = color;
     }
 
     // Get the name of this group
     public String getName(byte[] key) {
-        return VaultEncryptor.decrypt(name, key, getIV());
+        return VaultEncryptor.decrypt(name, key);
     }
 
     // Set the name of this group
     public void setName(String name, byte[] key) {
-        this.name = VaultEncryptor.encrypt(name, key, getIV());
-    }
-
-    // Get the IV of this group
-    public byte[] getIV() {
-        return Base64.getDecoder().decode(iv);
-    }
-
-    // Set the IV of this group
-    public void setIV(byte[] iv) {
-        this.iv = Base64.getEncoder().encodeToString(iv);
+        this.name = VaultEncryptor.encrypt(name, key);
     }
 
 //    // Get the color of the group

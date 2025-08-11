@@ -434,7 +434,7 @@ public class Shell {
         System.out.print("Notes: ");
         String notes = scanner.nextLine();
 
-        vault.getGroup(groupIndex).getEntries().add(new Login(name, VaultEncryptor.generateIV(), username, password, url, notes, key));
+        vault.getGroup(groupIndex).getEntries().add(new Login(name, username, password, url, notes, key));
     }
 
     // Add a payment card to the group

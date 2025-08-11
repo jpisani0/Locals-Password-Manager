@@ -23,10 +23,6 @@ public abstract class Entry {
     // The name of the entry
     protected String name;
 
-    // TODO
-    // The initialization vector of the entry. Base64 encoded.
-    protected String iv;
-
     // The notes for the entry
     protected String notes;
 
@@ -36,32 +32,22 @@ public abstract class Entry {
 
     // Get the name of the entry
     public String getName(byte[] key) {
-        return VaultEncryptor.decrypt(name, key, getIV());
+        return VaultEncryptor.decrypt(name, key);
     }
 
     // Set the name of the entry
     public void setName(String name, byte[] key) {
-        this.name = VaultEncryptor.encrypt(name, key, getIV());
-    }
-
-    // Get the initialization vector of this entry
-    public byte[] getIV() {
-        return Base64.getDecoder().decode(iv);
-    }
-
-    // Set the initialization vector of this entry
-    public void setIV(byte[] iv) {
-        this.iv = Base64.getEncoder().encodeToString(iv);
+        this.name = VaultEncryptor.encrypt(name, key);
     }
 
     // Get the notes for this entry
     public String getNotes(byte[] key) {
-        return VaultEncryptor.decrypt(notes, key, getIV());
+        return VaultEncryptor.decrypt(notes, key);
     }
 
     // Set the notes for this entry
     public void setNotes(String notes, byte[] key) {
-        this.notes = VaultEncryptor.encrypt(notes, key, getIV());
+        this.notes = VaultEncryptor.encrypt(notes, key);
     }
 
     @JsonIgnore

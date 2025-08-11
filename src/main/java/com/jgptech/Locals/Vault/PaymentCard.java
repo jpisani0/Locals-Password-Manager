@@ -35,63 +35,63 @@ public class PaymentCard extends Entry {
 
     // Constructor for a new payment card
     public PaymentCard(String name, String cardholderName, String cardNumber, String brand, String expireDate, String securityCode, String notes, byte[] key) {
-        this.name = VaultEncryptor.encrypt(name, key, getIV());
-        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, getIV());
-        this.cardNumber = VaultEncryptor.encrypt( cardNumber, key, getIV());
-        this.brand = VaultEncryptor.encrypt(brand, key, getIV());
-        this.expireDate = VaultEncryptor.encrypt(expireDate, key, getIV());
-        this.securityCode = VaultEncryptor.encrypt(securityCode, key, getIV());
-        this.notes = VaultEncryptor.encrypt(notes, key, getIV());
+        this.name = VaultEncryptor.encrypt(name, key);
+        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key);
+        this.cardNumber = VaultEncryptor.encrypt( cardNumber, key);
+        this.brand = VaultEncryptor.encrypt(brand, key);
+        this.expireDate = VaultEncryptor.encrypt(expireDate, key);
+        this.securityCode = VaultEncryptor.encrypt(securityCode, key);
+        this.notes = VaultEncryptor.encrypt(notes, key);
     }
 
     // Get the cardholder name
     public String getCardholderName(byte[] key) {
-        return VaultEncryptor.decrypt(cardholderName, key, getIV());
+        return VaultEncryptor.decrypt(cardholderName, key);
     }
 
     // Set the cardholder name
     public void setCardholderName(String cardholderName, byte[] key) {
-        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key, getIV());
+        this.cardholderName = VaultEncryptor.encrypt(cardholderName, key);
     }
 
     // Get the card number
     public String getCardNumber(byte[] key) {
-        return VaultEncryptor.decrypt(cardNumber, key, getIV());
+        return VaultEncryptor.decrypt(cardNumber, key);
     }
 
     // Set the card number
     public void setCardNumber(String cardNumber, byte[] key) {
-        this.cardNumber = VaultEncryptor.encrypt(cardNumber, key, getIV());
+        this.cardNumber = VaultEncryptor.encrypt(cardNumber, key);
     }
 
     // Get the brand
     public String getBrand(byte[] key) {
-        return VaultEncryptor.decrypt(brand, key, getIV());
+        return VaultEncryptor.decrypt(brand, key);
     }
 
     // Set the brand
     public void setBrand(String brand, byte[] key) {
-        this.brand = VaultEncryptor.encrypt(brand, key, getIV());
+        this.brand = VaultEncryptor.encrypt(brand, key);
     }
 
     // Get the expiration date
     public String getExpireDate(byte[] key) {
-        return VaultEncryptor.decrypt(expireDate, key, getIV());
+        return VaultEncryptor.decrypt(expireDate, key);
     }
 
     // Set the expiration date
     public void setExpireDate(String expireDate, byte[] key) {
-        this.expireDate = VaultEncryptor.encrypt(expireDate, key, getIV());
+        this.expireDate = VaultEncryptor.encrypt(expireDate, key);
     }
 
     // Get the security code
     public String getSecurityCode(byte[] key) {
-        return VaultEncryptor.decrypt(securityCode, key, getIV());
+        return VaultEncryptor.decrypt(securityCode, key);
     }
 
     // Set the security code
     public void setSecurityCode(String securityCode, byte[] key) {
-        this.securityCode = VaultEncryptor.encrypt(securityCode, key, getIV());
+        this.securityCode = VaultEncryptor.encrypt(securityCode, key);
     }
 
     // Print the relevant details for this payment card

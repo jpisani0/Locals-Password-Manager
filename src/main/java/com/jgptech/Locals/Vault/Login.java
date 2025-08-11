@@ -30,43 +30,42 @@ public class Login extends Entry {
     Login() {}
 
     // Constructor for a new entry
-    public Login(String name, byte[] iv, String username, String password, String url, String notes, byte[] key) {
-        this.name = VaultEncryptor.encrypt(name, key, iv);
-        this.iv = Base64.getEncoder().encodeToString(iv);
-        this.username = VaultEncryptor.encrypt(username, key, iv);
-        this.password = VaultEncryptor.encrypt(password, key, iv);
-        this.url = VaultEncryptor.encrypt(url, key, iv);
-        this.notes = VaultEncryptor.encrypt(notes, key, iv);
+    public Login(String name, String username, String password, String url, String notes, byte[] key) {
+        this.name = VaultEncryptor.encrypt(name, key);
+        this.username = VaultEncryptor.encrypt(username, key);
+        this.password = VaultEncryptor.encrypt(password, key);
+        this.url = VaultEncryptor.encrypt(url, key);
+        this.notes = VaultEncryptor.encrypt(notes, key);
     }
 
     // Get the username for this entry
     public String getUsername(byte[] key) {
-        return VaultEncryptor.decrypt(username, key, getIV());
+        return VaultEncryptor.decrypt(username, key);
     }
 
     // Set the username for this entry
     public void setUsername(String username, byte[] key) {
-        this.username = VaultEncryptor.encrypt(username, key, getIV());
+        this.username = VaultEncryptor.encrypt(username, key);
     }
 
     // Get the password for this login
     public String getPassword(byte[] key) {
-        return VaultEncryptor.decrypt(password, key, getIV());
+        return VaultEncryptor.decrypt(password, key);
     }
 
     // Set the password for this entry
     public void setPassword(String password, byte[] key) {
-        this.password = VaultEncryptor.encrypt(password, key, getIV());
+        this.password = VaultEncryptor.encrypt(password, key);
     }
 
     // Get the URL for this entry
     public String getUrl(byte[] key) {
-        return VaultEncryptor.decrypt(url, key, getIV());
+        return VaultEncryptor.decrypt(url, key);
     }
 
     // Set the URL for this entry
     public void setUrl(String url, byte[] key) {
-        this.url = VaultEncryptor.encrypt(url, key, getIV());
+        this.url = VaultEncryptor.encrypt(url, key);
     }
 
     // Print the relevant details for this entry
