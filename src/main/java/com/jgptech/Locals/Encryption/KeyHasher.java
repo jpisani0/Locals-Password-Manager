@@ -8,75 +8,44 @@
 
 package com.jgptech.Locals.Encryption;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.*;
 
-public class KeyHasher {
+import org.bouncycastle.crypto.params.Argon2Parameters;
+import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
+
+// REVIEW: should these methods be moved to VaultEncryptor and this class be removed?
+public final class KeyHasher {
+    // Memory for the Argon2 algorithm to use (KB)
+    private static final int MEMORY = 65536;
+
+    // Iterations for the Argon2 algorithm
+    private static final int ITERATIONS = 3;
+
+    // Parallelism for the Argon2 algorithm
+    private static final int PARALLELISM = 4;
+
+    // Derived key length (bytes)
+    private static final int KEY_LENGTH = 32; // 256 bits
+
     // Length of salts generated (bytes)
     private static final int SALT_LENGTH = 16;
 
-    // Length of derived keys (bytes)
-    private static final int KEY_LENGTH = 256;
 
-    // Default number of hash iterations
-    public static final int DEFAULT_ITERATIONS = 600000;
+    // Prevent instantiation
+    private KeyHasher() {}
 
-    // The user's master password as a String
-    public String password;
+    // Hash the master password. Used to derive the symmetric cryptographic key as well as the authentication hash
+    public static byte[] deriveKey(String password, byte[] salt) {
+        Argon2Parameters.Builder builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
+                .withSalt(salt).withMemoryAsKB(MEMORY).withIterations(ITERATIONS).withParallelism(PARALLELISM); // REVIEW: might add PIM support in future, if so withIterations() will be 3*PIM
 
-    // The salt used with the master password before hashing
-    public byte[] salt;
+        Argon2BytesGenerator generator = new Argon2BytesGenerator();
+        generator.init(builder.build());
 
-    // The hashing algorithm chosen
-    public HashingAlgorithm algorithm;
-
-    // Number of times to hash the master password
-    public int iterations;
-
-
-    // Constructor for the KeyHasher class
-    public KeyHasher(String password, byte[] salt, HashingAlgorithm algorithm, int iterations) {
-        this.password = password;
-        this.salt = salt;
-        this.algorithm = algorithm;
-        this.iterations = iterations;
-    }
-
-    // Hash the master password into a cryptographic key
-    public SecretKey deriveSecretKey() {
-        try {
-            // TODO: add support for other hashing algorithms, likely using a private method that converts the HashingAlgorithm enum to the string for SecretKeyFactory
-            String algorithmName = "PBKDF2WithHmacSHA256";
-            byte[] hash;
-            SecretKeyFactory skf;
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, KEY_LENGTH);
-
-            skf = SecretKeyFactory.getInstance(algorithmName);
-            byte[] keyBytes =  skf.generateSecret(spec).getEncoded();
-            return new SecretKeySpec(keyBytes, "AES");
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            System.out.println("ERROR: " + e.getMessage());
-            return null;
-        }
-    }
-
-    // Hash the derived key to safely store in the vault file
-    public byte[] hashKey(final byte[] key) {
-        byte[] hash = new byte[KEY_LENGTH];
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            hash = md.digest(key);
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("ERROR: " + e.getMessage());
-        }
-
-        return hash;
+        byte[] key = new byte[KEY_LENGTH];
+        generator.generateBytes(password.toCharArray(), key, 0, key.length);
+        return key;
     }
 
     // Generate a random salt to be used in the KDF
