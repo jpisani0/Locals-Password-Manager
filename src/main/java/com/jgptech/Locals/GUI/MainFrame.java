@@ -17,10 +17,11 @@ public class MainFrame extends JFrame {
         setSize(800, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE); // REVIEW: change this in the future to instead run some logic before closing so that we can ensure everything saves properly before exiting
         setResizable(false); // REVIEW: let them resize?
+        setLocationRelativeTo(null);
 
         // TODO: make icon for program
-//        ImageIcon image = new ImageIcon("../../../../resources/localsIcon.png");
-//        setIconImage(image.getImage());
+        ImageIcon image = new ImageIcon(MainFrame.class.getResource("/icons/logo.png"));
+        setIconImage(image.getImage());
 
         getContentPane().setBackground(Color.darkGray);
 

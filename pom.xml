@@ -16,7 +16,7 @@
         <main.class>com.jgptech.Locals.Main</main.class>
         <app.name>locals</app.name>
         <app.version>1.0</app.version>
-        <icon.path>src/main/resources/icon.png</icon.path>
+        <icon.path>src/main/resources/icons/logo.png</icon.path>
     </properties>
 
     <dependencies>
@@ -162,8 +162,8 @@
                                         <argument>--main-class</argument>
                                         <argument>${main.class}</argument>
 
-                                        <!--                                        <argument>&#45;&#45;icon</argument>-->
-                                        <!--                                        <argument>${icon.path}</argument>-->
+                                        <argument>--icon</argument>
+                                        <argument>${icon.path}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
