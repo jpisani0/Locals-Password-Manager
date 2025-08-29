@@ -12,11 +12,10 @@ import com.jgptech.Locals.Encryption.VaultEncryptor;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Group {
+public class Folder {
     @JsonIgnore
     // Shows that a given index is invalid
     private final int INVALID_INDEX = -1; // TODO: need to make this something "global" for the project
@@ -34,10 +33,10 @@ public class Group {
 
 
     // Constructor for loading a group from an existing vault file (Jackson requires an empty constructor)
-    Group() {}
+    Folder() {}
 
     // Constructor for a new group
-    public Group(String name, Color color, byte[] key /*Image groupImage*/) {
+    public Folder(String name, Color color, byte[] key /*Image groupImage*/) {
         this.name = VaultEncryptor.encrypt(name, key);
 //        this.color = color;
     }

@@ -9,7 +9,6 @@
 package com.jgptech.Locals.CLI;
 
 import com.jgptech.Locals.Encryption.PasswordGenerator;
-import com.jgptech.Locals.Encryption.VaultEncryptor;
 import com.jgptech.Locals.Vault.*;
 
 import java.awt.*;
@@ -35,7 +34,7 @@ public class Shell {
     // The vault that is open
     private final Vault vault;
 
-    // The group that is currently selected
+    // The folder that is currently selected
     private int groupIndex;
 
     // Key for decryption of vault data
@@ -142,27 +141,27 @@ public class Shell {
                     print these commands and their function.
                         help
                 l, list
-                    list all groups in the vault or entries in the group
-                        list [groups|entries]
+                    list all folders in the vault or entries in the folder
+                        list [folders|entries]
                 o, open
-                    open a group in the vault
-                        open [group]
+                    open a folder in the vault
+                        open [folder]
                 s, show
                     show the saved data in an entry
                         show [entry]
                 a, add
-                    add a new entry or group to the vault
-                        add [entry|group]
+                    add a new entry or folder to the vault
+                        add [entry|folder]
                 d, delete
-                    delete an entry or group from the vault
-                        delete [entry|group]
+                    delete an entry or folder from the vault
+                        delete [entry|folder]
                 e, edit
-                    edit the data in an entry or group
+                    edit the data in an entry or folder
                         edit entry [entry] [name|username|password|URL|notes]
-                        edit group [group] [name|color]
+                        edit folder [folder] [name|color]
                 m, move
-                    move an entry to another group
-                        move [entry] [new-group]
+                    move an entry to another folder
+                        move [entry] [new-folder]
                 """
         );
     }
@@ -173,30 +172,30 @@ public class Shell {
         printHelp();
     }
 
-    // List the groups in the vault or entries in the vault
+    // List the folders in the vault or entries in the vault
     private void list(String[] words) {
         // Check that the user supplied all needed arguments
         if(words.length > 1) {
-            // Check if the user wants to list groups or entries
+            // Check if the user wants to list folders or entries
             if(isGroupSelected(words[1])) {
                 vault.listGroups(key);
             } else if(isEntrySelected(words[1])) {
                 vault.listEntries(groupIndex, key);
             } else {
-                printErrorMsg("ERROR: use 'list groups' or 'list entries'");
+                printErrorMsg("ERROR: use 'list folders' or 'list entries'");
             }
         } else {
-            printErrorMsg("ERROR: use 'list groups' or 'list entries'");
+            printErrorMsg("ERROR: use 'list folders' or 'list entries'");
         }
     }
 
-    // Open a group in the vault
+    // Open a folder in the vault
     private void open(String[] words) {
         // Check that the user supplied all needed arguments
         if(words.length > 1) {
             openGroup(words[1]);
         } else {
-            printErrorMsg("ERROR: add the group name or number that you wish to open: 'open <group>'");
+            printErrorMsg("ERROR: add the folder name or number that you wish to open: 'open <folder>'");
         }
     }
 
@@ -210,43 +209,43 @@ public class Shell {
         }
     }
 
-    // Add a group or entry to the vault
+    // Add a folder or entry to the vault
     private void add(String[] words) {
         // Check tha the user supplied the second argument
         if(words.length > 1) {
-            // Check if the user wants to add a group or entry
+            // Check if the user wants to add a folder or entry
             if(isGroupSelected(words[1])) {
                 addGroup();
             } else if(isEntrySelected(words[1])) {
                 addEntry();
             } else {
-                printErrorMsg("ERROR: use 'add group' or 'add entry'");
+                printErrorMsg("ERROR: use 'add folder' or 'add entry'");
             }
 
             // Write this to the vault to avoid data loss in the event the shell does not close properly
             vault.write();
         } else {
-            printErrorMsg("ERROR: use 'add group' or 'add entry'");
+            printErrorMsg("ERROR: use 'add folder' or 'add entry'");
         }
     }
 
-    // Remove a group or entry from the vault
+    // Remove a folder or entry from the vault
     private void delete(String[] words) {
         // Check that the user supplied all needed arguments
         if(words.length > 2) {
-            // Check if a user wants to remove a group or entry
+            // Check if a user wants to remove a folder or entry
             if(isGroupSelected(words[1])) {
                 deleteGroup(words[2]);
             } else if(isEntrySelected(words[1])) {
                 deleteEntry(words[2]);
             } else {
-                printErrorMsg("ERROR: use 'delete group <group-number>' or 'delete entry <entry-number>'");
+                printErrorMsg("ERROR: use 'delete folder <folder-number>' or 'delete entry <entry-number>'");
             }
 
             // Write this to the vault to avoid data loss in the event the shell does not close properly
             vault.write();
         } else {
-            printErrorMsg("ERROR:  use 'delete group <group-number>' or 'delete entry <entry-number>'");
+            printErrorMsg("ERROR:  use 'delete folder <folder-number>' or 'delete entry <entry-number>'");
         }
     }
 
@@ -259,14 +258,14 @@ public class Shell {
             } else if(isEntrySelected(words[1])) {
                 editEntry(words[2], words[3]);
             } else {
-                printErrorMsg("ERROR: Use 'edit group <group> <field>' or 'edit entry <entry> <field>'.");
+                printErrorMsg("ERROR: Use 'edit folder <folder> <field>' or 'edit entry <entry> <field>'.");
             }
         } else {
-            printErrorMsg("ERROR: Use 'edit group <group> <field>' or 'edit entry <entry> <field>'.");
+            printErrorMsg("ERROR: Use 'edit folder <folder> <field>' or 'edit entry <entry> <field>'.");
         }
     }
 
-    // Move an entry from one group to another
+    // Move an entry from one folder to another
     private void move(String[] words) {
         // Check that the user supplied all needed arguments
         if(words.length > 3) {
@@ -275,22 +274,22 @@ public class Shell {
             } else if(isEntrySelected(words[1])) {
                 moveEntry(words[2], words[3]);
             } else {
-                printErrorMsg("ERROR: use 'move group <group> <new-index>' or 'move entry <entry> <new-group>");
+                printErrorMsg("ERROR: use 'move folder <folder> <new-index>' or 'move entry <entry> <new-folder>");
             }
         } else {
-            printErrorMsg("ERROR: use 'move group <group> <new-index>' or 'move entry <entry> <new-index>' or 'move entry <entry> <new-group>");
+            printErrorMsg("ERROR: use 'move folder <folder> <new-index>' or 'move entry <entry> <new-index>' or 'move entry <entry> <new-folder>");
         }
     }
 
-    // Open a group in the vault
+    // Open a folder in the vault
     private void openGroup(String word) {
         int newGroupIndex = vault.isValidGroupIndex(word, key);
 
-        // Only update the group index if the entered one was valid
+        // Only update the folder index if the entered one was valid
         if(newGroupIndex != INVALID_INDEX) {
             groupIndex = newGroupIndex;
         } else {
-            printErrorMsg("ERROR: " + word + " is not a valid group. Use 'list groups' to show all group names and numbers.");
+            printErrorMsg("ERROR: " + word + " is not a valid folder. Use 'list folders' to show all folder names and numbers.");
         }
     }
 
@@ -306,7 +305,7 @@ public class Shell {
         }
     }
 
-    // Add a new group to the vault
+    // Add a new folder to the vault
     private void addGroup() {
         System.out.print("Name: ");
         String name = scanner.nextLine();
@@ -314,10 +313,10 @@ public class Shell {
 //                System.out.print("Color: ");
         Color color = Color.RED; // TODO: put switch statement to get color from user, just using red for all for now
 
-        vault.addGroup(new Group(name, color, key));
+        vault.addGroup(new Folder(name, color, key));
     }
 
-    // Add an entry to the group
+    // Add an entry to the folder
     private void addEntry() {
         final int LOGIN = 1;
         final int PAYMENT_CARD = 2;
@@ -372,7 +371,7 @@ public class Shell {
         }
     }
 
-    // Add a Login to the group
+    // Add a Login to the folder
     private void addLogin() {
         System.out.print("Name: ");
         String name = scanner.nextLine();
@@ -437,7 +436,7 @@ public class Shell {
         vault.getGroup(groupIndex).getEntries().add(new Login(name, username, password, url, notes, key));
     }
 
-    // Add a payment card to the group
+    // Add a payment card to the folder
     private void addPaymentCard() {
         String name = "";
         String brand = "";
@@ -485,7 +484,7 @@ public class Shell {
         vault.getGroup(groupIndex).getEntries().add(new PaymentCard(name, brand, cardholderName, cardNumber, expireDate, securityCode, notes, key));
     }
 
-    // Add an SSH Key to the group
+    // Add an SSH Key to the folder
     private void addSSHKey() {
         String name = "";
         String privateKey = "";
@@ -521,7 +520,7 @@ public class Shell {
         vault.getGroup(groupIndex).getEntries().add(new SSHKey(name, privateKey, publicKey, fingerprint, notes, key));
     }
 
-    // Add a secure note to the group
+    // Add a secure note to the folder
     private void addSecureNote() {
         String name = "";
         String notes = "";
@@ -539,19 +538,19 @@ public class Shell {
         vault.getGroup(groupIndex).getEntries().add(new SecureNote(name, notes, key));
     }
 
-    // Delete a group from the vault
+    // Delete a folder from the vault
     private void deleteGroup(String word) {
         int removeGroupIndex = vault.isValidGroupIndex(word, key);
 
-        // See if we found a valid group index
+        // See if we found a valid folder index
         if(removeGroupIndex != INVALID_INDEX) {
             vault.removeGroup(removeGroupIndex);
         } else {
-            printErrorMsg("ERROR: " + word + " is not a valid group. Use 'list groups' to show all group names and numbers.");
+            printErrorMsg("ERROR: " + word + " is not a valid folder. Use 'list folders' to show all folder names and numbers.");
         }
     }
 
-    // Delete an entry from the group
+    // Delete an entry from the folder
     private void deleteEntry(String word) {
         int removeEntryIndex = INVALID_INDEX;
 
@@ -584,13 +583,13 @@ public class Shell {
         }
     }
 
-    // Edit a group in the vault
+    // Edit a folder in the vault
     private void editGroup(String groupWord, String fieldWord) {
         int editGroupIndex = vault.isValidGroupIndex(groupWord, key);
         String field = "";
         int fieldNum = INVALID_INDEX;
 
-        // Only continue if the group index is valid
+        // Only continue if the folder index is valid
         if(editGroupIndex != INVALID_INDEX) {
             switch(fieldWord) {
                 case "name":
@@ -610,7 +609,7 @@ public class Shell {
 
             vault.write();
         } else {
-            printErrorMsg("ERROR: " + groupWord + " is not a valid group. Use 'list groups' to show all group names and numbers.");
+            printErrorMsg("ERROR: " + groupWord + " is not a valid folder. Use 'list folders' to show all folder names and numbers.");
         }
     }
 
@@ -813,30 +812,30 @@ public class Shell {
         vault.write();
     }
 
-    // Move a group to a new index in the vault
+    // Move a folder to a new index in the vault
     private void moveGroup(String groupWord, String indexWord) {
         int selectedGroupIndex = vault.isValidGroupIndex(groupWord, key);
         int newIndex = vault.isValidGroupIndex(indexWord, key);;
 
-        // Only continue if a valid group index was entered
+        // Only continue if a valid folder index was entered
         if(selectedGroupIndex != INVALID_INDEX) {
             // Only continue if a valid new index was found
             if(newIndex != INVALID_INDEX) {
                 vault.moveGroup(selectedGroupIndex, newIndex);
 
-                // If the move group was the one we are currently in, also change to that group index
+                // If the move folder was the one we are currently in, also change to that folder index
                 if(selectedGroupIndex == groupIndex) {
                     groupIndex = newIndex;
                 }
             } else {
-                printErrorMsg("ERROR: " + indexWord + " is not a valid group. Use 'list groups' to show all group names and numbers.");
+                printErrorMsg("ERROR: " + indexWord + " is not a valid folder. Use 'list folders' to show all folder names and numbers.");
             }
         } else {
-            printErrorMsg("ERROR: " + indexWord + " is not a valid group. Use 'list groups' to show all group names and numbers.");
+            printErrorMsg("ERROR: " + indexWord + " is not a valid folder. Use 'list folders' to show all folder names and numbers.");
         }
     }
 
-    // Move an entry from one group to another
+    // Move an entry from one folder to another
     private void moveEntry(String entryWord, String groupWord) {
         int entryIndex = vault.getGroup(groupIndex).isValidEntryIndex(entryWord, key);
         int toGroupIndex = vault.isValidGroupIndex(groupWord, key);
@@ -845,16 +844,16 @@ public class Shell {
             if(toGroupIndex != INVALID_INDEX) {
                 vault.moveEntry(groupIndex, toGroupIndex, entryIndex);
             } else {
-                printErrorMsg("ERROR: " + groupWord + " is not a valid group. Use 'list groups' to show all group names and numbers.");
+                printErrorMsg("ERROR: " + groupWord + " is not a valid folder. Use 'list folders' to show all folder names and numbers.");
             }
         } else {
             printErrorMsg("ERROR: " + entryWord + " is not a valid entry. Use 'list entries' to show all entry names and numbers.");
         }
     }
 
-    // Returns true if the given word is one of the aliases for selecting a group
+    // Returns true if the given word is one of the aliases for selecting a folder
     private boolean isGroupSelected(String word) {
-        return (word.equals("group") || word.equals("groups") || word.equals("g"));
+        return (word.equals("folder") || word.equals("folders") || word.equals("g"));
     }
 
     // Returns true if the given word is one of the aliases for selecting an entry

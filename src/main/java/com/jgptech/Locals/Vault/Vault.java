@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.Base64;
-import javax.crypto.*;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -45,7 +45,7 @@ public class Vault {
     private String masterHash;
 
     // Groups in the vault
-    private ArrayList<Group> groups = new ArrayList<>();
+    private ArrayList<Folder> folders = new ArrayList<>();
 
     @JsonIgnore
     // The default/general group index
@@ -61,7 +61,7 @@ public class Vault {
         this.saltEnc = Base64.getEncoder().encodeToString(saltEnc);
         this.saltAuth = Base64.getEncoder().encodeToString(saltAuth);
         this.masterHash = Base64.getEncoder().encodeToString(masterHash);
-        groups.add(new Group("General", Color.blue, key));
+        folders.add(new Folder("General", Color.blue, key));
     }
 
     @JsonIgnore
@@ -128,13 +128,13 @@ public class Vault {
 
     // Get the amount of groups in this vault
     public int size() {
-        return groups.size();
+        return folders.size();
     }
 
     @JsonIgnore
     // Checks if this vault is empty
     public boolean isEmpty() {
-        return groups.isEmpty();
+        return folders.isEmpty();
     }
 
     // Load data from the vault file
@@ -214,90 +214,90 @@ public class Vault {
     // REVIEW: can maybe remove these two
     @JsonProperty
     // Get the groups array (for Jackson)
-    ArrayList<Group> getGroups() {
-        return groups;
+    ArrayList<Folder> getGroups() {
+        return folders;
     }
 
     @JsonProperty
     // Set the groups array (for Jackson)
-    void setGroups(ArrayList<Group> groups) {
-        this.groups = groups;
+    void setGroups(ArrayList<Folder> folders) {
+        this.folders = folders;
     }
 
     @JsonIgnore
-    public Group getGroup(int groupIndex) throws IndexOutOfBoundsException {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
+    public Folder getGroup(int groupIndex) throws IndexOutOfBoundsException {
+        if(groupIndex < 0 || groupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        return groups.get(groupIndex);
+        return folders.get(groupIndex);
     }
 
     @JsonIgnore
     // Add a group to the end of this vault
-    public void addGroup(Group group) {
-        groups.add(group);
+    public void addGroup(Folder folder) {
+        folders.add(folder);
     }
 
     @JsonIgnore
     // Add a group at a specific index of this vault
     public void addGroup(int groupIndex, String name, Color color, byte[] key) throws IndexOutOfBoundsException {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
+        if(groupIndex < 0 || groupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        groups.add(groupIndex, new Group(name, color, key));
+        folders.add(groupIndex, new Folder(name, color, key));
     }
 
     @JsonIgnore
     // Move a group in the array
     public void moveGroup(int currentGroupIndex, int newGroupIndex) throws IndexOutOfBoundsException {
-        if(currentGroupIndex < 0 || currentGroupIndex > groups.size()) {
+        if(currentGroupIndex < 0 || currentGroupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + currentGroupIndex);
-        } else if(newGroupIndex < 0 || newGroupIndex > groups.size()) {
+        } else if(newGroupIndex < 0 || newGroupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + newGroupIndex);
         }
 
-        Group group = groups.get(currentGroupIndex);
-        groups.remove(currentGroupIndex);
+        Folder folder = folders.get(currentGroupIndex);
+        folders.remove(currentGroupIndex);
 
-        if(newGroupIndex == groups.size() - 1) {
-            groups.add(group);
+        if(newGroupIndex == folders.size() - 1) {
+            folders.add(folder);
         } else {
-            groups.add(newGroupIndex, group);
+            folders.add(newGroupIndex, folder);
         }
     }
 
     public void removeGroup(int groupIndex) throws IndexOutOfBoundsException {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
+        if(groupIndex < 0 || groupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         } else if(groupIndex == 1) {
             throw new IndexOutOfBoundsException("Cannot remove 'General' group"); // REVIEW: general group should later be made to "All" and contain references to all entries in all groups
         }
 
         // Take all entries out of this group and place them in the General/Default group
-        for(int entryIndex = 0; entryIndex < groups.get(groupIndex).size(); entryIndex++) {
-            Entry entry = groups.get(groupIndex).getEntry(entryIndex);
+        for(int entryIndex = 0; entryIndex < folders.get(groupIndex).size(); entryIndex++) {
+            Entry entry = folders.get(groupIndex).getEntry(entryIndex);
 
             // Add entry to the General group
-            groups.get(GENERAL_GROUP_INDEX).addEntry(entry);
+            folders.get(GENERAL_GROUP_INDEX).addEntry(entry);
 
             // Remove the entry from the previous group
-            groups.get(groupIndex).removeEntry(entryIndex);
+            folders.get(groupIndex).removeEntry(entryIndex);
         }
 
         // We can now safely remove the group with no entries in it
-        groups.remove(groupIndex);
+        folders.remove(groupIndex);
     }
 
     @JsonIgnore
     // List all the groups in this vault
     public void listGroups(byte[] key) {
-        if(!groups.isEmpty()) {
+        if(!folders.isEmpty()) {
             System.out.println();
 
-            for(int index = 0; index < groups.size(); index++) {
-                System.out.println((index + 1) + ". " + groups.get(index).getName(key));
+            for(int index = 0; index < folders.size(); index++) {
+                System.out.println((index + 1) + ". " + folders.get(index).getName(key));
             }
 
             System.out.println();
@@ -335,25 +335,25 @@ public class Vault {
 
     // Move an entry from one group to another
     public void moveEntry(int fromGroupIndex, int toGroupIndex, int entryIndex) throws IndexOutOfBoundsException {
-        if(fromGroupIndex < 0 || fromGroupIndex > groups.size()) {
+        if(fromGroupIndex < 0 || fromGroupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid from group index: " + fromGroupIndex);
         }
 
-        if(toGroupIndex < 0 || toGroupIndex > groups.size()) {
+        if(toGroupIndex < 0 || toGroupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid to group index:" + toGroupIndex);
         }
 
-        Entry entry = groups.get(fromGroupIndex).getEntry(entryIndex);
-        groups.get(toGroupIndex).addEntry(entry);
-        groups.get(fromGroupIndex).removeEntry(entryIndex);
+        Entry entry = folders.get(fromGroupIndex).getEntry(entryIndex);
+        folders.get(toGroupIndex).addEntry(entry);
+        folders.get(fromGroupIndex).removeEntry(entryIndex);
     }
 
     // List the entries of a group in the vault
     public void listEntries(int groupIndex, byte[] key) throws IndexOutOfBoundsException {
-        if(groupIndex < 0 || groupIndex > groups.size()) {
+        if(groupIndex < 0 || groupIndex > folders.size()) {
             throw new IndexOutOfBoundsException("Invalid group index: " + groupIndex);
         }
 
-        groups.get(groupIndex).listEntries(key);
+        folders.get(groupIndex).listEntries(key);
     }
 }
